@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('layouts/header'); -%>
+
+
+<body>
+
+<%- include('layouts/heading'); -%>
+<%- include('layouts/navbar'); -%>
+
+<div class="main">
+  <h1>Zandd Employees</h1>
+  <hr>
+  <p>
+  <table style="width:100%">
+
+     <tr>
+        <th>Ref</th>
+        <th>ZANDD ID</th>
+        <th>Firstname</th>
+        <th>Initials</th>
+        <th>Lastname</th>
+        <th>Date of Birth</th>
+        <th>Phonenumber</th>
+        <th>E-mail</th>
+        <th>Start date</th>
+        <th>End date</th>
+        <th>Status</th>
+      </tr>
+      <% for (var i = 0; i < items.length; i++) {
+      %>
+      <tr>
+         <td><a id="dbid" href="/zndEmployees/<%= items[i]._id%>" target="_blank"><%=i+1%></a></td>
+         <td><%= items[i].employeeID%></td>
+         <td><%= items[i].employeefirstName%></td>
+         <td><%= items[i].employeeInitials%></td>
+         <td><%= items[i].employeelastName%></td>
+         <td><%= items[i].employeedateOfBirth%></td>
+         <td><%= items[i].employeePhoneNumber%></td>
+         <td><%= items[i].employeeEmail%></td>
+         <td><%= items[i].employeeStartDate%></td>         
+         <td><%= items[i].employeeEndDate%></td>         
+         <td><%= items[i].employeeStatus%></td>         
+      </tr>
+      <% }%>
+   </table>
+</div>
+
+
+
+<%- include('layouts/news'); -%>
+<%- include('layouts/footer'); -%>
+</body>
+</html>

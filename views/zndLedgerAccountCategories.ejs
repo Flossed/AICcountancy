@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('layouts/header'); -%>
+
+
+<body>
+
+<%- include('layouts/heading'); -%>
+<%- include('layouts/navbar'); -%>
+
+<div class="main">
+  <h1>Zandd ledgerAccounts</h1>
+  <hr>
+  <p>
+  <table style="width:100%">
+
+     <tr>
+        <th>Ref</th>
+        <th>ledgerLabel</th>
+        <th>ledgerAccountNameID</th>
+        <th>ledgerAccountName</th>
+        <th>ledgerAccountNameDescription</th>        
+      </tr>
+      <% for (var i = 0; i < items.length; i++) {
+      %>
+      <tr>
+         <td><a id="dbid" href="/zndLedgerAccountCategory/<%= items[i]._id%>" target="_blank"><%=i+1%></a></td>
+         <td><%= items[i].ledgerLabel%></td>
+         <td><%= items[i].ledgerAccountNameID%></td>         
+         <td><%= items[i].ledgerAccountName%></td>
+         <td><%= items[i].ledgerAccountNameDescription%></td>
+      </tr>
+      <% }%>
+   </table>
+</div>
+
+
+
+<%- include('layouts/news'); -%>
+<%- include('layouts/footer'); -%>
+</body>
+</html>

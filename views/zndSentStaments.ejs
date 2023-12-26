@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>   
+   <body onload="showTable()">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">
+         <textarea style="display:none;" id="sendItemsList"><%= typeof sendStatementList != "undefined" ? sendStatementList : "" %></textarea>
+         <h1>Send Items</h1>
+         <table id="SendItems">
+            <tr>
+               <th>item Date</th>
+               <th>item Time</th>               
+               <th>item ID</th>
+            </tr>
+            <tr>
+               <td><span id="itemID"></span></td>
+               <td><span id="itemDate"></span></td>               
+            </tr>
+          </table>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+   </body>
+</html>

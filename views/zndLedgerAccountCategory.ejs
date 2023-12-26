@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+
+
+   <body onload="enableForm('init');">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">
+         <% if (typeof valErrors != "undefined"  && valErrors.length > 0 ) { %>
+            <div class="errorBar">
+               <span id="errorheader">Valdiation result: (page will not completly render until all errors are fixed)</span>
+               <ul class="errorClass">
+                    <%   var i;
+                         for (i = 0; i < valErrors.length; i++) { %>
+                            <li style="background-color:<%=valErrors[i].errorType.includes('Error')?'#ff9999':'#7CFC00'%>"> <%= valErrors[i].message %></li>
+                         <% } %>
+               </ul>
+            </div>
+         <% } %>
+         <div>
+            <div class="pageFlipper" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>">
+               <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+               <button id="pf" type="buttont" onclick="loadpage(1);" >Next </button><br>
+               <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+            </div>
+         </div>
+
+         <div class="ledgerentry">
+            <h1>ZANDD LedgerAcount Name Management Page</h1>
+            <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
+            Currently the form is<span  style="color:red;"><%=(typeof items != "undefined" &&   items.editState) ? (items.editState.includes('on') ? ' NOT ': ''): '' %></span> editable.
+            <br><p>
+            <hr>
+            <form id="entreeForm" action="/zndMngLedgerAccountCategory" method="POST" enctype="multipart/form-data">
+                <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"><%= typeof items != "undefined" ?  items._id : "" %></textarea>
+                <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"><%= typeof items != "undefined" ?  items.__v : "" %></textarea>
+                <textarea style="display:none;" rows="1" class="form-control" id="actie" name="actie"><%= typeof items != "undefined" ?  items.actie: "" %></textarea>
+                <input type="checkbox"  style="display:none;"  id="editState" name="editState" <%=(typeof items != "undefined" &&   items.editState) ? (items.editState.includes('on') ? 'checked': ''): '' %>>                
+                <p><label>Ledger Label</label>
+                <textarea  id="ledgerLabel" readonly rows="1" cols="40" style="resize: none;text-align:center;"><%=(typeof items  != "undefined") ? items.ledgerLabel   : '-' %></textarea>
+                <br><p>
+                <p><label>Ledger Account Name ID:</label>
+                <textarea id="ledgerAccountNameID" rows="1" cols="40" placeholder="..." name="ledgerAccountNameID"><%= typeof items != "undefined" ? items.ledgerAccountNameID : "" %></textarea>
+                <br><p>
+                <p><label>Ledger Account Name:</label>
+                <textarea id="ledgerAccountName" rows="1" cols="40" placeholder="..." name="ledgerAccountName"><%= typeof items != "undefined" ? items.ledgerAccountName : "" %></textarea>
+                <br><p>
+                <p><label style="vertical-align: top;">Destination Account</label>
+                <select name="destinationAccount" id="destinationAccount">
+                   <% for (var i = 0; i < emailaddresses.length; i++) { %>
+                         <option value="<%=emailaddresses[i].emailCategory%>" <%=(typeof items != "undefined" &&  items.destinationAccount.includes(emailaddresses[i].emailCategory)) ? 'selected': '' %>><%=emailaddresses[i].emailCategory%></option>
+                   <%  } %>
+                </select>
+                <br><p>
+                <p><label style="vertical-align: top;">Description of Ledger Accountname:</label>
+                <textarea rows="25"  cols="40" id="ledgerAccountNameDescription" placeholder="..." name="ledgerAccountNameDescription"><%= typeof items != "undefined" ? items.ledgerAccountNameDescription : "" %></textarea>
+                <br><p>
+                <div class="buttonbar">
+                   <button id="FA" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>
+                   <button id="FAU" name="updateForm" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
+                   <button id="FA" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>
+                   <button id="FAD" name="deleteForm" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
+                   <button id="FA" type="button"  onclick="formulierActie('validate');">Validate</button><br>
+                   <button id="FA" type="button"  onclick="formulierActie('cancel');">Cancel</button><br>
+                </div>
+            </form>
+         </div>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+      <script src="/js/zndLedgerAccountCategory.js"></script>
+   </body>
+</html>

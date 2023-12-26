@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body>
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">
+         <h1>Email Addresseses</h1>
+         <hr>
+         <p>
+         <table style="width:100%">
+            <tr>
+               <th>Ref</th>
+               <th>E-mail Address</th>
+               <th>E-mail Category</th>
+               <th>E-mail Description:</th>
+            </tr>
+            <% for (var i = 0; i < items.length; i++) {
+            %>
+               <tr>
+                  <td><a id="dbid" href="/zndEmailAddress/<%= items[i]._id%>" target="_blank"><%=i+1%></a></td>
+                  <td><%= items[i].emailaddress%></td>
+                  <td><%= items[i].emailCategory%></td>
+                  <td><%= items[i].emailDescription%></td>
+               </tr>
+            <% }%>
+         </table>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+   </body>
+</html>

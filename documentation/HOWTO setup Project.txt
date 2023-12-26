@@ -1,0 +1,480 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+//   Appliciation Name :  zandnewbooks
+//
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+*********************************************************************************************************
+* I. Create a remote git repository for storing the project
+*********************************************************************************************************
+
+> open browser @ https://zandd.eu:8443/dashboard
+> open underst Project "zandd trade Rythms" project.
+> press "Create repository"
+> setup name of repository: "zndKNCTrader"
+> setup default branchname : "main"
+> Fill in description for the project: "Repository for codebase backend automatic Binance Tradingbot"
+> press the "Create repository" button
+
+Create a repository for the project :
+                              *   You have an empty repository
+                              *   To get started you will need to run these commands in your terminal.
+                              *
+                              *   New to Git? Learn the basic Git commands
+                              *   Configure Git for the first time
+                              *   git config --global user.name "decaan"
+                              *   git config --global user.email "decaan@zandd.eu"
+                              *   Working with your repository
+                              *   I just want to clone this repository
+                              *   If you want to simply clone this empty repository then run this command in your terminal.
+                              *
+                              *   git clone https://decaan:P!ckwick70@zandd.eu:8443/scm/zo/zanddnewbooks.git
+                              *   My code is ready to be pushed
+                              *   If you already have code ready to be pushed to this repository then run this in your terminal.
+                              *
+                              *   cd existing-project
+                              *   git init
+                              *   git add --all
+                              *   git commit -m "Initial Commit"
+                              *   git remote add originhttps://decaan:P!ckwick70@zandd.eu:8443/scm/zo/zanddnewbooks.git
+                              *   git push -u origin HEAD:main
+                              *   My code is already tracked by Git
+                              *   If your code is already tracked by Git then set this repository as your "origin" to push to.
+                              *
+                              *   cd existing-project
+                              *   git remote set-url originhttps://decaan:P!ckwick70@zandd.eu:8443/scm/zo/zanddnewbooks.git
+                              *   git push -u origin --all
+                              *   git push origin --tags
+                              *   All done with the commands?
+
+*********************************************************************************************************
+* I. End: Create a remote git repository for storing the project
+*********************************************************************************************************
+
+
+
+*********************************************************************************************************
+* II. Setup git repository
+*********************************************************************************************************
+
+> cd F:\_Applications\__ZNDOFFICE
+> git clone https://decaan:P!ckwick70@zandd.eu:8443/scm/zo/zanddnewbooks.git
+> cd F:\_Applications\__ZNDOFFICE\zanddnewbooks
+
+*********************************************************************************************************
+* II. End Setup git repository
+*********************************************************************************************************
+
+
+
+
+
+
+
+
+
+*********************************************************************************************************
+* III. Initialize GitFlow!
+*********************************************************************************************************
+
+> git flow init -d
+> git push -u origin HEAD:develop
+
+*********************************************************************************************************
+* III. End Initialize GitFlow!
+*********************************************************************************************************
+
+*********************************************************************************************************
+* IV. Setup local nexus 
+*********************************************************************************************************
+
+> npm config set registry http://192.168.129.196:8081/repository/zanddNPMHosted/
+
+
+*********************************************************************************************************
+* IV. End setup local nexus 
+******************************************************************************************************************************************************************************************************************
+
+
+
+* IV. Copy template Project
+*********************************************************************************************************
+
+> mkdir scripts
+> cd scripts
+> copy F:\_Applications\__ZNDTraders\templTrader\scripts\* .
+> cd ..
+> .\scripts\initFromTRDTemplate.bat
+
+
+*********************************************************************************************************
+* IV. End Copy template Project
+*********************************************************************************************************
+
+
+
+*********************************************************************************************************
+* V. Initialize Node project and Release
+*********************************************************************************************************
+
+> npm init
+
+                                        * description: Repository for codebase backend automatic Binance Tradingbot
+                                        * keywords: trader bot zandd binance
+                                        * author: Daniel S. A. Khan (c) 2022
+
+> npm install express http nodemon ejs body-parser  mongoose@5.12.6 express-fileupload socket.io socket.io-stream mocha chai  chai-http crypto-js  node-fetch@2.6.2 semver nconf winston supertest  node-html-parser should ws chai-jquery jquery base64-stream node-imap
+> npm version 0.0.0
+> npm set-script start "nodemon index"
+> npm set-script test "nyc mocha --exit"
+
+*********************************************************************************************************
+* V. END Initialize Node project and Release
+*********************************************************************************************************
+
+*********************************************************************************************************
+* VI. Setup configuration
+*********************************************************************************************************
+--------------------------------------------------------------------------------------------
+- Change Config: Update package.json and the configuration of the project
+--------------------------------------------------------------------------------------------
+
+> change config/default.json To:   {   "application"   : {   "ServiceEndPointPort"            : 20070,
+                                                              "DB"                             : "mongodb://10.0.0.10/zanddBooks",
+                                                              "progStart"                      : "scripts\\startBrowser.bat",
+                                                              "outputToBrowser"                : "no",
+                                                              "logFileName"                    : "zanddBooks",
+                                                              "applicationName"                : "zanddBooks",
+                                                              "logTracelevel"                  : "trace",
+                                                              "headless"                       : false
+                                                          }
+                                    }
+                                    
+--------------------------------------------------------------------------------------------
+- Change Config: End Update package.json and the configuration of the project
+--------------------------------------------------------------------------------------------
+
+*********************************************************************************************************
+* VI. END Setup configuration
+*********************************************************************************************************
+
+
+
+*********************************************************************************************************
+* VII. Verify if package will work
+*********************************************************************************************************
+--------------------------------------------------------------------------------------------
+- Run npm test: All unit tests should result in a success
+--------------------------------------------------------------------------------------------
+> --------------------------------------------------------------------------------------------
+- Run npm test: All unit tests should result in a success
+--------------------------------------------------------------------------------------------
+> nyc mocha --exit
+
+Result should look simlar to this:
+
+1/16/2022, 20:02:08 | INFO | binanceIF:putKeepAliveListenKey:keeping alive  listenkey |
+       Should result in an object as response (282ms)
+       Response Object should not be empty
+       Response Object  should have property 'returnCode'
+       Response Object  should have property 'returnMsg'
+       Response Object  should have property 'body'
+       Response Object should be empty
+
+
+  517 passing (11s)
+
+-----------------------------|---------|----------|---------|---------|-------------------------------------------------
+File                         | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+-----------------------------|---------|----------|---------|---------|-------------------------------------------------
+All files                    |   60.58 |     48.6 |   53.71 |   60.98 |
+ zndKNCTrader                |    86.4 |    16.66 |    62.5 |   87.25 |
+  index.js                   |    86.4 |    16.66 |    62.5 |   87.25 | 108,117-133,165,173,185
+ zndKNCTrader/controllers    |   55.55 |    53.67 |   48.27 |    55.7 |
+  default.js                 |      40 |      100 |       0 |      40 | 58-73
+  listOrders.js              |      60 |      100 |       0 |      60 | 56-62
+  main.js                    |      90 |      100 |     100 |      90 | 64
+  manageOrder.js             |      35 |        0 |       0 |      35 | 57-74,83-89
+  manageTradeStatus.js       |   54.54 |      100 |       0 |   54.54 | 59-67
+  order.js                   |   33.33 |        0 |       0 |   33.33 | 54-69,78-88
+  orderManagement.js         |      60 |      100 |       0 |      60 | 58-64
+  services.js                |   85.61 |     86.9 |     100 |   85.47 | ...-264,272-275,367-370,388-392,472-473,491-493
+  test.js                    |    6.86 |        0 |       0 |       7 | 55-164,173-178
+  tradeStatus.js             |   17.24 |        0 |       0 |   17.64 | 61-146,155-182
+ zndKNCTrader/models         |     100 |      100 |     100 |     100 |
+  binanceTradeData.js        |     100 |      100 |     100 |     100 |
+  binanceUserData.js         |     100 |      100 |     100 |     100 |
+  candleData.js              |     100 |      100 |     100 |     100 |
+  executionReport.js         |     100 |      100 |     100 |     100 |
+  outboundAccountPosition.js |     100 |      100 |     100 |     100 |
+  placedorders.js            |     100 |      100 |     100 |     100 |
+  placedordersHist.js        |     100 |      100 |     100 |     100 |
+  zndTradeMngt.js            |     100 |      100 |     100 |     100 |
+ zndKNCTrader/services       |   59.69 |    46.87 |   54.34 |   60.14 |
+  binanceIF.js               |   77.16 |    69.23 |   85.71 |   77.16 | ...-508,537,550-551,565-567,574-611,624-625,650
+  configuration.js           |    92.3 |      100 |     100 |    92.3 | 65
+  errorCatalog.js            |     100 |      100 |     100 |     100 |
+  streamData.js              |      78 |       75 |   72.72 |      80 | 54,67,85,104-114,134,145
+  userStreamData.js          |      40 |        5 |   54.54 |   40.19 | 67-120,134-135,141,157,179,183-230,243
+  watchDog.js                |   26.15 |        0 |   14.28 |   26.15 | 58-179,193
+  zndAMM.js                  |   48.44 |    57.14 |   46.15 |   50.46 | ...,327-333,351-374,394-395,408-429,450-480,496
+  zndCalcAlgo.js             |   83.53 |    66.66 |     100 |   83.18 | ...-253,282,309,343-361,367,407,429,451,466,479
+  zndCalcCandle.js           |   68.91 |    52.63 |      50 |   69.44 | 64-74,89,110,188-247,276-289,304
+  zndLoggerClass.js          |   72.72 |       60 |      50 |   72.72 | 87-97,112-117,131,143-147
+  zndMsg.js                  |     100 |      100 |     100 |     100 |
+  zndOrderManagement.js      |   26.19 |        0 |       0 |   26.19 | 52-126
+  zndStateMachine.js         |   22.22 |      7.5 |      15 |   22.82 | 61-126,150-171,186-365,383
+-----------------------------|---------|----------|---------|---------|-------------------------------------------------
+
+>
+--------------------------------------------------------------------------------------------
+- END Run npm test: All unit tests should result in a success
+--------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------
+- Startup first time:
+--------------------------------------------------------------------------------------------
+
+> del  logs\*
+> npm start
+
+1. check  mongodb to see if datebase as specified has been created.
+2. check to see if the binancetradedatas are being updated.
+3. check logs for exceptions and errors. there should be after final startup only debug and info statements not error or exception statements.
+4. fund account with enough funds to make trades
+5. check to see if the bot has the correct periodicity (the periode in which frequently the moving average passes from 30 to 70%)
+6. check the trades a purchase should immediatly be followed by a sell.
+
+
+If all of these are good the project is ready to be used and saved as working version.
+
+--------------------------------------------------------------------------------------------
+- END Startup first time:
+--------------------------------------------------------------------------------------------
+*********************************************************************************************************
+* VII. End verify if package will work
+*********************************************************************************************************
+
+
+
+
+*********************************************************************************************************
+* VIII. Finalize project
+*********************************************************************************************************
+--------------------------------------------------------------------------------------------
+- Sync Back all changes
+--------------------------------------------------------------------------------------------
+> cd F:\_Applications\__ZNDTraders\zndKNCTrader
+> .\scripts\updateTRDTemplate.bat
+
+--------------------------------------------------------------------------------------------
+- End Sync Back all changes
+--------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------
+- Setup Jira Project
+--------------------------------------------------------------------------------------------
+
+> open browser @ http://10.0.0.197:9990/
+> open under Project  => "Create project"
+> select Scrum Software development
+> setup name of repository: "zndKNCTrader"
+> check if generated key is unique else adapt
+> Fill in description for the project: "Repository for codebase backend automatic Binance Tradingbot"
+> press the "Submit" button
+
+--------------------------------------------------------------------------------------------
+- End Setup Jira Project
+--------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------
+- Create initial story under which the initialization of the project will be done
+--------------------------------------------------------------------------------------------
+
+> Press Create button
+> select as issue type a story
+> create a issue title
+> create a description
+> press the "Create" button
+> copy issue name
+
+--------------------------------------------------------------------------------------------
+- END Create initial story under which the initialization of the project will be done
+--------------------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------------------
+- Update Repository.
+--------------------------------------------------------------------------------------------
+> cd F:\_Applications\__ZNDTraders\zndKNCTrader
+> scripts\saveFeature.bat ZNDKNCTRAD-1  initialVersion  0.1.0
+
+--------------------------------------------------------------------------------------------
+- END Update Repository.
+--------------------------------------------------------------------------------------------
+
+*********************************************************************************************************
+* VIII. END Finalize project
+*********************************************************************************************************
+
+
+*********************************************************************************************************
+* IX. Update template directoryu
+*********************************************************************************************************
+> scripts\updateTemplate.bat
+*********************************************************************************************************
+* IX. End Update template directoryu
+*********************************************************************************************************
+
+*********************************************************************************************************
+* X. Update remote server
+*********************************************************************************************************
+
+>  Log on to server
+>  git clone 'https://decaan:P!ckwick70@zandd.eu:8443/scm/ztr/zndKNCTrader.git'
+>  mv zndKNCTrader/ zndKNCTrader/
+>  cd zndKNCTrader/
+>  npm install
+>  npm start
+> check to see if there are any errors then solve them
+
+> nohup `npm start 1,2>output.txt` &
+
+*********************************************************************************************************
+* X End Update remote server
+*********************************************************************************************************
+
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
+/* DONE!!!!!!!!!!!!!!!!!!!!!!
+/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*/*
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Appendix A: git ignore:
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#########################################################################################################
+# .gitignore in root of project
+#  created for nod.js with express
+# exclude everythin and explicity include what is needed to run project and stored in git.
+#########################################################################################################
+
+/*
+*.bak
+!.gitignore
+!automation
+!*.txt
+!*.js
+!*.css
+!*.esj
+!*.json
+!*.bat
+!*.sh
+!/views
+!/views/layouts
+!/services
+!/controllers
+!/public
+!/public/css
+!/models
+!/test
+!/scripts
+!/documentation
+
+#########################################################################################################
+#   1. /*                           'exclude everything'
+#   2. *.bak                        ' exclude any bak file (already covered by 1.)
+#   3. !automation                  ' automation, in this project a jenkins groovy file for devops
+#   4. !*.js                        ' any java script file in any directory
+#   5. !*.css                       ' any css file in any directory
+#   6. !*.esj                       ' any express file in any directory
+#   7. !*.json                      ' any json file in any directory
+#   8. !*.bat                       ' any bat files in any directory
+#   9. !*.sh                        ' any linux shell files in any directory (used for Devops automation)
+#  10. !*.txt                       ' any documentation to support the project.
+#  11. !/views                      ' the directory views , express directory containing the view of the MVC pattern
+#  12. !/views/layouts              ' the directory views/layouts , express directory containing the templates for the view of the MVC pattern
+#  13. !/services                   ' the directory services , nod.js middleware directory containing services supporting the applcaition
+#  14. !/controllers                ' the directory contorllers , express directory containing the controller view of the MVC pattern
+#  15. !/public                     ' the directory public , express directory containing supporting artefacts the view of the MVC pattern
+#  16. !/public/css                 ' the directory public/css , express directory containing supporting css files the view of the MVC pattern should be covered by 14)
+#  17. !/models                     ' the directory models , express directory containing the model of the MVC pattern (*database spec for mongodb scripts)
+#  18. !/test                       ' the directory test , BDD directory containing supertest/mocha/chai tests to verify application
+#  19. !/scripts                    ' the directory scripts , script directory containing scripts required for devops
+#  20. !/documentation              ' the directory documentation ,  containing any suipporting text documentation for the project
+#########################################################################################################
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// End Appendix: A.
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Appendix B: start up bit bucket server
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+++ Start the scsi share
+
+// Side note here : using a working bitbucket repository : instructions need to be gitflowified
+
+// putty "10.0.0.197"
+// start scsi share in yast
+// check /ndrive that git is present.
+// repeat and fix until present
+// --check if NAS is running
+// check if blockdevice is present `iqn.2004-04.com.qnap:ts-h973ax:iscsi.linlun9bay.5bf603`
+// should be a blockdevice of 200 GB
+
+yast->network services->iSCSI Initiator->Discovered Targets : select target  : connect
+cd /ndrive;
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++ EDND start scsi share
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++ Start the bitbucket implementation
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> cd /opt/atlassian/bitbucket/7.14.1/bin
+> ./start-bitbucket.sh
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Appendix B: End start up bit bucket server
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Appendix C: sonatype repo
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++ Start the bitbucket implementation
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> npm set registry = "http://10.0.0.196:8081/repository/zndNPMProxy/"
+> npm delete registry
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// Appendix B: End start up bit bucket server
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ Remarks: on git
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+# initializes the develop branch                    : > git flow init
+# forces reintialization                            : > git flow init  -f
+#  pushes the develop branch to remote repository   : > git push -u origin HEAD:develop
+# Temporary save WIP                                : > git stash
+# Load stored changes as actual                     : > git stash apply
+# See what is happening with the stash              : > git stash show
+# Remove pending issues                             : > git stash clear
+# incease the wrong remote was added                : > git remote remove origin
+# clone git repository                              : > git clone http://decaan:Pickwick70@10.0.0.197:7990/scm/ztr/zndKNCTrader.git
+# Use a git UI to keep track of the status of git or even replace commandshell
+# sourcetree, gitkraken, gitui
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++ End Remarks: on git
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

@@ -1,0 +1,15 @@
+{   "application"   : {   "ServiceEndPointPort"            : 10070,
+                          "DB"                             : "mongodb://192.168.129.197/zanddBooks",                          
+                          "progStart"                      : "scripts\\startBrowser.bat",
+                          "outputToBrowser"                : "no",
+                          "logFileName"                    : "zanddBooks", 
+                          "applicationName"                : "zanddBooks",
+                          "logTracelevel"                  : "trace", 
+                          "headless"                       : false,                          
+                          "statementTemplate"              : "F:\\_Applications\\__ZNDOFFICE\\Accountancy\\templates\\zanddStatement.docx",  
+                          "outputDir"                      : "F:\\_Applications\\__ZNDOFFICE\\Accountancy\\output",  
+                          "outputDocName"                  : "outputDocName.docx",                            
+                          "wordPath"                       : "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE", 
+                          "WordOptions"                    : "/mFilePrintDefault /mFileExit /mFileCloseOrExit /q /n"
+                      }
+}

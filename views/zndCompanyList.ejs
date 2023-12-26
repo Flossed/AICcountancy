@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+   <body>   
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      
+      <div class="main">
+         <h1>Compagnies</h1>
+         <hr>
+         <p>
+         <table style="width:100%">         
+            <tr>
+               <th>Ref</th>
+               <th>companyName</th>
+               <th>companyStreetname</th>
+               <th>companyHouseNumber</th>
+               <th>companyPostcode</th>
+               <th>companyExtraAdressDetails</th>
+               <th>companyState</th>
+               <th>companyCountry</th>
+               <th>companyWebaddress</th>
+               <th>companyEmail</th>
+               <th>companyTelefoneNumber</th>
+               <th>companyRegistrationNumber</th>
+               <th>companyVATNumber</th>
+            </tr>
+            <% for (var i = 0; i < items.length; i++) {
+            %>
+               <tr>
+                  <td><a id="dbid" href="/zndCompagny/<%= items[i]._id%>" target="_blank"><%=i+1%></a></td>
+                  <td><%= items[i].companyName%></td>
+                  <td><%= items[i].companyStreetname%></td>
+                  <td><%= items[i].companyHouseNumber%></td>
+                  <td><%= items[i].companyPostcode%></td>
+                  <td><%= items[i].companyExtraAdressDetails%></td>
+                  <td><%= items[i].companyState%></td>
+                  <td><%= items[i].companyCountry%></td>
+                  <td><%= items[i].companyWebaddress%></td>         
+                  <td><%= items[i].companyEmail%></td>         
+                  <td><%= items[i].companyTelefoneNumber%></td>         
+                  <td><%= items[i].companyRegistrationNumber%></td>         
+                  <td><%= items[i].companyVATNumber%></td>         
+               </tr>
+            <% }%>
+          </table>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+   </body>
+</html>

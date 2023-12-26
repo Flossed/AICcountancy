@@ -1,0 +1,6 @@
+/opt/atlassian/jira/8.13/jre/bin/keytool -import -alias zand -file /certs/zandd.eu.crt  -keystore /opt/atlassian/jira/8.13/jre/lib/security/cacerts
+
+/opt/atlassian/jira/8.13/jre//bin/keytool -import -alias zandC -file /certs/GandiStandardSSLCA2.pem   -keystore /opt/atlassian/jira/8.13/jre/lib/security/cacerts
+
+
+/opt/atlassian/jira/8.13/jre//bin/keytool -export  -file test.txt -keystore cacerts

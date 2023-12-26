@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">
+      <h1 id="returnCode" hidden ><%=typeof result !== 'undefined' ? result.returnCode : 'doemaar'%></h1>
+      <h1 id="returnMsg" hidden ><%=typeof result !== 'undefined'  ? result.returnMsg : 'vloegroe' %></h1>
+      <h1 id="returnBody" hidden ><%=typeof result !== 'undefined' ? result.body : 'raarmaarwaar'%></h1>
+         <div class="ledgerentry">                        
+            <h1>Load Coda files.</h1>
+            <form class="zndLoadCODAFiles">
+               <div id="statementDropArea"> 	                      	          
+      	          Please Drop your CODA files in the red dashed rectangle.
+                  <input type="file" style="display:none;"  id="fileElem"  onchange="handleFiles(this.files)"> 
+	             </div>
+            </form>            
+         </div>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+      <script src="/js/zndLoadCodaFiles.js"></script>
+   </body>
+</html>

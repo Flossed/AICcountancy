@@ -1,0 +1,79 @@
+#############################0#######################################################################
+# git cheatsheet
+####################################################################################################
+----------------------------------------------------------------------------------------------------
+- Setup
+----------------------------------------------------------------------------------------------------
+* git config --global user.name "daniel  khan"
+* git config --global user.email "decaan@zandd.eu"
+* git clone http://10.0.0.197:7990/scm/zo/zanddbooks.git
+* git remote add origin http://decaan:P!ckwick70@10.0.0.197:7990/scm/zo/zanddbooks.git
+* git remote remove origin 
+* git remote set-url origin http://decaan:P!ckwick70@10.0.0.197:7990/scm/zo/zanddbooks.git
+* git init
+* git flow init  //initializes the develop branch 
+
+----------------------------------------------------------------------------------------------------
+- WIP
+----------------------------------------------------------------------------------------------------
+
+
+
+* git add --all
+* git commit -m "Initial Commit"
+* git stash  // to store temporary WIP
+* git stash apply  // to load stored changes as actual, 
+* git stash show  // to see what is happening with the stash
+* git stash clear // to remove pending issues
+* git status // to see current state of work
+* git tag -d v0.1.2
+
+
+* git flow feature start ZNDROS-14
+* git add --all
+* git commit -a -m "ZNDROS-14"
+* git push --set-upstream origin feature/ZNDROS-14
+* git flow feature finish ZNDROS-14
+* git flow release start 0.4.0
+* npm version minor
+* git flow release finish 0.4.0 -m "fixed ZNDROS-14"
+
+or
+* scripts\saveFeature.bat BOOKSMK2-54  updateExpensesFunctionality  0.19.0
+
+* git flow bugfix start ZNDROS-2
+* git add --all
+* git commit -m "Fixed ZNDROS-2; Doc update"
+* git push --set-upstream origin bugfix/ZNDROS-2
+* git flow bugfix finish -F ZNDROS-2
+* git flow release start 0.2.0
+* npm version patch
+* git flow release finish 0.2.5 -m "fixed ZNDROS-2"
+
+or
+* scripts\saveBugfix.bat BOOKSMK2-52 addedCoderecords  0.18.8
+
+----------------------------------------------------------------------------------------------------
+- Updating remote repository
+----------------------------------------------------------------------------------------------------
+
+* git push -u origin HEAD:main
+* git push -u origin HEAD:develop
+* git push origin --tags
+
+* git reset --hard 3c4056908d3e0073685475a20b4baa70fab6edee // jumnping through branches
+* git pull http://decaan:P!ckwick70@10.0.0.197:7990/scm/zo/zanddbooks.git main  // for updating local directories
+* git pull 'http://decaan:P!ckwick70@10.0.0.197:7990/scm/zo/zanddbooks.git'  develop  // for updating local directories
+* git push -f -u origin HEAD:main
+
+####################################################################################################
+# END : git cheatsheet
+####################################################################################################
+
+
+
+*  cd ~zandd/ZNDROSTrader
+*  ./scripts/trash node
+*   git pull
+*  nohup `npm start 1,2>output.txt`&
+

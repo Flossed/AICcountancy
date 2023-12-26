@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body>
+   
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">
+        <h1>Expenses</h1>
+        <hr>        
+        <table style="width:100%">
+            <tr>
+               <th>ID</th>
+               <th>Gross Amount</th>
+               <th>DeclarationStatement</th>
+               <th>Employee</th>
+               <th>Date</th>
+               <th>Description</th>
+               <th>Invoice Nr.</th>               
+               
+               
+            </tr>
+            <% for (var i = 0; i < items.length; i++) {
+            %>
+            <tr>
+               <td><a id="dbid" href="/zndStatements/<%= items[i]._id%>" target="_blank"><%=i+1%></a></td>
+               <td><%= items[i].grossAmount%></td>
+               <td><%= items[i].declarationStatement%></td>
+               <td><%= items[i].beneficiary%></td>
+               <td><%= items[i].bankDate%></td>
+               <td><%= items[i].compagnyName%></td>
+               <td><%= items[i].invoiceNumber%></td>               
+               
+            </tr>
+            <% }%>
+         </table>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+   </body>
+</html>

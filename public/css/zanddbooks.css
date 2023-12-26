@@ -1,0 +1,592 @@
+/* File             : zanddbooks.css
+   Author           : Daniel S. A. Khan
+   Copywrite        : Daniel S. A. Khan (c) 2022
+   Description      : Main CSS file for ZANDDBOOKS
+   Notes            :
+*/
+body
+{   font-family: 'Calibri', sans-serif;
+	  font-size: 21px;
+	  background:#FEFBE4;	  
+}
+ 
+
+.heading
+{   font-family: 'Calibri', sans-serif;
+	  background: transparent url(/img/ZANDD.jpg) no-repeat top left;
+	  background-size: 100% 100%;
+	  position: fixed;
+	  top:0%;
+	  position: fixed;
+	  width: 100%;
+	  height: 14%;
+	  text-align: 	center;
+}
+
+
+
+.navbar
+{	  font-family: 'Calibri', sans-serif;
+	  position: fixed;
+	  top:14.0%;
+	  height:100%;
+	  width: 9%;
+	  padding-left: 1%;
+	  padding-right: 1%;
+	  left: 0;
+	  background:#F5F3E4;
+}
+
+
+
+.newsbar
+{   font-family: 'Calibri', sans-serif;
+	  position: fixed;
+	  top:14%;
+	  width: 0;
+	  height:83%;
+	  right: 1px;	  
+	  background:#F5F3E4;
+	  border: 1px solid black;
+	  overflow-y: hidden;
+	  overflow-x: hidden;
+}
+
+
+
+.main
+{   font-family: 'Calibri', sans-serif;
+	  position: fixed;
+	  left:11%;
+	  top: 15%;
+	  bottom: 5%;
+	  width:  87vw;
+	  height: 85vh;
+	  padding-left: 1%;
+	  padding-right: 1%;
+	  overflow-y: scroll;
+	  overflow-x: scroll;
+}
+
+
+
+.footer
+{   font-family: 'Calibri', sans-serif;
+	  position: fixed;
+	  bottom:1%;
+	  width: 98%;
+    text-align: center;
+}
+
+
+
+table
+{   border: 1px solid #473d1e;
+    border-collapse: collapse;
+    border-spacing: 300px;
+    font-family: 'Calibri', sans-serif;
+    font-size: 10px;
+}
+
+
+
+th
+{   text-align: center;
+	  padding: 2px;
+	  border: 1px solid #473d1e;
+	  font-size: 14px;
+	  background-color:    grey;
+}
+
+
+
+td
+{   text-align: center;
+	  padding: 1px;
+	  border: 1px solid #473d1e;
+	  background-color: transparent;
+}
+
+
+
+form
+{   display: table;
+}
+
+
+
+p
+{   display: table-row;
+    text-align: left;
+}
+
+
+
+label
+{   display: table-cell;
+    padding-left: 2px;
+    padding-right: 10px;
+    vertical-align: top;
+    
+}
+
+
+
+input 
+{   display: table-cell;    
+}
+
+
+
+.displayDocument
+{   position: absolute;
+	  left:103%;
+	  top: 12.2%;
+	  height:15%;
+	  width:100%; 	  
+	  overflow: hidden;
+	  padding: 20px;
+	  border: 1px solid green;
+	  font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+}	
+
+
+.displayDocumentEmpl
+{   position: fixed;
+	  left:37.4vw;
+	  top: 26.5vh;
+	  height:69.5vh;
+	  width:36%; 	  
+	  overflow: hidden;
+	  padding: 20px;
+	  border: 1px solid green;
+	  font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+}	
+
+.displayDocumentComp
+{   position: fixed;
+	  left:38vw;
+	  top: 26.5vh;
+	  height:69.5vh;
+	  width:36%; 	  
+	  overflow: hidden;
+	  padding: 20px;
+	  border: 1px solid green;
+	  font-family: 'Calibri', sans-serif;
+    font-size: 14px;
+}	
+
+
+
+.docImage
+{   width: 75%; 
+	  height: 75%;
+}
+
+
+
+.docEntry
+{   font-weight : bold;
+    padding-right: 10px;  
+}
+
+
+
+.ledgerentry
+{   position: absolute;  
+	  top: -2.5% ; 
+}
+
+
+
+.hamburgerToggle
+{   position: fixed;
+    top: 3.5vh; 
+	  left:81vw;	 
+	  height:5%;
+	  width:35%; 	  
+}
+
+
+.hamburgerToggle .tooltiptext 
+{   visibility: hidden;  
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: fixed;
+    left:93vw;
+    top: 6vh;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.hamburgerToggle:hover .tooltiptext {
+  visibility: visible;
+}
+
+.newsButtonBar, .pageFlipper, .buttonbar
+{   position: fixed;
+	  left:94vw;	 
+	  height:5%;
+	  width:35%; 	  
+}
+
+
+
+.newsButtonBar
+{   top: 17%;
+}
+
+
+
+.pageFlipper
+{   top: 32%;	   
+}
+
+
+
+.buttonbar
+{   top: 70%;	     	  
+}
+
+.manageBar
+{   top: 50%;	     	  
+}
+
+#totalsRecords
+{   font-size: 40px;
+}
+
+#FA, #FAU, #FAD 
+{   color: white;  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #6699ff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #001a4d;
+    min-width: 95px;
+}
+
+#UNLOCK 
+{   color: white;  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #117700;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #001a4d;
+    min-width: 95px;
+}
+
+#printPdf 
+{   color: white;  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background-color: #b366ff;
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #001a4d;
+    min-width: 95px;
+}
+
+
+#SAR 
+{   position:fixed;
+    background: url(/img/Telescope-01.svg) no-repeat;   
+    border: 2px  solid #fbed84;     
+    width : 100px;
+    height: 100px;
+    right:12%;    
+    top:17%;      
+}
+
+#printPdf:hover
+{   background: #cc99ff;
+}
+
+#UNLOCK:hover 
+{   background: #1fcc00;
+}
+
+#FA:hover  
+{   background: #b3ccff;
+}
+
+
+
+#SAR:hover
+{
+	  background: url(/img/Telescope-01.svg) no-repeat ;     	
+    border-radius: 5px;    
+    border: 2px solid #dfc507;  
+    cursor : pointer;
+}
+
+
+
+#FAD:hover
+{   background: #b3ccff;
+}
+
+
+
+#FAU:hover
+{   background: #b3ccff;
+}
+
+
+
+#pf, #ed, #sendForm, #lock, #accnt, #NB
+{   color: white;  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 4px 2px;
+    cursor: pointer;    
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #001a4d;
+    min-width: 95px;
+}
+
+
+
+#NB
+{   background-color: #6e6d58;     
+}
+
+
+
+#pf
+{   background-color: #cc9900;     
+}
+
+
+
+#pf:hover
+{   background: #4d3900;
+}
+
+
+
+#ed
+{   background-color: #264d00;
+}
+
+
+
+#ed:hover
+{   background: #66cc00;
+}
+
+
+
+#sendForm
+{   background-color: #6699ff;
+}
+
+
+
+#sendForm:hover
+{   background: #b3ccff;	  
+}
+
+#lock
+{   background-color: #800000;
+}
+
+#accnt
+{   background-color: #806600;
+}
+
+
+#lock:hover 
+{   background: #ff6666;
+}
+
+#accnt:hover
+{   background: #e6b800;
+}
+
+
+
+.showdata 
+{   position: fixed;
+	  top:225px;
+	  height:30px;	
+	  width: 65px;
+	  right: 55px;
+}
+
+.filterdata 
+{   position: absolute;
+	  top:35px;
+	  height:30px;	
+	  width: 100px;
+	  right: 55px;
+	  font-size: 14px;
+}
+
+.dashBoardFilter
+{   position: absolute;
+	  top:10%;
+	  height:5vh;	
+	  width: 90vw;
+	  left: 10vw;
+	  font-size: 14px;
+}
+
+
+.rawdata 
+{   position: fixed;
+	  display: inline-block;
+	  top:275px;
+	  width:250px;		
+	  padding : 20px
+    overflow-x: scroll;
+	  padding:1px	
+}
+
+
+
+.switch input 
+{   opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+
+
+.slider 
+{   position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #b3ccff;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+
+.slider:before 
+{   position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+
+
+input:checked + .slider 
+{   background-color: #2196F3;
+}
+
+
+
+input:focus + .slider 
+{   box-shadow: 0 0 1px #2196F3;
+}
+
+
+
+input:checked + .slider:before 
+{   -webkit-transform: translateX(72px);
+    -ms-transform: translateX(72px);
+    transform: translateX(72px);
+}
+
+
+
+.slider.round 
+{   border-radius: 34px;
+}
+
+.slider.round:before 
+{   border-radius: 50%;
+}
+
+#statementDropArea 
+{   position: absolute;
+	  left:25.4vw;
+	  top: -4.5vh;
+	  border: 2px dashed red;
+    border-radius: 20px;
+    width: 36.0vw;
+    height: 4.2vw;
+    font-family: sans-serif;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: 	center;
+}
+
+#statementDropAreaComp 
+{   position: absolute;
+	  left:26vw;
+	  top: -4.1vh;
+	  border: 2px dashed red;
+    border-radius: 20px;
+    width: 36.0vw;
+    height: 4.2vw;
+    font-family: sans-serif;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: 	center;
+}
+#statementDropArea.highlight, #statementDropAreaComp.highlight  
+{   border: 4px dashed green;
+}
+
+#showRawData
+{  position: absolute;	 
+	 top: 10vh;	  
+	 font-family: 'Calibri', sans-serif;
+   font-size: 15px;
+}
+
+#SendItems
+{   border: 1px solid #473d1e;
+    border-collapse: collapse;
+    border-spacing: 300px;
+    font-family: 'Calibri', sans-serif;
+    font-size: 16px;
+    padding : 35px 70px;
+    width: 75vw;
+}
+
+.dashBoardButtons
+{   position: fixed;
+    top:16vh;
+	  left:90vw;	 
+	  height:5%;
+	  width:35%; 	  
+}
+
+/* LOG:
+*/

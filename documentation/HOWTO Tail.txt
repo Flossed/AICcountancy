@@ -1,0 +1,5 @@
+Open powershell under windows 
+cd to tasrget directory 
+> cd F:\_Applications\__ZNDOFFICE\zanddBooks\logs
+tail file 
+> Get-Content .\zandBooks-undefined10.4.2022undefined.log -Wait -Tail 30

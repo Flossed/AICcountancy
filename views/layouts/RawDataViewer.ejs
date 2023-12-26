@@ -1,0 +1,9 @@
+<div class="newsbar">
+   <h3>Raw Bankdata </h3>    
+   <div id="showRawData"  class="rawdata">
+      <% if( typeof bankData != "undefined" ) { %> 
+         <% for(let i= 0; i<bankData.length;i++) { %>
+         <%=bankData[i]%><br> 
+      <% }} %>
+   </div>
+</div>

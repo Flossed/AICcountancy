@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body onload="enableForm('init');">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">         
+         <% if (typeof valErrors != "undefined"  && valErrors.length > 0 ) { %>
+            <div class="errorBar">
+               <span id="errorheader">Valdiation result: (page will not completly render until all errors are fixed)</span>
+               <ul class="errorClass">
+                    <% var i;
+                       for (i = 0; i < valErrors.length; i++) {
+                    %>
+                       <li style="background-color:<%=valErrors[i].errorType.includes('Error')?'#ff9999':'#7CFC00'%>"> <%= valErrors[i].message %></li>
+                    <% } %>
+               </ul>
+            </div>
+         <% } %>
+
+         <div>
+            <div class="pageFlipper" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>">
+               <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+               <button id="pf" type="buttont" onclick="loadpage(1);" >Next </button><br>
+               <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+            </div>
+         </div>
+         <div class="newsButtonBar">            
+         </div>
+         
+         <div class="ledgerentry">
+            <h1>ZANDD Trading Companies</h1>             
+            <h1 id="pdfFile" hidden ><%=typeof items != "undefined" ?  items.docScan : ""%></h1>
+            <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
+            <form id="manageAffiliatedCompagny" action="/zndMngCompagny" method="POST" enctype="multipart/form-data">
+               <textarea style="display:none;" rows="1" class="form-control" id="docScan" name="docScan"><%= typeof items != "undefined" ?  items.docScan : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="docPath" name="docPath"><%= typeof items != "undefined" ?  items.docPath : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"><%= typeof items != "undefined" ?  items._id : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"><%= typeof items != "undefined" ?  items.__v : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="actie" name="actie"><%= typeof items != "undefined" ?  items.actie: "" %></textarea>
+            
+               <div id="statementDropAreaComp"> 	                
+      	          Please Drop your files in  the red dashed rectangle.  	    	            
+                  <input type="file" style="display:none;" id="statementDocuments" multiple  onchange="handleFiles(this.files)"> 
+	             </div>
+	             
+	             <input type="checkbox"  style="display:none;"  id="editState" name="editState" <%=(typeof items != "undefined" &&   items.editState) ? (items.editState.includes('on') ? 'checked': ''): '' %>> <br>
+               <label>Currently the form is<span  style="color:red;"><%=(typeof items != "undefined" &&   items.editState) ? (items.editState.includes('on') ? ' NOT ': ''): '' %></span>editable.</label><p>
+               <br><p>
+               <br>
+               <p><label>Company Name:</label>
+               <textarea rows="1"  cols="40" id="companyName"  style="resize: none;text-align:center;"  placeholder="..." name="companyName"><%= typeof items != "undefined" ? items.companyName : "" %></textarea></p>
+               <p><label>Company Notes:</label>
+               <textarea rows="10" cols="40"  id="companyNotes" style="resize: none;"  placeholder="..." name="companyNotes"><%= typeof items != "undefined" ? items.companyNotes : "" %></textarea></p>
+               <br>
+               <p><label>Company house number:</label>
+               <textarea rows="1"  cols="40"  id="companyHouseNumber" style="resize: none;text-align:center;"  placeholder="..." name="companyHouseNumber"><%= typeof items != "undefined" ? items.companyHouseNumber : "" %></textarea></p>
+               <br>
+               <p><label>Streetname of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyStreetname" style="resize: none;text-align:center;"  placeholder="..." name="companyStreetname"><%= typeof items != "undefined" ? items.companyStreetname : "" %></textarea></p>
+               <br>
+               <p><label>Postcode of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyPostcode" style="resize: none;text-align:center;"  placeholder="..." name="companyPostcode"><%= typeof items != "undefined" ? items.companyPostcode : "" %></textarea></p>
+               <br>
+               <p><label>Extra Address details of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyExtraAdressDetails" style="resize: none;text-align:center;"  placeholder="..." name="companyExtraAdressDetails"><%= typeof items != "undefined" ? items.companyExtraAdressDetails : "" %></textarea></p>
+               <br>
+               <p><label>State of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyState" style="resize: none;text-align:center;"  placeholder="..." name="companyState"><%= typeof items != "undefined" ? items.companyState : "" %></textarea></p>
+               <br>
+               <p><label>Country of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyCountry" style="resize: none;text-align:center;" placeholder="..." name="companyCountry"><%= typeof items != "undefined" ? items.companyCountry : "" %></textarea></p>
+               <br>
+               <p><label>Webaddress of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyWebaddress" style="resize: none;text-align:center;"  placeholder="..." name="companyWebaddress"><%= typeof items != "undefined" ? items.companyWebaddress : "" %></textarea></p>
+               <br>
+               <p><label>Email of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyEmail" style="resize: none;text-align:center;"  placeholder="..." name="companyEmail"><%= typeof items != "undefined" ? items.companyEmail : "" %></textarea></p>
+               <br>
+               <p><label>Phonenumber of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyTelefoneNumber" style="resize: none;text-align:center;" placeholder="..." name="companyTelefoneNumber"><%= typeof items != "undefined" ? items.companyTelefoneNumber : "" %></textarea></p>
+               <br>
+               <p><label>Bankaccount Number of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyBankAccountNumber" style="resize: none;text-align:center;"  placeholder="..." name="companyBankAccountNumber"><%= typeof items != "undefined" ? items.companyBankAccountNumber : "" %></textarea></p>
+               <br>
+               <p><label>Registrationnumber of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyRegistrationNumber" style="resize: none;text-align:center;"  placeholder="..." name="companyRegistrationNumber"><%= typeof items != "undefined" ? items.companyRegistrationNumber : "" %></textarea></p>
+               <br>
+               <p><label>V.A.T. Number of the Company:</label>
+               <textarea rows="1"  cols="40"  id="companyVATNumber" style="resize: none;text-align:center;"  laceholder="..." name="companyVATNumber"><%= typeof items != "undefined" ? items.companyVATNumber : "" %></textarea></p>
+               
+               <div class="buttonbar">
+                  <button id="FA" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>
+                  <button id="FAU" name="updateForm" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
+                  <button id="FA" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>
+                  <button id="FAD" name="deleteForm" style="<%=(typeof items != "undefined" &&  typeof  items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
+                  <button id="FA" type="button"  onclick="formulierActie('validate');">Validate</button><br>
+                  <button id="FA" type="button"  onclick="formulierActie('cancel');">Cancel</button><br>
+               </div>
+            </form>
+         </div>
+         <div class="displayDocumentComp">
+            <div >
+               <h2>Preview Document</h2>
+               <span class="docEntry">File name:[ <%=typeof items != "undefined" ?  items.docScan : ""%> ]</span></br>
+               <span class="docEntry">Path:[ <%=typeof items != "undefined" ?  items.docPath : ""%> ]</span>               
+               <hr>
+                <button id="prev">Previous</button><br>
+                <button id="next">Next</button><br>
+                &nbsp; &nbsp;
+                <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+            </div>
+            <canvas id="the-canvas"></canvas>
+         </div>
+      </div>
+      
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+      <script src="/js/zndCompagny.js"></script>
+      <script src="/js/pdfviewer.js"></script>         
+   </body>
+</html>

@@ -1,0 +1,75 @@
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body>   
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+     
+      <div class="main">
+         <h1>Zandd Ledger</h1>
+         <div class="filterdata">
+               <label class="switch">
+                    <input type="checkbox" id="filterState"  name="filterState"  onchange="filterData()">
+                  <span class="slider round"></span> 
+              </label><br><br>
+              ALL <-------> NEW  
+         </div>  
+         
+         <hr>
+         <p>
+         <table style="width:100%">
+            <tr>
+               <th>NR</th>
+               <th><a href="/zndLedger?sortCrit=DONE">Done</a></th>
+               <th><a href="/zndLedger?sortCrit=UPL">UPL</a></th>
+               <th>ACCOK</th>
+               <th><a href="/zndLedger?sortCrit=TRN-REF">TRN-REF</a></th>
+               <th><a href="/zndLedger?sortCrit=Bankdate">Bankdate</a></th>
+               <th><a href="/zndLedger?sortCrit=Invoicedate">Invoicedate</a></th>
+               <th>GrossAmount</th>
+               <th>PayedVat</th>
+               <th>Booked Period</th>
+               <th>Type of Proof</th>
+               <th>Type payment</th>
+               <th>Declarant</th>
+               <th>Grootboekrekening</th>
+               <th>Company</th>
+               <th>Invoice Number</th>
+               <th>Customer Reference</th>
+               <th>Payment ID</th>
+               <th>Vat number</th>           
+               <th>PendingActions</th>
+               <!-- <th style="visibility:collapse;">Scanned Document</th> -->
+            </tr>
+            <% for (var i = 0; i < items.length; i++) {
+            %>
+            <tr>
+               <td><a id="dbid" href="/zndStatements/<%= items[i]._id%>"><%=i+1%></a></td>
+               <td><textarea  disabled rows="1" cols="1" style="resize: none;text-align:center;"><%=(typeof items[i].locked != "undefined") ? (items[i].locked.includes('on') ? 'X': '-'): '' %></textarea></td>
+               <td><textarea  disabled rows="1" cols="1" style="resize: none;text-align:center;"><%=(typeof items[i].transferredAccountant != "undefined") ? (items[i].transferredAccountant.includes('on') ? 'X': '-'): '' %></textarea></td>
+               <td><textarea  disabled rows="1" cols="1" style="resize: none;text-align:center;"><%=(typeof items[i].accntchk != "undefined") ? (items[i].accntchk.includes('on') ? 'X': '-'): '' %></textarea></td>
+               <td id="bankrefsz"><%=(typeof items[i].bankstatementID != "undefined") ? items[i].bankstatementID: ' - ' %></td>
+               <td><%= items[i].bankDate%></td>
+               <td><%= items[i].invoiceDate%></td>
+               <td><%= items[i].grossAmount%></td>
+               <td><%= items[i].VAT%></td>
+               <td><%= items[i].bookingPeriod%></td>
+               <td><%= items[i].proofType%></td>
+               <td><%= items[i].paymentTypes%></td>
+               <td><%= items[i].beneficiary%></td>       
+               <td><%= items[i].ledgerAccount%></td>
+               <td><%= items[i].compagnyID%></td>
+               <td><%= items[i].invoiceNumber%></td>
+               <td><%= items[i].customerReference%></td>
+               <td><%= items[i].PaymentID%></td>
+               <td><%= items[i].VATNumber%></td>       
+               <td><%= items[i].pendingActions%></td>
+               <!-- <td style="visibility:collapse;"><%= items[i].docScan%></td> -->
+            </tr>
+            <% }%>
+         </table>
+      </div>      
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>      
+      <script src="/js/zndLedger.js"></script>
+   </body>
+</html>

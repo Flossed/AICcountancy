@@ -1,0 +1,31 @@
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body onload="initTable(<%=JSON.stringify(items) %>, <%=JSON.stringify(queryObj) %>);">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+
+      <div class="main" >
+         <h1>Zandd Expenses</h1>    
+         <br><p>     
+         
+         
+         <div class="dashBoardFilter">
+          <form>
+               <div class="dashBoardButtons">            
+                  <button id="pf" type="button"  onclick="refreshPage();">Refresh</button><br>
+                  <button id="pf" type="button"  onclick="augmentPage();">Augment</button><br>
+               </div>
+               <label style="margin-left:10px;">Begin Datum (dd-mm-jjj): </label>   <textarea style="margin-right:50px;resize: none;" rows="1"  cols="20" id="dashStartDate"      placeholder="..." name="dashStartDate"      onchange="filterOnDate(0,1999999999999);"></textarea>                                
+               <label style="margin-left:10px;">Eind Datum (dd-mm-jjj): </label>    <textarea style="margin-right:50px;resize: none;" rows="1"  cols="20" id="dashEndDate"        placeholder="..." name="dashEndDate"        onchange="filterOnDate(0,1999999999999);"></textarea>               
+               <label style="margin-left:10px;">Bedrijven:</label>                  <select   style="margin-right:50px;resize: none;" rows="1"  cols="20" id="companies"          placeholder="..." name="companies"          onchange="filterOnDate(0,1999999999999);"></select>
+          </form>
+         </div>         
+         <hr>
+         <div id='statementRecords'></div>
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>
+      <script src="/js/zndExpensesNext.js"></script>      
+      <script src="/js/index.js"></script>
+   </body>
+</html>

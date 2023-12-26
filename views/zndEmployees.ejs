@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body onload="enableForm('init');">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">    
+         <% if (typeof valErrors != "undefined"  && valErrors.length > 0 ) { %>
+            <div class="errorBar">
+               <span id="errorheader">Valdiation result: (page will not completly render until all errors are fixed)</span>
+               <ul class="errorClass">
+                  <% var i;
+                     for (i = 0; i < valErrors.length; i++) { %>
+                  <li style="background-color:<%=valErrors[i].errorType.includes('Error')?'#ff9999':'#7CFC00'%>"> <%= valErrors[i].message %></li> <% } %>
+               </ul>
+             </div>
+         <% } %>
+         
+         <div>
+            <div class="pageFlipper" style="<%=(typeof employees != "undefined" &&  typeof  employees._id != "undefined" )  ? '':'display:none' %>">
+               <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+               <button id="pf" type="buttont" onclick="loadpage(1);" >Next </button><br>
+               <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+            </div>
+         </div>           
+         <div class="newsButtonBar">            
+         </div>                        
+         
+         <div class="ledgerentry">
+            <h1>ZANDD Employee</h1>        
+            <h1 id="pdfFile" hidden ><%=typeof employees != "undefined" ?  employees.docScan : ""%></h1>
+            <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
+            Currently the form is<span  style="color:red;"><%=(typeof items != "undefined" &&  items.editState) ? (items.editState.includes('on') ? ' NOT ': ''): '' %></span> editable.<p>            
+            <hr>            
+            <form id="employeeEntryForm" action="/zndMngEmployees" method="POST" enctype="multipart/form-data">
+               <textarea style="display:none;" rows="1" class="form-control" id="docScan" name="docScan"><%= typeof employees != "undefined" ?  employees.docScan : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="docPath" name="docPath"><%= typeof employees != "undefined" ?  employees.docPath : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"><%= typeof employees != "undefined" ?  employees._id : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"><%= typeof employees != "undefined" ?  employees.__v : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="actie" name="actie"><%= typeof employees != "undefined" ?  employees.actie: "" %></textarea>
+         
+                <div id="statementDropArea"> 	                
+      	           Please Drop your files in  the red dashed rectangle.  	    	            
+                   <input type="file" style="display:none;" id="statementDocuments" multiple  onchange="handleFiles(this.files)"> 
+	              </div>
+	              
+	             <input type="checkbox"  style="display:none;"  id="editState" name="editState" <%=(typeof employees != "undefined" &&   employees.editState) ? (employees.editState.includes('on') ? 'checked': ''): '' %>></input>             
+               <br><p><br>
+               <label>Employee ID:</label>
+               <textarea  id="employeeID" disabled rows="1" style="resize: none;text-align:center;"><%=(typeof employees  != "undefined") ?  employees.employeeID   : '-' %></textarea>
+               <br><p><br>
+               <label>First Name: </label>
+               <textarea rows="1"  style="resize: none;" id="employeefirstName" placeholder="..." name="employeefirstName"><%= typeof employees != "undefined" ? employees.employeefirstName : "" %></textarea>
+               <br><p><br>
+               <label>Initials of First Names: </label>
+               <textarea rows="1"  style="resize: none;" id="employeeInitials" placeholder="..." name="employeeInitials"><%= typeof employees != "undefined" ? employees.employeeInitials : "" %></textarea>
+               <br><p><br>
+               <label>Last Name: </label>
+               <textarea rows="1"  style="resize: none;" id="employeelastName" placeholder="..." name="employeelastName"><%= typeof employees != "undefined" ? employees.employeelastName : "" %></textarea>
+               <br><p><br>
+               <label>Phonenumber: </label>
+               <textarea rows="1"  style="resize: none;" id="employeePhoneNumber" placeholder="..." name="employeePhoneNumber"><%= typeof employees != "undefined" ? employees.employeePhoneNumber : "" %></textarea>
+               <br><p><br>
+               <label>E-mail:</label>
+               <textarea rows="1"  style="resize: none;" id="employeeEmail" placeholder="..." name="employeeEmail"><%= typeof employees != "undefined" ? employees.employeeEmail : "" %></textarea>
+               <br><p><br>
+               <label>Start Date(dd-mm-jjj):</label>
+               <textarea rows="1"  style="resize: none;" id="employeeStartDate" placeholder="..." name="employeeStartDate"><%= typeof employees != "undefined" ? employees.employeeStartDate : "" %></textarea>
+               <br><p><br>
+               <label>End Date(dd-mm-jjj):</label>
+               <textarea rows="1"  style="resize: none;" id="employeeEndDate" placeholder="..." name="employeeEndDate"><%= typeof employees != "undefined" ? employees.employeeEndDate : "" %></textarea>
+               <br><p><br>
+               <label>Employee Status:</label>
+               <textarea  id="employeeStatus" disabled rows="1" style="resize: none;text-align:center;"><%=(typeof employees  != "undefined") ?  employees.employeeStatus   : '-' %></textarea>
+               <br><p><br>
+               <div class="buttonbar">              
+                  <button id="FAU" name="updateForm" style="<%=(typeof employees != "undefined" &&  typeof  employees._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
+                  <button id="FA"  name="duplicate"  style="<%=(typeof employees != "undefined" &&  typeof  employees._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>
+                  <button id="FAD" name="deleteForm" style="<%=(typeof employees != "undefined" &&  typeof  employees._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
+                  <button id="FA"  type="button"     onclick="formulierActie('validate');">Validate</button><br>
+                  <button id="FA"  type="button"     onclick="formulierActie('cancel');">Cancel</button><br>
+                  <button id="FA"  name="create"     style="<%=(typeof employees != "undefined" &&  typeof  employees._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>
+               </div>
+            </form>
+            <div class="displayDocumentEmpl">
+               <div >
+                  <h2>Preview Document</h2>
+                  <span class="docEntry">File name:[ <%=typeof employees != "undefined" ?  employees.docScan : ""%> ]</span></br>
+                  <span class="docEntry">Path:[ <%=typeof employees != "undefined" ?  employees.docPath : ""%> ]</span>
+                  <hr>
+                  <button id="prev">Previous</button>
+                  <button id="next">Next</button>           
+                  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+               </div>
+               <canvas id="the-canvas"></canvas>
+            </div>
+         </div>
+        
+      </div>
+      <%- include('layouts/news'); -%>
+      <%- include('layouts/footer'); -%>      
+      <script src="/js/zndEmployees.js"></script>
+      <script src="/js/pdfviewer.js"></script>               
+   </body>
+</html>
