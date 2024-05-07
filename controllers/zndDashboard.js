@@ -37,6 +37,7 @@ const zndManageData                     = require('../services/zndManageData')
 
 /* ------------------------------------- Models ------------------------------*/
 const zanddLedger                       = require('../models/zanddLedger')
+const zndBookKeepersLedgers             = require( "../models/zndBookKeepersLedgers" );
 /* -------------------------------- End Models -------------------------------*/
 
 
@@ -71,9 +72,10 @@ async function main(req, res)
         {   
             await zndManageData.runDataAugmentation();
         }
-        items                       = await zanddLedger.find(filter).sort({BankdateEpoch : 1})
+        items                       = await zanddLedger.find(filter).sort({BankdateEpoch : 1})        
+        let bookkeepingLedgerNames  = await zndBookKeepersLedgers.find();
         
-        res.render('zndDashboard',{ items:items, queryObj:queryObj });
+        res.render('zndDashboard',{ items:items, queryObj:queryObj, bookkeepingLedgerNames:bookkeepingLedgerNames });
     }
     catch(ex)
     {   logger.exception(applicationName + ':zndDashboard:main():An exception occurred: ['+ ex +'].')

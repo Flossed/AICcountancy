@@ -30,6 +30,8 @@ const zanddLedgerSchema = new Schema({
   invoiceNumber: String,
   ledgerAccount: String,
   bkLedgerAccount: String,
+  bkBookYear: String,
+  bkNotes: String,
   declarationStatement: String,
   locked:String, 
   movementSign:String, 

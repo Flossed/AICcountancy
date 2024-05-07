@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+   <%- include('layouts/header'); -%>
+   <body onload="enableForm('init');">
+      <%- include('layouts/heading'); -%>
+      <%- include('layouts/navbar'); -%>
+      <div class="main">          
+         <div>
+            <div class="pageFlipper" style="<%=(typeof dataRecord !== 'undefined' &&  typeof  dataRecord._id !== 'undefined' )  ? '':'display:none' %>">
+               <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+               <button id="pf" type="button" onclick="loadpage(1);" >Next </button><br>
+               <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+            </div>
+         </div>
+
+         <div class="ledgerentry">
+            <h1>Bookkeeping Years Management Page</h1>
+            <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
+            Currently the form is<span  style="color:red;"><%=(typeof dataRecord != "undefined" &&   dataRecord.editState) ? (dataRecord.editState.includes('on') ? ' NOT ': ''): '' %></span> editable.
+            <br><p>
+            <hr>
+            <form id="bookkeepingYears" action="/zndBookkeepingYears" method="POST" enctype="multipart/form-data">
+                <textarea style="display:none;" rows="1"  id="_id" name="_id"><%= typeof dataRecord != "undefined" ?  dataRecord._id : "" %></textarea>
+                <textarea style="display:none;" rows="1"  id="__v" name="__v"><%= typeof dataRecord != "undefined" ?  dataRecord.__v : "" %></textarea>
+                <textarea style="display:none;" rows="1"  id="action" name="action"><%= typeof dataRecord != "undefined" ?  dataRecord.action: "" %></textarea>
+                
+                <input type="checkbox"  style="display:none;"  id="editState" name="bkLedgerEditState" <%=(typeof dataRecord != "undefined" &&   dataRecord.editState) ? (dataRecord.editState.includes('on') ? 'checked': ''): '' %>>                
+                <p><label>Bookkeeping Year Label</label>
+                <textarea readonly rows="1" cols="40" style="resize: none;text-align:center;" id="bookkeepingYearLabel"><%=(typeof dataRecord  != "undefined") ? dataRecord.bookkeepingYearLabel   : '-' %></textarea>
+                <br><p>
+                <p><label>Bookkeeping Year ID:</label>
+                <textarea rows="1" cols="40" placeholder="..." id="bookkeepingYearID" name="bookkeepingYearID"><%= typeof dataRecord != "undefined" ? dataRecord.bookkeepingYear : "" %></textarea>
+                <br><p>
+                <p><label>Bookkeeping Year:</label>
+                <textarea  rows="1" cols="40" placeholder="..." id="bookkeepingYear" name="bookkeepingYear"><%= typeof dataRecord != "undefined" ? dataRecord.bookkeepingYear : "" %></textarea>
+                <br><p>                
+
+                <p><label style="vertical-align: top;">Description of Bookkeeping Year:</label>
+                <textarea rows="25"  cols="40"  placeholder="..." id="bookkeepingYearDescription" name="bookkeepingYearDescription"><%= typeof dataRecord != "undefined" ? dataRecord.bookkeepingYearDescription : "" %></textarea>
+                <br><p>
+                <div class="buttonbar">
+                   <button id="FA" style="<%=(typeof dataRecord != "undefined" &&  typeof  dataRecord._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>
+                   <button id="FAU" name="updateForm" style="<%=(typeof dataRecord != "undefined" &&  typeof  dataRecord._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
+                   <button id="FA" style="<%=(typeof dataRecord != "undefined" &&  typeof  dataRecord._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>
+                   <button id="FAD" name="deleteForm" style="<%=(typeof dataRecord != "undefined" &&  typeof  dataRecord._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
+                   <button id="FA" type="button"  onclick="formulierActie('validate');">Validate</button><br>
+                   <button id="FA" type="button"  onclick="formulierActie('cancel');">Cancel</button><br>
+                </div>
+            </form>
+         </div>
+      </div>      
+      <script src="/js/zndBookkeepingYears.js"></script>
+   </body>
+</html>

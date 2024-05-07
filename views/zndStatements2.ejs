@@ -1,16 +1,54 @@
-<!DOCTYPE html>
 <html lang="en">
    <%- include('layouts/header'); -%>
-   <body>   
+   <body onload="init();">   
       <%- include('layouts/heading'); -%>
       <%- include('layouts/navbar'); -%>
       <div class="main"> 
          <div class="ledgerentry">
-            <h1>Statement</h1>                 
+            <h1>Statement</h1>
+            <textarea style="display:none;" id="pdfFile" ><%=typeof items != "undefined" ? items.docScan : ""%></textarea>                 
+            <textarea style="display:none;" id="companyList"><%=JSON.stringify(typeof companies != "undefined" ? companies : "")%></textarea>
+            <textarea style="display:none;" id="idlist"><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></textarea>
+            <table>
+               <tr>
+                  <th style="background-color: #e6e6e6">
+                    Edit State
+                  </th> 
+                  <th style="background-color: #e6e6e6">
+                    Send state
+                  </th>
+                  <th style="background-color: #e6e6e6">
+                    Send time
+                  </th>
+                  <th style="background-color: #e6e6e6">
+                    Send count
+                  </th>
+               </tr> 
+               <tr>
+                  <td id="editStateFlag">                    
+                  </td> 
+                  <td id="sendStateFlag">                    
+                  </td>
+                  <td id="sendTime">                    
+                  </td>
+                  <td id="sendCount">                    
+                  </td>
+               </tr> 
+            </table>            
+            <hr>
+            <form id="ledgerEntryForm" action="/zndMngStatements2" method="POST" enctype="multipart/form-data">
+                <textarea style="display:none;" rows="1" class="form-control" id="docScan" name="docScan"><%= typeof items != "undefined" ? items.docScan : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="docPath" name="docPath"><%= typeof items != "undefined" ? items.docPath : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"><%= typeof items != "undefined" ? items._id : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"><%= typeof items != "undefined" ? items.__v : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="movementSign" name="movementSign"><%= typeof items != "undefined" ? items.movementSign : "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="bankRecord" name="bankRecord"><%= typeof items != "undefined" ? items.bankRecord: "" %></textarea>
+               <textarea style="display:none;" rows="1" class="form-control" id="actie" name="actie"><%= typeof items != "undefined" ? items.actie: "" %></textarea>
+            </form>  
         </div> 
-      </div> 
-	 
+      </div>
       <%- include('layouts/RawDataViewer'); -%>
       <%- include('layouts/footer'); -%>
+      <script src="/js/zndStatements2.js"></script>
    </body>
 </html>

@@ -1,12 +1,15 @@
 <html lang="en">
    <%- include('layouts/header'); -%>
-   <body onload="initTable(<%=JSON.stringify(items) %>, <%=JSON.stringify(queryObj) %>);">
+   <body onload="init()">
       <%- include('layouts/heading'); -%>
       <%- include('layouts/navbar'); -%>
 
       <div class="main" >
          <h1>Zandd Dashboard</h1>    
-         <br><p>     
+         <br><p>
+         <textarea style="display:none;" id="items" ><%=typeof items !== "undefined" ? JSON.stringify(items) : ""%></textarea>                 
+         <textarea style="display:none;" id="queryObj"><%=typeof queryObj !== "undefined" ? JSON.stringify(queryObj) : ""%></textarea>     
+         <textarea style="display:none;" id="bookkeepingLedgerNames"><%=typeof bookkeepingLedgerNames !== "undefined" ? JSON.stringify(bookkeepingLedgerNames) : ""%></textarea>
          
          
          <div class="dashBoardFilter">

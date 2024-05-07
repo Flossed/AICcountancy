@@ -1,6 +1,6 @@
 <html lang="en">
    <%- include('layouts/header'); -%>
-   <body onload="enableForm('init'); runFlags(<%=typeof items !=='undefined'?JSON.stringify(items):'' %>);">   
+   <body onload="enableForm('init'); runFlags(<%=typeof items !=='undefined'?JSON.stringify(items):'' %>);updateFields()">   
       <%- include('layouts/heading'); -%>
       <%- include('layouts/navbar'); -%>
       <div class="main">         
@@ -36,6 +36,10 @@
             <h1 id="pdfFile" hidden ><%=typeof items != "undefined" ? items.docScan : ""%></h1>
             <h1 id="companyList" hidden ><%=JSON.stringify(typeof companies != "undefined" ? companies : "")%></h1>
             <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
+            <h1 id="bookkeepingLedgerNames" hidden ><%=typeof bookkeepingLedgerNames != "undefined" ? JSON.stringify(bookkeepingLedgerNames) : ""%></h1>
+            <h1 id="bookkeepingYears" hidden ><%=typeof bookkeepingYears !== "undefined" ? JSON.stringify(bookkeepingYears) : "[]"%></h1>
+            
+            
             <table>
                <tr>
                   <th style="background-color: #e6e6e6">
@@ -118,18 +122,29 @@
                    <%  } %>
                  </select>
                  </p>
-                 <br><!--
+                 <br>
+                 <hr>
                  <p><label>LedgerAccount Accountant: </label>
                   <select style="width: 316px;" name="bkLedgerAccount" id="bkLedgerAccount">
-                   <% for (var i = 0; i < bookkeepingLedgerNames.length; i++) { %>`
+                   <!--<% for (var i = 0; i < bookkeepingLedgerNames.length; i++) { %>`
                       <option value="<%=bookkeepingLedgerNames[i]%>" <%=(typeof items != "undefined" &&  items.ledgerAccount.includes(bookkeepingLedgerNames[i])) ? 'selected': '' %>><%=bookkeepingLedgerNames[i]%></option>
-                   <%  } %>
+                   <%  } %> --> 
                  </select>
                  </p>
-                 <br> 
+                 <br>
+                 <p><label>Book Year Cost: </label>
+                 <select style="width: 316px;" name="bkBookYear" id="bkBookYear">                                       
+                  </select>
+                  <br> 
                  <p><label>Accountant Reference: </label>
                  <textarea rows="1"  cols="40" id="acountantReference" style="resize: none;" placeholder="..." name="acountantReference"><%= typeof items != "undefined" ? items.acountantReference : "" %></textarea>          
-                 <br> -->
+                 <br>
+
+                 <p><label>Bookkeeping Notes: </label>
+                  <textarea style="resize: none;" rows="7"  cols="40"  id="bkNotes" placeholder="..." name="bkNotes"></textarea></p>
+                  <br>
+
+                 <hr>
                  <p><label>Booking Periode(Q<n>/Year): </label>
                  <select style="width: 316px;" name="bookingPeriod" id="bookingPeriod" value="opel">
                     <option value="Q1"  <%=(typeof items != "undefined" &&  items.bookingPeriod.includes('Q1')) ? 'selected': '' %>>Q1</option>
