@@ -1,12 +1,13 @@
 let tableData, rowList, oRowList;
 let bookkeepingLedgerNames;
+let bookkeepingYears;
 
 const statementMap                      = {   'NR'                   :'ID' ,
                                               'Doc'                  :'DOC',
-                                              
+                                              'creation Date'        :'creationDate',
                                               'creation DateStr'     :'creationDateString',
-                                              'UploadTime'           :'DONE',
-                                              'UploadCount'          :'UPL',
+                                              //'UploadTime'           :'DONE',
+                                              //'UploadCount'          :'UPL',
                                               'ACCOK'                :'ACCOK',
                                               'TRANSREF'             :'TRNREF',
                                               'CRED/DEB'             :'CREDEB',
@@ -14,19 +15,19 @@ const statementMap                      = {   'NR'                   :'ID' ,
                                               'Invoice Date'         :'invoiceDate',
                                               'Gross Amount'         :'grossAmount',
                                               'Vat'                  :'VAT',
-                                              'Booked VAT'           :'bookedVAT',
-                                              'Booked Period'        :'bookingPeriod',
+                                              //'Booked VAT'           :'bookedVAT',
+                                              //'Booked Period'        :'bookingPeriod',
                                               'Type of Proof'        :'proofType',
                                               'Type payment'         :'paymentTypes',
                                               'Declarant'            :'beneficiary',
                                               'Grootboekrekening'    :'ledgerAccount',
-                                              'Bookkeeping Ledger'   :'bkLedgerAccount',
-                                              'acountant Reference'  :'acountantReference',
                                               'Company'              :'compagnyID',
                                               'Invoice Number'       :'invoiceNumber',
                                               'Bill Description'     :'billDescription',
                                               'Document Name'        :'documentName',
-                                              'creation Date'        :'creationDate',
+                                              'Bookkeeping Ledger'   :'bkLedgerAccount',
+                                              'acountant Reference'  :'acountantReference',
+                                              'bkBookYear'           :'bkBookYear'
                                            };
 
 
@@ -566,6 +567,7 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies )
          rowData.invoiceDateEpoch    = msg[j].invoiceDateEpoch ;
          rowData.grossAmountNR       = msg[j].grossAmountNR ;
          rowData.VATNR               = msg[j].VATNR ;
+         rowData.bkBookYear          = msg[j].bkBookYear ;
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, rowData, rows, updateStatementList );
       }
       return rows;
@@ -583,33 +585,36 @@ function findBookkeeperLedgerName ( bkLedgerAccountID )
 }
 
 
-function populateTable ( table, dataRows )
+
+
+function findBookyear ( bkBookYearID )
+{  const pos = bookkeepingYears.map( e => e._id ).indexOf( bkBookYearID );
+   return pos > -1 ? bookkeepingYears[pos].bookkeepingYear : '';
+}
+
+function populateTable ( table, dataRows, map )
 {
    try
-   {
-      let element, counter = 0;
+   {   const options                   =  { minimumFractionDigits: 2, maximumFractionDigits: 2, style: 'currency', currency: 'EUR'};
 
-      for ( element of dataRows )
-      {
-         const rowReference            = '';
-         const row                     = table.insertRow();
-         const options  =  { minimumFractionDigits: 2, maximumFractionDigits: 2, style: 'currency', currency: 'EUR'};
-         let ROWID = '';
-         for ( key in element )
-         {  console.log( 'key: ' + key )
-            if  ( !( ( key.includes( 'invoiceDateEpoch' )  || key.includes( 'bankDateEpoch' )  || key.includes( 'grossAmountNR' ) || key.includes( 'VATNR' ) ) ) )
-            {
-               const cell            = row.insertCell();
-               const content         = element[key];
-               let text              = '';
-               const textNode        = document.createTextNode( content );
-               const aElement        = document.createElement( 'a' );
-               const rowReference    = '/zndStatements/' + content;
+       let element, counter = 0;
 
+       console.log( 'dataRows length: ' + dataRows.length );
+       for ( element of dataRows )
+       {   const row                   = table.insertRow();
+           let ROWID                   = '';
+
+           for ( const matrixElement in map )
+           {   const key               = map[matrixElement];
+               const cell              = row.insertCell();
+               const content           = element[key];
+               let text                = '';
+               const textNode          = document.createTextNode( content );
+               const aElement          = document.createElement( 'a' );
+               const rowReference      = '/zndStatements/' + content;
                aElement.setAttribute( 'href',rowReference );
                aElement.setAttribute( 'target','_blank' );
                cell.setAttribute( 'style', 'padding-left:10px;padding-right:10px;' );
-
                switch ( key )
                {   case 'compagnyID'        :   cell.appendChild( textNode );
                                                 break;
@@ -625,9 +630,13 @@ function populateTable ( table, dataRows )
                                                      break;
                                                 }
                    case 'bkLedgerAccount'   :   {   const ledgerText        =  document.createTextNode( findBookkeeperLedgerName( content ) );
-                                                    cell.appendChild( ledgerText );
+                                                    cell.appendChild( ledgerText )
                                                     break;
                                                 }
+                  case 'bkBookYear'         :   {   const ledgerText        =  document.createTextNode( findBookyear( content ) );
+                                                   cell.appendChild( ledgerText );
+                                                   break;
+                                               }
                    default                  :   if ( amountElements.includes( key ) )
                                                 {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
                                                     cell.appendChild( taxt );
@@ -635,71 +644,9 @@ function populateTable ( table, dataRows )
                                                 }
                                                 else
                                                    cell.appendChild( textNode );
-                                                   break;
+                                                break;
                }
-            }
-         }
-      }
-   }
-   catch ( ex )
-   {   console.log( 'zndDashboard:populateTable: An exception occurred:[' + ex + '].' );
-   }
-}
-
-
-function populateTable2 ( table, dataRows, map )
-{
-   try
-   {   const options                   =  { minimumFractionDigits: 2, maximumFractionDigits: 2, style: 'currency', currency: 'EUR'};
-
-       let element, counter = 0;
-
-       console.log( 'dataRows length: ' + dataRows.length );
-       for ( element of dataRows )
-       {   const row                   = table.insertRow();
-           let ROWID                   = '';
-
-           for ( const matrixElement in map )
-            {  const key              = map[matrixElement];
-                  const cell          = row.insertCell();
-                   const content       = element[key];
-                   let text            = '';
-                   const textNode      = document.createTextNode( content );
-                   const aElement      = document.createElement( 'a' );
-                   const rowReference  = '/zndStatements/' + content;
-
-                   aElement.setAttribute( 'href',rowReference );
-                   aElement.setAttribute( 'target','_blank' );
-                   cell.setAttribute( 'style', 'padding-left:10px;padding-right:10px;' );
-
-                   switch ( key )
-                   {   case 'compagnyID'        :   cell.appendChild( textNode );
-                                                    break;
-                       case 'ID'                :   text            =  document.createTextNode( counter++ );
-                                                    aElement.appendChild( text );
-                                                    cell.appendChild( aElement );
-                                                    ROWID = aElement;
-                                                    break;
-                       case 'documentName'      :   {   const textNoder        =  document.createTextNode( content );
-                                                         aElement.appendChild( textNoder );
-                                                         aElement.setAttribute( 'href',ROWID.href );
-                                                         cell.appendChild( aElement );
-                                                         break;
-                                                    }
-                       case 'bkLedgerAccount'   :   {   const ledgerText        =  document.createTextNode( findBookkeeperLedgerName( content ) );
-                                                        cell.appendChild( ledgerText );
-                                                        break;
-                                                    }
-                       default                  :   if ( amountElements.includes( key ) )
-                                                    {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
-                                                        cell.appendChild( taxt );
-                                                        cell.style.textAlign   = 'right';
-                                                    }
-                                                    else
-                                                       cell.appendChild( textNode );
-                                                    break;
-                   }
-               
+               cell.style.maxWidth = '200px'; 
            }
        }
    }
@@ -802,8 +749,7 @@ function createTable ( tableName, rows, map,ledgerAccounts, companies )
       tableElement                    = document.createElement( 'TABLE' );
       clearTable( tableAnchor );
       createTableHeader( tableElement, map, tableName, rows );
-      //populateTable( tableElement, rows );
-      populateTable2( tableElement, rows, map );
+      populateTable( tableElement, rows, map );
       tableAnchor.appendChild( tableElement );
       contextualizeAccounts( rows,ledgerAccounts );
       contextualizeCompanies( rows, companies );
@@ -1046,6 +992,8 @@ function init ()
 {   const msg = JSON.parse( document.getElementById( 'items' ).value );
     const queryObj = JSON.parse( document.getElementById( 'queryObj' ).value );
     bookkeepingLedgerNames = JSON.parse( document.getElementById( 'bookkeepingLedgerNames' ).textContent );
+    bookkeepingYears =   JSON.parse(document.getElementById( 'bookkeepingYears' ).textContent ) ;
+    console.log( 'bookkeepingYears: ' , bookkeepingYears );
     initTable ( msg,queryObj );
 }
 

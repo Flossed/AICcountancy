@@ -373,7 +373,7 @@ function updatebkBookYear ()
             }
         }    
         else
-        {   if ( item.bookkeepingYear.includes('2023') )
+        {   if ( item.bookkeepingYear.includes('--') )
             {   option.selected = true;
             }
          }

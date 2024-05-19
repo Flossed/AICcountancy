@@ -263,7 +263,7 @@ async function main ( req, res )
    try
    {
       var items, ideez, bankData, employees, companies, accountLedgerNames, paymentTypesList;
-      var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList;
+      var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList, bookyearNames;
 
       logger.trace( applicationName + ':zndStatements:main:Started' );
 
@@ -276,7 +276,7 @@ async function main ( req, res )
           companies                   = await zanddCompanies.find().sort( {companyName :1} );
           accountLedgerNames          = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
           //bookkeepingLedgerNames      = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
-          bookkeepingLedgerNames      = await zndBookKeepersLedgers.find();
+          bookkeepingLedgerNames      = await zndBookKeepersLedgers.find();          
 		  const record = {'action':'getData'}; 
 		  const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
           //console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
@@ -301,9 +301,10 @@ async function main ( req, res )
             accountLedgerNames         = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
             //bookkeepingLedgerNames     = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
           bookkeepingLedgerNames     = await zndBookKeepersLedgers.find();
+          const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
             paymentTypesList           = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
           console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
-            res.render( 'zndStatements',{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList } );
+            res.render( 'zndStatements',{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList ,bookkeepingYears:bookkeepingYears.body} );
         }
         logger.trace( applicationName + ':zndStatements:main:Done' );
     }
