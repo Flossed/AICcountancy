@@ -343,7 +343,7 @@ function openPDF ( path )
 
 
 function updatebkLedgerAccount ()
-{  console.log( 'updatebkLedgerAccount' );   
+{  console.log( 'updatebkLedgerAccount' );
    const bookkeepingLedgerNames = JSON.parse( document.getElementById( 'bookkeepingLedgerNames' ).textContent );
    const bkLedgerAccount          =  document.getElementById( 'bkLedgerAccount' );
    bookkeepingLedgerNames.sort( function ( a, b ) { return a.bkLedgerName.localeCompare( b.bkLedgerName ); } );
@@ -360,28 +360,36 @@ function updatebkLedgerAccount ()
 }
 
 function updatebkBookYear ()
-{  console.log( 'updatebkBookYear' );   
-   const bookkeepingYears = JSON.parse( document.getElementById( 'bookkeepingYears' ).textContent );
-   const bkBookYear          =  document.getElementById( 'bkBookYear' );
-   bookkeepingYears.sort( function ( a, b ) { return a.bkLedgerName.localeCompare( b.bkLedgerName ); } );
-   bookkeepingYears.forEach( function ( item )
-   {  const option = document.createElement( 'option' );
-      option.text = item.bkBookYear;
-      option.value = item._id;
-      bkBookYear.add( option );
-      if ( typeof itemList.bkBookYear !== 'undefined' )
-      if ( itemList.bkBookYear.includes( item._id ) )
-      {   option.selected = true;
-      }
-   } );
+{   const bookkeepingYears = JSON.parse( document.getElementById( 'bookkeepingYears' ).textContent );
+    const bkBookYear          =  document.getElementById( 'bkBookYear' );
+    bookkeepingYears.forEach( function ( item )
+    {   const option = document.createElement( 'option' );
+        option.text = item.bookkeepingYear;
+        option.value = item._id;
+        bkBookYear.add( option );
+        if ( typeof itemList.bkBookYear !== 'undefined' )
+        {   if ( itemList.bkBookYear.includes( item._id ) )
+            {   option.selected = true;
+            }
+        }    
+        else
+        {   if ( item.bookkeepingYear.includes('2023') )
+            {   option.selected = true;
+            }
+         }
+    } );
 }
 
 
 function updateFields ()
 {  console.log( 'updateFields' );
-   updatebkLedgerAccount(); 
+   updatebkLedgerAccount();
    updatebkBookYear();
 
-   document.getElementById( 'bkNotes' ).value = itemList.bkNotes;
-   
+   if (typeof itemList.bkNotes !== 'undefined' )
+   {   document.getElementById( 'bkNotes' ).value = itemList.bkNotes;      
+   } 
+   else 
+   {   document.getElementById( 'bkNotes' ).value = '1. Geen Opmerkingen'; 
+   }
 }

@@ -6,36 +6,37 @@
 */
 
 /* ------------------     External Application Libraries      ----------------*/
-const winston                           = require( "winston" );
+const winston                           = require( 'winston' );
 /* ------------------ End External Application Libraries      ----------------*/
 
 /* --------------- External Application Libraries Initialization -------------*/
 /* ----------- End External Application Libraries Initialization -------------*/
 
 /* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require( "../services/configuration" );
+const config                            = require( '../services/configuration' );
 /* ------------------ End Internal Application Libraries      ----------------*/
 
 /* ------------------------------------- Controllers -------------------------*/
-const zndManageStatements               = require( "../controllers/zndManageStatements" );
+const zndManageStatements               = require( '../controllers/zndManageStatements' );
 /* -------------------------------- End Controllers --------------------------*/
 
 /* ------------------------------------- Services ----------------------------*/
-const Logger                            = require( "../services/zndLoggerClass" );
+const Logger                            = require( '../services/zndLoggerClass' );
 /* -------------------------------- End Services -----------------------------*/
 
 /* ------------------------------------- Models ------------------------------*/
-const zanddLedger                       = require( "../models/zanddLedger" );
-const zanddCompanies                    = require( "../models/zndCompanies" );
-const zanddEmployees                    = require( "../models/zanddEmployees" );
-const ledgerAccountLabels               = require( "../models/ledgerAccountCategoryName" );
-const paymentCatagories                 = require( "../models/paymentCatagories" );
-const zndBookKeepersLedgers             = require( "../models/zndBookKeepersLedgers" );
+const zanddLedger                       = require( '../models/zanddLedger' );
+const zanddCompanies                    = require( '../models/zndCompanies' );
+const zanddEmployees                    = require( '../models/zanddEmployees' );
+const ledgerAccountLabels               = require( '../models/ledgerAccountCategoryName' );
+const paymentCatagories                 = require( '../models/paymentCatagories' );
+const zndBookKeepersLedgers             = require( '../models/zndBookKeepersLedgers' );
+const manageBookkeepingYears             = require( '../services/manageBookkeepingYears' );
 /* -------------------------------- End Models -------------------------------*/
 
 /* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get( "application:logFileName" );
-const applicationName                   = config.get( "application:applicationName" );
+const logFileName                       = config.get( 'application:logFileName' );
+const applicationName                   = config.get( 'application:applicationName' );
 /* --------------------------------- End Application constants ----------------*/
 
 /* --------------- Internal Application Libraries Initialization -------------*/
@@ -46,142 +47,142 @@ const logger                            = new Logger( logFileName );
 function getKeyValuePairFromArrayItem ( arrayOfElements, keyValueToReturn )
 {
    try
-	  {
-      var retVal,returnKey,returnVal;
+    {
+      let retVal,returnKey,returnVal;
 
-	      //logger.trace(applicationName + ':zndStatements:getKeyValuePairFromArrayItem:Started ');
+        //logger.trace(applicationName + ':zndStatements:getKeyValuePairFromArrayItem:Started ');
 
-	      returnKey                       = "";
-	      returnVal                       = "";
+        returnKey                       = '';
+        returnVal                       = '';
 
-	      if ( typeof arrayOfElements !== "undefined" )
-	      {
+        if ( typeof arrayOfElements !== 'undefined' )
+        {
          retVal                      = arrayOfElements.filter( ( [key, value] ) => key.includes( keyValueToReturn ) );
-	      } 
-	      //logger.trace(applicationName + ':zndStatements:getKeyValuePairFromArrayItem:Done');
-	      return retVal;
-	  }
-	  catch ( ex )
-	  {
-      logger.exception( applicationName + "zndStatements:getKeyValuePairFromArrayItem: An Exception occurred:["+ex+"]." );
-	  }
+        }
+        //logger.trace(applicationName + ':zndStatements:getKeyValuePairFromArrayItem:Done');
+        return retVal;
+    }
+    catch ( ex )
+    {
+      logger.exception( applicationName + 'zndStatements:getKeyValuePairFromArrayItem: An Exception occurred:[' + ex + '].' );
+    }
 }
 
 
 
 function createFilteredDataDump ( objectData )
 {
-   try 
+   try
    {
-      var keyValueArray, filteredArray, retval, arrayOfRecords; 
-  
-      logger.trace( applicationName + ":zndStatements:createFilteredDataDump:Started " );    
-        
-      keyValueArray                   = [ "amount",
-	      									                  "BankReferenceNumber",
-	      									                  "BICCODE",
-	      									                  "categoryPurpose",
-	      									                  "communicationZoneCode",
-	      									                  "communicationZone",
-	      									                  "communication",
-	      									                  "counterpartAccountNR",
-	      									                  "counterpartName",
-	      									                  "customerReference",
-	      									                  "entryDate",
-	      									                  "ISOReasonReturnCode",
-	      									                  "movementSign",
-	      									                  "purpose",
-	      									                  "referenceNumber",
-	      									                  "RtransactionType",
-	      									                  "valueDate"
-	      									                ];   
-	      filteredArray                   = []; 	
-	      returnObject                    = {}; 
-	      arrayOfRecords                  = JSON.parse( objectData ); 
-	      
-	      for ( let i=0;i<arrayOfRecords.length;i++ )
-	      {
-         let arrayObjectArray        = Object.entries( arrayOfRecords[i] ); 	      	  
-	      	  for ( let k=0;k<keyValueArray.length;k++ )
-	      	  {
-            let returnObject        =  getKeyValuePairFromArrayItem( arrayObjectArray,keyValueArray[k] );
-	      	  	  if ( returnObject.length >0 )  
-	      	  	  {
+      let keyValueArray, filteredArray, retval, arrayOfRecords;
+
+      logger.trace( applicationName + ':zndStatements:createFilteredDataDump:Started ' );
+
+      keyValueArray                   = [ 'amount',
+                                            'BankReferenceNumber',
+                                            'BICCODE',
+                                            'categoryPurpose',
+                                            'communicationZoneCode',
+                                            'communicationZone',
+                                            'communication',
+                                            'counterpartAccountNR',
+                                            'counterpartName',
+                                            'customerReference',
+                                            'entryDate',
+                                            'ISOReasonReturnCode',
+                                            'movementSign',
+                                            'purpose',
+                                            'referenceNumber',
+                                            'RtransactionType',
+                                            'valueDate'
+                                          ];
+        filteredArray                   = [];
+        returnObject                    = {};
+        arrayOfRecords                  = JSON.parse( objectData );
+
+        for ( let i = 0;i < arrayOfRecords.length;i++ )
+        {
+         const arrayObjectArray        = Object.entries( arrayOfRecords[i] );
+            for ( let k = 0;k < keyValueArray.length;k++ )
+            {
+            const returnObject        =  getKeyValuePairFromArrayItem( arrayObjectArray,keyValueArray[k] );
+                if ( returnObject.length > 0 )
+                {
                filteredArray.push( returnObject );
-	      	  	  } 
-	          }
-	          if ( !filteredArray[filteredArray.length-1].includes( "--------------------------------------" ) ) 
-	          {
-            filteredArray.push( "--------------------------------------" );
-	          } 
-	      }         
-	      logger.trace( applicationName + ":zndStatements:createFilteredDataDump:Done " );       
-	      return filteredArray;
-	  }
-	  catch ( ex )
-	  {
-      logger.exception( applicationName + "zndStatements:createFilteredDataDump: An Exception occurred:["+ex+"]." );	    
-	  } 
+                }
+            }
+            if ( !filteredArray[filteredArray.length - 1].includes( '--------------------------------------' ) )
+            {
+            filteredArray.push( '--------------------------------------' );
+            }
+        }
+        logger.trace( applicationName + ':zndStatements:createFilteredDataDump:Done ' );
+        return filteredArray;
+    }
+    catch ( ex )
+    {
+      logger.exception( applicationName + 'zndStatements:createFilteredDataDump: An Exception occurred:[' + ex + '].' );
+    }
 }
 
 
 function getAndSetSign ( items )
 {
    try
-	  {
-      var keyValueArray,filteredArray, retval, returnObject, arrayOfRecords;
+    {
+      let keyValueArray,filteredArray, retval, returnObject, arrayOfRecords;
 
-	      logger.trace( applicationName + ":zndStatements:getAndSetSign:Started " );
+        logger.trace( applicationName + ':zndStatements:getAndSetSign:Started ' );
 
-	      keyValueArray                   = [ "amount",
-										                        "BankReferenceNumber",
-										                        "BICCODE",
-										                        "categoryPurpose",
-										                        "communicationZoneCode",
-										                        "communicationZone",
-										                        "communication",
-										                        "counterpartAccountNR",
-										                        "counterpartName",
-										                        "customerReference",
-										                        "entryDate",
-										                        "ISOReasonReturnCode",
-										                        "movementSign",
-										                        "purpose",
-										                        "referenceNumber",
-										                        "RtransactionType",
-										                        "valueDate"
-										                      ];
-	       filteredArray                  = [];
-	       returnObject                   = {};
-	       
-	       if ( typeof objectData !== "undefined" ) 
-	       {
+        keyValueArray                   = [ 'amount',
+                                            'BankReferenceNumber',
+                                            'BICCODE',
+                                            'categoryPurpose',
+                                            'communicationZoneCode',
+                                            'communicationZone',
+                                            'communication',
+                                            'counterpartAccountNR',
+                                            'counterpartName',
+                                            'customerReference',
+                                            'entryDate',
+                                            'ISOReasonReturnCode',
+                                            'movementSign',
+                                            'purpose',
+                                            'referenceNumber',
+                                            'RtransactionType',
+                                            'valueDate'
+                                          ];
+         filteredArray                  = [];
+         returnObject                   = {};
+
+         if ( typeof objectData !== 'undefined' )
+         {
          arrayOfRecords                 = JSON.parse( objectData );
 
-	           for ( let i=0;i<arrayOfRecords.length;i++ )
-	           {
-            let arrayObjectArray       = Object.entries( arrayOfRecords[i] );
-             
-	           	   for ( let k=0;k<keyValueArray.length;k++ )
-	           	   {
+             for ( let i = 0;i < arrayOfRecords.length;i++ )
+             {
+            const arrayObjectArray       = Object.entries( arrayOfRecords[i] );
+
+                  for ( let k = 0;k < keyValueArray.length;k++ )
+                  {
                returnObject           = getKeyValuePairFromArrayItem( arrayObjectArray,keyValueArray[k] );
-	           		     if ( returnObject.length >0 )
-	           		     {
+                     if ( returnObject.length > 0 )
+                     {
                   filteredArray.push( returnObject );
-	           		     }
-	               }
-	               if ( !filteredArray[filteredArray.length-1].includes( "--------------------------------------" ) )
-	               {
-               filteredArray.push( "--------------------------------------" );
-	               }
-	           }
-	           return filteredArray;
-	       } 
-	  }
-	  catch ( ex )
-	  {
-      logger.exception( applicationName + "zndStatements:getAndSetSign: An Exception occurred:["+ex+"]." );
-	  }
+                     }
+                 }
+                 if ( !filteredArray[filteredArray.length - 1].includes( '--------------------------------------' ) )
+                 {
+               filteredArray.push( '--------------------------------------' );
+                 }
+             }
+             return filteredArray;
+         }
+    }
+    catch ( ex )
+    {
+      logger.exception( applicationName + 'zndStatements:getAndSetSign: An Exception occurred:[' + ex + '].' );
+    }
 }
 
 
@@ -189,35 +190,35 @@ function getAndSetSign ( items )
 function getAndSetfiat ( items )
 {
    try
-	  {
-      var ledgerRecords, recordObject;
+    {
+      let ledgerRecords, recordObject;
 
-	  	  logger.trace( applicationName + ":zndStatements:getAndSetfiat:Started " );
+        logger.trace( applicationName + ':zndStatements:getAndSetfiat:Started ' );
 
-	      ledgerRecords                   = [];
-	  	  recordObject                    = {};
+        ledgerRecords                   = [];
+        recordObject                    = {};
 
-	  	  if ( typeof items.bankRecord !== "undefined" || items.bankRecord.length !== 0 ) //in case of a petit cash record
-		    {
+        if ( typeof items.bankRecord !== 'undefined' || items.bankRecord.length !== 0 ) //in case of a petit cash record
+        {
          if ( items.bankRecord.length > 0 )
-		  	    {
+            {
             ledgerRecords           = JSON.parse( items.bankRecord );
-		  	    	  for ( let i=0;i<ledgerRecords.length;i++ )
-		  	    	  {
+                for ( let i = 0;i < ledgerRecords.length;i++ )
+                {
                recordObject        = ledgerRecords[i];
-		  	    	  	  if ( recordObject.recordID.includes( "1" ) )
-		  	    	  	  {
- 	items.valuta    = recordObject.accountNRCC.substr( recordObject.accountNRCC.length -3 );
-		  	    	  	  }
-		  	    	  }
-		  	    }
-		    }
-		    logger.trace( applicationName + ":zndStatements:getAndSetfiat:Done." );
-	  }
-	  catch ( ex )
-	  {
-      logger.trace( applicationName + "zndStatements:getAndSetfiat:An exception occurred:[" + ex + "]" );
-	  }
+                    if ( recordObject.recordID.includes( '1' ) )
+                    {
+  items.valuta    = recordObject.accountNRCC.substr( recordObject.accountNRCC.length - 3 );
+                    }
+                }
+            }
+        }
+        logger.trace( applicationName + ':zndStatements:getAndSetfiat:Done.' );
+    }
+    catch ( ex )
+    {
+      logger.trace( applicationName + 'zndStatements:getAndSetfiat:An exception occurred:[' + ex + ']' );
+    }
 }
 
 
@@ -225,34 +226,34 @@ function getAndSetfiat ( items )
 async function updateSentFileStatus ( items )
 {
    try
-	  {
-      logger.trace( applicationName + ":zndStatements:updateSentFileStatus:Started " );
-	      zndManageStatements.setRecord( items );
-	      let retVal                      = zndManageStatements.findRecord();
-		    logger.trace( applicationName + ":zndStatements:updateSentFileStatus:Done." );
-	  }
-	  catch ( ex )
-	  {
-      logger.trace( applicationName + "zndStatements:updateSentFileStatus:An exception occurred:[" + ex + "]" );
-	  }
+    {
+      logger.trace( applicationName + ':zndStatements:updateSentFileStatus:Started ' );
+        zndManageStatements.setRecord( items );
+        const retVal                      = zndManageStatements.findRecord();
+        logger.trace( applicationName + ':zndStatements:updateSentFileStatus:Done.' );
+    }
+    catch ( ex )
+    {
+      logger.trace( applicationName + 'zndStatements:updateSentFileStatus:An exception occurred:[' + ex + ']' );
+    }
 }
 
 async function runAugments ( items )
 {
    try
-	  {
-      logger.trace( applicationName + ":zndStatements:runAugments:Started" );
+    {
+      logger.trace( applicationName + ':zndStatements:runAugments:Started' );
 
-	      getAndSetSign( items );
-	      getAndSetfiat( items );
-      let retVal                      = updateSentFileStatus( items );  
-	      logger.trace( applicationName + ":zndStatements:runAugments:Done" );
-	      return retVal;
-	  }
-	  catch ( ex )
-	  {
-      logger.trace( applicationName + "zndStatements:runAugments:An exception occurred:[" + ex + "]" );
-	  }
+        getAndSetSign( items );
+        getAndSetfiat( items );
+      const retVal                      = updateSentFileStatus( items );
+        logger.trace( applicationName + ':zndStatements:runAugments:Done' );
+        return retVal;
+    }
+    catch ( ex )
+    {
+      logger.trace( applicationName + 'zndStatements:runAugments:An exception occurred:[' + ex + ']' );
+    }
 }
 
 
@@ -264,51 +265,52 @@ async function main ( req, res )
       var items, ideez, bankData, employees, companies, accountLedgerNames, paymentTypesList;
       var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList;
 
-			  logger.trace( applicationName + ":zndStatements:main:Started" );
+      logger.trace( applicationName + ':zndStatements:main:Started' );
 
       if ( req.params.id != null )
-      {
-         req.params.newform          = false;
-			      items                       = await zanddLedger.findById( req.params.id );
-			      ideez                       = await zanddLedger.find().sort( {invoiceDate :1} ).distinct( "_id" );
-			      bankData                    = [];
-			      employees                   = await zanddEmployees.find().distinct( "employeeID",{"employeeStatus":"Active" } );
-			      companies                   = await zanddCompanies.find().sort( {companyName :1} );
-			      accountLedgerNames          = await ledgerAccountLabels.find().distinct( "ledgerLabel" );
-			      //bookkeepingLedgerNames      = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
-				  bookkeepingLedgerNames      = await zndBookKeepersLedgers.find();
-				  console.log('Bookkkaaaar',bookkeepingLedgerNames)
-			      paymentTypesList            = await paymentCatagories.find().distinct( "paymentCatagoryName" );
+      {   req.params.newform          = false;
+          items                       = await zanddLedger.findById( req.params.id );
+          ideez                       = await zanddLedger.find().sort( {invoiceDate :1} ).distinct( '_id' );
+          bankData                    = [];
+          employees                   = await zanddEmployees.find().distinct( 'employeeID',{'employeeStatus':'Active' } );
+          companies                   = await zanddCompanies.find().sort( {companyName :1} );
+          accountLedgerNames          = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
+          //bookkeepingLedgerNames      = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
+          bookkeepingLedgerNames      = await zndBookKeepersLedgers.find();
+		  const record = {'action':'getData'}; 
+		  const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
+          //console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
+          paymentTypesList            = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
 
-             
-		        if ( typeof items.bankRecord !== "undefined" ||  items.bankRecord.length !== 0 )
-		        {    
-		            if ( items.bankRecord.length > 0 )
-		        	  {
-               bankData            = createFilteredDataDump( items.bankRecord );		        	      
-		        	  }
-		        }
-		        let retVal                  = await runAugments( items );
-		      	res.render( "zndStatements",{ items:items ,ideez:ideez,bankData:bankData, employees:employees, companies:companies, accountLedgerNames:accountLedgerNames,  bookkeepingLedgerNames:bookkeepingLedgerNames,paymentTypesList:paymentTypesList } );
-		    }
-		    else
-		    {
+
+            if ( typeof items.bankRecord !== 'undefined' ||  items.bankRecord.length !== 0 )
+            {
+                if ( items.bankRecord.length > 0 )
+                {
+               bankData            = createFilteredDataDump( items.bankRecord );
+                }
+            }
+            const retVal                  = await runAugments( items );
+            res.render( 'zndStatements',{ items:items ,ideez:ideez,bankData:bankData, employees:employees, companies:companies, accountLedgerNames:accountLedgerNames,  bookkeepingLedgerNames:bookkeepingLedgerNames,paymentTypesList:paymentTypesList,bookkeepingYears:bookkeepingYears.body } );
+        }
+        else
+        {
          req.params.newform         = true;
-		    	  employees                  = await zanddEmployees.find().distinct( "employeeID",{"employeeStatus":"Active" } );
-		    	  companies                  = await zanddCompanies.find().sort( {companyName :1} );
-		    	  accountLedgerNames         = await ledgerAccountLabels.find().distinct( "ledgerLabel" );
-		    	  //bookkeepingLedgerNames     = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
-				  bookkeepingLedgerNames     = await zndBookKeepersLedgers.find();
-		    	  paymentTypesList           = await paymentCatagories.find().distinct( "paymentCatagoryName" );
-				  console.log('Bookkkaaaar',bookkeepingLedgerNames)
-		    	  res.render( "zndStatements",{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList } );
-		    }
-		    logger.trace( applicationName + ":zndStatements:main:Done" );
-	  }
-	  catch ( ex )
-	  {
-      logger.trace( applicationName + "zndStatements:main:An exception occurred:[" + ex + "]" );
- 	  }
+            employees                  = await zanddEmployees.find().distinct( 'employeeID',{'employeeStatus':'Active' } );
+            companies                  = await zanddCompanies.find().sort( {companyName :1} );
+            accountLedgerNames         = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
+            //bookkeepingLedgerNames     = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
+          bookkeepingLedgerNames     = await zndBookKeepersLedgers.find();
+            paymentTypesList           = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
+          console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
+            res.render( 'zndStatements',{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList } );
+        }
+        logger.trace( applicationName + ':zndStatements:main:Done' );
+    }
+    catch ( ex )
+    {
+      logger.trace( applicationName + 'zndStatements:main:An exception occurred:[' + ex + ']' );
+     }
 }
 /* --------------------------------- End Functions   -------------------------*/
 

@@ -15,7 +15,10 @@
 /* -------------------------------- End Controllers ---------------------------*/
 
 /* ------------------------------------- Services -----------------------------*/
-const {logger,applicationName}          = require( '../services/generic' );
+const { data } = require( 'jquery' );
+const {logger,applicationName}         = require( '../services/generic' );
+const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
+const zndManageData                    = require( '../services/zndManageData' );
 /* -------------------------------- End Services ------------------------------*/
 
 /* ------------------------------------- Models -------------------------------*/
@@ -60,18 +63,21 @@ async function handleBookkeepingYearsGet ( req,res )
     {   logger.trace( applicationName + ':generic:handleBookkeepingYearsGet():Started' );
 
         const params                   = req.params;
+        console.log( params );
 
         if ( params.recordID != null )
         {   const record               = {} ;
             record.action              = 'getRecordData';
             const recordID             = params.recordID;
 
-            const dataRecord           = await manageFuelAspect.manageFuelAspect( record,recordID );
+            const dataRecord           = await manageBookkeepingYears.manageBookkeepingYears( record,recordID );
+            console.log( dataRecord );
 
 
             record.action = 'getData';
 
-            const dataRecords           = await manageFuelAspect.manageFuelAspect( record,recordID );
+            const dataRecords           = await manageBookkeepingYears.manageBookkeepingYears( record,recordID );
+
 
             res.render( 'zndBookkeepingYears' , {   params:params , dataRecord : dataRecord.body , dataRecords: dataRecords.body} );
         }
@@ -88,9 +94,34 @@ async function handleBookkeepingYearsGet ( req,res )
 }
 
 
+async function handleBookkeepingYearsPost ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleBookkeepingYearsPost():Started' );
+
+        const dataRecord               = { ... req.body } ;
+        console.log( 'The P:',dataRecord );
+        const params                   = req.params;
+        const retVal                   = await manageBookkeepingYears.manageBookkeepingYears( dataRecord,'' );
+
+        const responseRecord           = retVal.body.createRec;
+        const tempRecord               = { action : 'getData' };
+        const dataRecords              = await manageBookkeepingYears.manageBookkeepingYears( tempRecord,'' );
+
+
+
+        res.render( 'zndBookkeepingYears' , {   params:params , dataRecord : responseRecord , dataRecords: dataRecords.body} );
+
+        logger.trace( applicationName + ':generic:handleBookkeepingYearsPost():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleBookkeepingYearsPost():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
 async function bookkeepingYearsHandler ( req,res )
 {   try
-    {   logger.trace( applicationName + ':generic:bookkeepingYearsHandler():Started' );        
+    {   logger.trace( applicationName + ':generic:bookkeepingYearsHandler():Started' );
         switch ( req.method )
         {   case 'POST' :   handleBookkeepingYearsPost( req,res );
                             break;
@@ -107,6 +138,61 @@ async function bookkeepingYearsHandler ( req,res )
 
 
 
+async function handleLaboratoryPost ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleLaboratoryPost():Started' );
+        console.log( 'The P:',req.body );
+        switch( req.body.action )
+        {   case 'updateCreationDate' :   zndManageData.updateCreationDate();
+                                          break;
+            case 'deleteCreationDate' :   zndManageData.deleteCreationDate();
+                                          break;
+            default                   :   break;
+        }
+
+        //zndManageData.updateCreationDate(); 
+        res.render( 'laboratory'  );
+        logger.trace( applicationName + ':generic:handleLaboratoryPost():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleLaboratoryPost():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+async function handleLaboratoryGet ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleLaboratoryGet():Started' );        
+        res.render( 'laboratory'  );
+        logger.trace( applicationName + ':generic:handleLaboratoryGet():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleLaboratoryGet():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+async function laboratoryHandler ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:laboratoryHandler():Started' );
+        
+        switch ( req.method )
+        {   case 'POST' :   handleLaboratoryPost( req,res );
+                            break;
+            case 'GET'  :   handleLaboratoryGet( req,res );
+                            break;
+            default     :   break;
+        }
+
+        
+        logger.trace( applicationName + ':generic:laboratoryHandler():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:laboratoryHandler():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
 /* --------------------------- End Private Functions   --------------------------*/
 
 
@@ -117,6 +203,10 @@ async function main ( req, res )
 
         switch ( req.originalUrl )
         {  case '/zndBookkeepingYears'        :   bookkeepingYearsHandler( req,res );
+                                                  break;
+           case  findTerm( req.originalUrl,'zndBookkeepingYears' )         :   bookkeepingYearsHandler( req,res );
+                                                  break;
+           case '/Laboratory'                 :   laboratoryHandler( req,res );
                                                   break;
            default                            :   unknownHandler( req,res );
                                                   break;

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('layouts/header'); -%>
+   <body>
+   <%- include('layouts/heading'); -%>
+   <%- include('layouts/navbar'); -%>
+   
+   
+      <div class="main" onload="ïnit();">
+         <h1>Laboratory</h1>
+         <textarea style="display:none;" id="items"><%= typeof items !== "undefined" ? items : "[]" %></textarea>
+         The testplace of things 
+         <hr>
+         <h2>Test</h2>
+         <form id="updateCreationDateForm" action="/Laboratory" method="POST" enctype="multipart/form-data">
+            <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"></textarea>
+            <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"></textarea>            
+            <textarea style="display:none;" rows="1" class="form-control" id="action" name="action"></textarea>
+         </form>
+         <button class="buttonni" id="updateCreationDate" onclick="formulierActie('updateCreationDate');">Update creation date</button>        
+         <button class="buttonni" id="deleteCreationDate" onclick="formulierActie('deleteCreationDate');">Delete creation date</button>        
+      </div>   
+      <script src="/js/laboratory.js"></script>
+   </body>
+</html>

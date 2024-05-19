@@ -3,6 +3,8 @@ let bookkeepingLedgerNames;
 
 const statementMap                      = {   'NR'                   :'ID' ,
    'Doc'                  :'DOC',
+   'creation Date'        :'creationDate',   
+   'creation DateStr'     :'creationDateString',
    'UploadTime'           :'DONE',
    'UploadCount'          :'UPL',
    'ACCOK'                :'ACCOK',
@@ -529,12 +531,16 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies )
       msg                             = tableData;
       rowData                         = {};
       rows                            = [];
+      const options  = {  day: '2-digit' , month: '2-digit', year: 'numeric'};
 
       for ( j = 0; j < msg.length; j++ )
       {
-         rowData             = {};
+         let creationDate            = typeof msg[j].creationDate !== 'undefined' ? msg[j].creationDate : '---'
+         rowData                     = {};
          rowData.ID                  =  msg[j]._id;
-         rowData.DOC                = typeof msg[j].docPath !== 'undefined' ? ( msg[j].docPath.length > 0 ? 'D' : 'NP' ) : 'U' ;
+         rowData.DOC                 = typeof msg[j].docPath !== 'undefined' ? ( msg[j].docPath.length > 0 ? 'D' : 'NP' ) : 'U' ;
+         rowData.creationDate        = creationDate ;
+         rowData.creationDateString  = (new Date( creationDate)).toLocaleDateString('nl-NL', {options});
          rowData.DONE                = typeof msg[j].lastTransferredAccountantTime !== 'undefined' ? msg[j].lastTransferredAccountantTime : '---' ;
          rowData.UPL                 = typeof msg[j].transferredAccountantCount !== 'undefined' ?  Number( msg[j].transferredAccountantCount ) : 0 ;
          rowData.ACCOK               = typeof msg[j].accntchk !== 'undefined' ? ( msg[j].accntchk.includes( 'on' ) ? 'X' : '-' ) : '' ;

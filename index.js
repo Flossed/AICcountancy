@@ -169,7 +169,8 @@ function setRouting ()
 
         app.get( '/zndPrintStatement/:id',zndPrintStatementCntrl.main );
 
-
+        
+        app.get( '/zndBookkeepingYears/:recordID',genericCntrl.main );
         app.use( '*', genericCntrl.main );
        logger.trace( applicationName + ':index:setRouting:Done ' );
      }
