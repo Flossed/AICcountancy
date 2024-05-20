@@ -22,6 +22,7 @@ const zndManageStatements               = require( '../controllers/zndManageStat
 
 /* ------------------------------------- Services ----------------------------*/
 const Logger                            = require( '../services/zndLoggerClass' );
+const manageLedger                      = require( '../services/manageLedger' );
 /* -------------------------------- End Services -----------------------------*/
 
 /* ------------------------------------- Models ------------------------------*/
@@ -44,6 +45,33 @@ const logger                            = new Logger( logFileName );
 
 /* ------------------------------------- Functions   --------------------------*/
 let dataSet, dataSetHist;
+
+async function handleGetMovement ( recordID )
+{   try
+    {   logger.trace( applicationName + ':generic:handleGetMovement():Started' );
+
+        if ( typeof recordID !== 'undefined' )
+        {   let record                 =   {};
+            record.action              =   'getRecordData';
+            const statement            =   await manageLedger.manageLedger( record , recordID );
+
+            record = { ... statement.body._doc };
+            record.movementSign    = '1';
+            if ( statement.body.paymentTypes.includes ( 'BANK' ) )
+            {  const bankRecord        = JSON.parse( record.bankRecord );
+                record.movementSign    = bankRecord[0].movementSign;
+            }
+            record.action              = 'updateData';
+            console.log( 'Record:',record );
+            await manageLedger.manageLedger( record , recordID );
+        }
+        logger.trace( applicationName + ':generic:handleGetMovement():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleGetMovement():An exception occurred :[' + ex + '].' );
+    }
+}
+
 
 async function filloutPendingActions ()
 {   try
@@ -189,11 +217,10 @@ async function cleanNotes ()
 
 
 
-async function updateMovementOfBankToInvoice ()
+async function setCreditDebitSign ()
 {   try
-    {   let i, retVal, rs, count;
-
-        logger.trace( applicationName + ':zndManageData:updateMovementOfBankToInvoice:Started' );
+    {   logger.trace( applicationName + ':zndManageData:setCreditDebitSign:Started' );
+        /*
 
         rs                              = dataSet;
         count                           = 0;
@@ -208,13 +235,14 @@ async function updateMovementOfBankToInvoice ()
                 retVal                  = await zanddLedger.findByIdAndUpdate( rs[i]._id,{ ...rs[i]._doc} ,{useFindAndModify:false} );
             }
         }
+        */
 
 
 
-        logger.trace( applicationName + ':zndManageData:updateMovementOfBankToInvoice:Done' );
+        logger.trace( applicationName + ':zndManageData:setCreditDebitSign:Done' );
     }
     catch ( ex )
-    {   logger.exception( applicationName + ':zndManageData:updateMovementOfBankToInvoice:An exception occured:[' + ex + '].' );
+    {   logger.exception( applicationName + ':zndManageData:setCreditDebitSign:An exception occured:[' + ex + '].' );
     }
 }
 
@@ -406,7 +434,7 @@ async function init ()
         dataSet                        =   await zanddLedger.find();
         dataSetHist                    =   await zanddLedgerHist.find();
 
-        runDataAugmentation();
+        //runDataAugmentation();
         logger.trace( applicationName + ':zndManageData:init:Done' );
     }
     catch ( ex )
@@ -421,6 +449,9 @@ module.exports.runDataAugmentation      = runDataAugmentation;
 module.exports.removeLock               = removeLock;
 module.exports.updateCreationDate       = updateCreationDate;
 module.exports.deleteCreationDate       = deleteCreationDate;
+module.exports.setCreditDebitSign       = setCreditDebitSign;
+module.exports.handleGetMovement        = handleGetMovement;
+
 
 /* ----------------------------------End External functions ------------------*/
 

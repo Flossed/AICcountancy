@@ -18,6 +18,7 @@
 const { data } = require( 'jquery' );
 const {logger,applicationName}         = require( '../services/generic' );
 const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
+const manageLedger                     = require( '../services/manageLedger' );
 const zndManageData                    = require( '../services/zndManageData' );
 /* -------------------------------- End Services ------------------------------*/
 
@@ -137,20 +138,42 @@ async function bookkeepingYearsHandler ( req,res )
 }
 
 
+async function updateAllMovements()
+{   try
+    {   logger.trace( applicationName + ':generic:updateAllMovements():Started' );
+        const record                   =   {}; 
+        const recordID                 =   '';
+        record.action                  =   'getData';
+        let timeOuttime                =   100;
+
+        const allRecords               = ( await manageLedger.manageLedger( record , recordID )).body;
+        allRecords.forEach( element => {   zndManageData.handleGetMovement( element._doc._id );
+                                            });
+ 
+        logger.trace( applicationName + ':generic:updateAllMovements():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:updateAllMovements():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
 
 async function handleLaboratoryPost ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:handleLaboratoryPost():Started' );
-        console.log( 'The P:',req.body );
-        switch( req.body.action )
+        switch ( req.body.action )
         {   case 'updateCreationDate' :   zndManageData.updateCreationDate();
                                           break;
             case 'deleteCreationDate' :   zndManageData.deleteCreationDate();
                                           break;
-            default                   :   break;
+            case 'updateOneMovement'  :   await zndManageData.handleGetMovement( req.body.recordID );
+                                          break;
+            case 'updateAllMovements' :   updateAllMovements( );
+                                          break;
+            default                   :   throw 'Crap Action: [' + req.body.action  + ']';
         }
 
-        //zndManageData.updateCreationDate(); 
         res.render( 'laboratory'  );
         logger.trace( applicationName + ':generic:handleLaboratoryPost():Done' );
     }
@@ -162,7 +185,7 @@ async function handleLaboratoryPost ( req,res )
 
 async function handleLaboratoryGet ( req,res )
 {   try
-    {   logger.trace( applicationName + ':generic:handleLaboratoryGet():Started' );        
+    {   logger.trace( applicationName + ':generic:handleLaboratoryGet():Started' );
         res.render( 'laboratory'  );
         logger.trace( applicationName + ':generic:handleLaboratoryGet():Done' );
     }
@@ -175,7 +198,7 @@ async function handleLaboratoryGet ( req,res )
 async function laboratoryHandler ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:laboratoryHandler():Started' );
-        
+
         switch ( req.method )
         {   case 'POST' :   handleLaboratoryPost( req,res );
                             break;
@@ -184,7 +207,7 @@ async function laboratoryHandler ( req,res )
             default     :   break;
         }
 
-        
+
         logger.trace( applicationName + ':generic:laboratoryHandler():Done' );
     }
     catch ( ex )

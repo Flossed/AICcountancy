@@ -11,14 +11,23 @@
          <textarea style="display:none;" id="items"><%= typeof items !== "undefined" ? items : "[]" %></textarea>
          The testplace of things 
          <hr>
-         <h2>Test</h2>
+         <h2>Management Functionality</h2>
          <form id="updateCreationDateForm" action="/Laboratory" method="POST" enctype="multipart/form-data">
             <textarea style="display:none;" rows="1" class="form-control" id="_id" name="_id"></textarea>
             <textarea style="display:none;" rows="1" class="form-control" id="__v" name="__v"></textarea>            
             <textarea style="display:none;" rows="1" class="form-control" id="action" name="action"></textarea>
+            <label> record ID:</label> 
+            <textarea class="textareaLine" style="resize: none;"  id="recordID" name="recordID"></textarea>
          </form>
+         <h3>Adding creation date of Statement to form based on historical records</h3>
          <button class="buttonni" id="updateCreationDate" onclick="formulierActie('updateCreationDate');">Update creation date</button>        
          <button class="buttonni" id="deleteCreationDate" onclick="formulierActie('deleteCreationDate');">Delete creation date</button>        
+         <h3>UPdating Movement Sign to set Debit or credit status</h3>
+         Default if it is a payment via cash the movement sign is Debit, <br>
+         in case of a payment via bank the movement sign needs to be checked from the codarecord and set to accordingly<br>
+         <button class="buttonni" id="getMovement" onclick="formulierActie('updateOneMovement');">update one record</button>        
+         <button class="buttonni" id="updateMovement" onclick="formulierActie('updateAllMovements');">Update all records</button>        
+         
       </div>   
       <script src="/js/laboratory.js"></script>
    </body>

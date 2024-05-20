@@ -490,7 +490,7 @@ function mapTotals ( startDate,endDate,ledgerAccounts, companies )
       for ( j = 0; j < msg.length; j++ )
       {
          tRowData                    = {};
-         tRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( msg[j].movementSign.includes( '1' ) ? 'Debit' : ( msg[j].movementSign.includes( '0' ) ? 'Credit' : 'Unknown' ) ) : 'Unknown' ;
+         tRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ;
          tRowData.grossAmount        = msg[j].grossAmount;
          tRowData.grossAmount        = msg[j].grossAmount;
          tRowData.VAT                = msg[j].VAT;
@@ -521,7 +521,7 @@ function mapledgers ( startDate,endDate,ledgerAccounts, companies )
       for ( j = 0; j < msg.length; j++ )
       {
          oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( msg[j].movementSign.includes( '1' ) ? 'Debit' : ( msg[j].movementSign.includes( '0' ) ? 'Credit' : 'Unknown' ) ) : 'Unknown' ;
+         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ; 
          oRowData.grossAmount        = msg[j].grossAmount;
          oRowData.VAT                = msg[j].VAT;
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateLedgerOverviewList );
@@ -549,7 +549,7 @@ function mapOverview ( startDate,endDate,ledgerAccounts, companies )
       {
          oRowData.compagnyID         = msg[j].compagnyID;
          oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( msg[j].movementSign.includes( '1' ) ? 'Debit' : ( msg[j].movementSign.includes( '0' ) ? 'Credit' : 'Unknown' ) ) : 'Unknown' ;
+         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ; 
          oRowData.grossAmount        = msg[j].grossAmount;
          oRowData.VAT                = msg[j].VAT;
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateOverviewList );
@@ -586,7 +586,8 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies, dashBookYe
          rowData.UPL                 = typeof msg[j].transferredAccountantCount !== 'undefined' ?  Number( msg[j].transferredAccountantCount ) : 0 ;
          rowData.ACCOK               = typeof msg[j].accntchk !== 'undefined' ? ( msg[j].accntchk.includes( 'on' ) ? 'X' : '-' ) : '' ;
          rowData.TRNREF              = typeof msg[j].bankstatementID !== 'undefined' ? msg[j].bankstatementID : '-' ;
-         rowData.CREDEB              = typeof msg[j].movementSign !== 'undefined' ? ( msg[j].movementSign.includes( '1' ) ? 'Debit' : ( msg[j].movementSign.includes( '0' ) ? 'Credit' : 'Unknown' ) ) : 'Unknown' ;
+         rowData.CREDEB              = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ;
+         
          rowData.bankDate            = msg[j].bankDate;
          rowData.invoiceDate         = msg[j].invoiceDate;
          rowData.grossAmount         = msg[j].grossAmount;

@@ -30,6 +30,8 @@ const {logger,applicationName}          = require( './generic' );
 /* ------------------------------------- Models -------------------------------*/
 const zndBookkeepingYears                   = require( '../models/zndBookkeepingYears' );
 const zndBookkeepingYearsHist               = require( '../models/zndBookkeepingYearHist');
+const zndLedger                             = require( '../models/zanddLedger' );
+const zndLedgerHist                         = require( '../models/zanddLedgerHist' );
 /* -------------------------------- End Models --------------------------------*/
 
 /* ---------------------------------  Application constants    ----------------*/
@@ -45,6 +47,8 @@ function getModel ( model )
         let result                      = { ...errorCatalog.noError };
         switch ( model )
         {   case 'bookkeepingYear'      : result.body          = { zndBookkeepingYears, zndBookkeepingYearsHist };
+                                          return result;
+            case 'zanddLedger'          : result.body          = { zndLedger, zndLedgerHist };
                                           return result;
             default                     : result               = { ...errorCatalog.badResult };
                                           result.body.extendedMessage = applicationName + ':manageDataModel:getModel:Unknown Model requested:[' + model + ']';

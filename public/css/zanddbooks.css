@@ -603,5 +603,21 @@ input:checked + .slider:before
     min-width: 95px;
 }
 
+.textareaBlock
+{   height: 20em;
+    width: 25em;   
+    resize: none;
+    text-align:center;
+    margin: 0.1em;
+}
+
+.textareaLine
+{   height: 2em;
+    width: 25em;   
+    resize: none;
+    text-align:center;
+    margin: 0.1em;
+}
+
 /* LOG:
 */
