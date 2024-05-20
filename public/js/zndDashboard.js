@@ -142,10 +142,12 @@ function filterOnDate ()
       document.getElementById( 'dashEndDate' ).style.backgroundColor  =  '';
    }
 
-   dashledgerAccounts                           = document.getElementById( 'dashledgerAccounts' ).value;
-   companies                                    = document.getElementById( 'companies' ).value;
+   const dashledgerAccounts            = document.getElementById( 'dashledgerAccounts' ).value;
+   const companies                     = document.getElementById( 'companies' ).value;
+   const dashBookYear                  = document.getElementById( 'dashBookYear' ).value; 
+   
 
-   manageDashBoard( dashStartDatems,dashEndDatems, dashledgerAccounts,companies );
+   manageDashBoard( dashStartDatems,dashEndDatems, dashledgerAccounts,companies, dashBookYear );
 }
 
 
@@ -389,7 +391,7 @@ function updateStatementList ( dataRecord, List )
 
 
 
-function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowData, rows, updateFunction )
+function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowData, rows, updateFunction, dashBookYear )
 {
    try
    {
@@ -399,35 +401,72 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
       ledgerswitch                    = ledgerAccounts.includes( '--------------------------------------------' ) ? false : true;
       companySwitch                   = companies.includes( '---' ) ? false : true;
 
-      if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate )   )
-      {
-         if ( !ledgerswitch && !companySwitch )
+      const bookYear = findBookyear ( dashBookYear );
+      console.log('bookYear',typeof bookYear);
+      if ( bookYear === '---' || bookYear.length === 0 ) 
+      {   if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) ) 
+          {
+             if ( !ledgerswitch && !companySwitch )
+             {
+                updateFunction( rowData, rows );
+             }
+             if ( ledgerswitch && !companySwitch )
+             {
+                if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts ) )
+                {
+                   updateFunction( rowData, rows );
+                }
+             }
+    
+             if ( !ledgerswitch &&  companySwitch )
+             {
+                if ( msg[rowNR].compagnyID.includes( companies ) )
+                {
+                   updateFunction( rowData, rows );
+                }
+             }
+    
+             if ( ledgerswitch &&  companySwitch )
+             {
+                if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts )  &&  msg[rowNR].compagnyID.includes( companies ) )
+                {
+                   updateFunction( rowData, rows );
+                }
+             }
+          }
+      }
+      else
+      {  if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) && ( msg[rowNR].bkBookYear === dashBookYear ) ) 
          {
-            updateFunction( rowData, rows );
-         }
-         if ( ledgerswitch && !companySwitch )
-         {
-            if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts ) )
+            if ( !ledgerswitch && !companySwitch )
             {
                updateFunction( rowData, rows );
+            }
+            if ( ledgerswitch && !companySwitch )
+            {
+               if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts ) )
+               {
+                  updateFunction( rowData, rows );
+               }
+            }
+   
+            if ( !ledgerswitch &&  companySwitch )
+            {
+               if ( msg[rowNR].compagnyID.includes( companies ) )
+               {
+                  updateFunction( rowData, rows );
+               }
+            }
+   
+            if ( ledgerswitch &&  companySwitch )
+            {
+               if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts )  &&  msg[rowNR].compagnyID.includes( companies ) )
+               {
+                  updateFunction( rowData, rows );
+               }
             }
          }
 
-         if ( !ledgerswitch &&  companySwitch )
-         {
-            if ( msg[rowNR].compagnyID.includes( companies ) )
-            {
-               updateFunction( rowData, rows );
-            }
-         }
-
-         if ( ledgerswitch &&  companySwitch )
-         {
-            if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts )  &&  msg[rowNR].compagnyID.includes( companies ) )
-            {
-               updateFunction( rowData, rows );
-            }
-         }
       }
       return rows;
    }
@@ -525,7 +564,7 @@ function mapOverview ( startDate,endDate,ledgerAccounts, companies )
 
 
 
-function mapStatements ( startDate,endDate,ledgerAccounts, companies )
+function mapStatements ( startDate,endDate,ledgerAccounts, companies, dashBookYear )
 {
    try
    {
@@ -568,7 +607,7 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies )
          rowData.grossAmountNR       = msg[j].grossAmountNR ;
          rowData.VATNR               = msg[j].VATNR ;
          rowData.bkBookYear          = msg[j].bkBookYear ;
-         rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, rowData, rows, updateStatementList );
+         rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, rowData, rows, updateStatementList, dashBookYear );
       }
       return rows;
    }
@@ -586,7 +625,6 @@ function findBookkeeperLedgerName ( bkLedgerAccountID )
 
 
 
-
 function findBookyear ( bkBookYearID )
 {  const pos = bookkeepingYears.map( e => e._id ).indexOf( bkBookYearID );
    return pos > -1 ? bookkeepingYears[pos].bookkeepingYear : '';
@@ -599,7 +637,7 @@ function populateTable ( table, dataRows, map )
 
        let element, counter = 0;
 
-       console.log( 'dataRows length: ' + dataRows.length );
+       
        for ( element of dataRows )
        {   const row                   = table.insertRow();
            let ROWID                   = '';
@@ -630,7 +668,7 @@ function populateTable ( table, dataRows, map )
                                                      break;
                                                 }
                    case 'bkLedgerAccount'   :   {   const ledgerText        =  document.createTextNode( findBookkeeperLedgerName( content ) );
-                                                    cell.appendChild( ledgerText )
+                                                    cell.appendChild( ledgerText );
                                                     break;
                                                 }
                   case 'bkBookYear'         :   {   const ledgerText        =  document.createTextNode( findBookyear( content ) );
@@ -638,15 +676,17 @@ function populateTable ( table, dataRows, map )
                                                    break;
                                                }
                    default                  :   if ( amountElements.includes( key ) )
-                                                {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
-                                                    cell.appendChild( taxt );
-                                                    cell.style.textAlign   = 'right';
+                                                {   if ( typeof content !== 'undefined') 
+                                                    {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
+                                                        cell.appendChild( taxt );
+                                                        cell.style.textAlign   = 'right';
+                                                    } 
                                                 }
                                                 else
                                                    cell.appendChild( textNode );
                                                 break;
                }
-               cell.style.maxWidth = '200px'; 
+               cell.style.maxWidth = '200px';
            }
        }
    }
@@ -739,7 +779,7 @@ function sortRows ( sortID,sortMap, rows )
 
 
 
-function createTable ( tableName, rows, map,ledgerAccounts, companies )
+function createTable ( tableName, rows, map,ledgerAccounts, companies , dashBookYear)
 {
    try
    {
@@ -749,10 +789,10 @@ function createTable ( tableName, rows, map,ledgerAccounts, companies )
       tableElement                    = document.createElement( 'TABLE' );
       clearTable( tableAnchor );
       createTableHeader( tableElement, map, tableName, rows );
-      populateTable( tableElement, rows, map );
+      populateTable( tableElement, rows, map, dashBookYear );
       tableAnchor.appendChild( tableElement );
-      contextualizeAccounts( rows,ledgerAccounts );
-      contextualizeCompanies( rows, companies );
+      //contextualizeFilter ( rows, ledgerAccounts, companies, dashBookYear );
+
    }
    catch ( ex )
    {
@@ -778,17 +818,45 @@ function sortColumn ( kolm, tableName, map, rows )
 
 
 
-function manageDashBoard ( startDate,endDate,ledgerAccounts, companies )
+function manageDashBoard ( startDate,endDate,ledgerAccounts, companies, dashBookYear )
 {
    try
-   {  createTable( 'statementRecords', mapStatements( startDate,endDate,ledgerAccounts, companies ), statementMap,ledgerAccounts, companies );
-      createTable( 'overviewRecords', mapOverview( startDate,endDate,ledgerAccounts, companies ), overviewMap,ledgerAccounts, companies );
-      createTable( 'manageTotalsByLedger', mapledgers( startDate,endDate,ledgerAccounts, companies ), ledgerMap,ledgerAccounts, companies );
-      createTable( 'totalsRecords', mapTotals( startDate,endDate,ledgerAccounts, companies ), totalMap,ledgerAccounts, companies );
+   {  const statementRecords = mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear );
+      console.log(statementRecords); 
+      createTable( 'statementRecords', mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear ), statementMap,ledgerAccounts, companies, dashBookYear );
+      contextualizeFilter ( mapStatements( startDate,endDate,ledgerAccounts, companies ), ledgerAccounts, companies, dashBookYear );
+      createTable( 'overviewRecords', mapOverview( startDate,endDate,ledgerAccounts, companies, dashBookYear ), overviewMap,ledgerAccounts, companies, dashBookYear );
+      createTable( 'manageTotalsByLedger', mapledgers( startDate,endDate,ledgerAccounts, companies, dashBookYear ), ledgerMap,ledgerAccounts, companies, dashBookYear );
+      createTable( 'totalsRecords', mapTotals( startDate,endDate,ledgerAccounts, companies, dashBookYear ), totalMap,ledgerAccounts, companies, dashBookYear );
+      
    }
    catch ( ex )
    {
       console.log( 'zndDashboard:manageDashBoard: An exception occurred:[' + ex + '].' );
+   }
+}
+
+function contextualizeBookYears ( rows, dashBookYear )
+{  //console.log('bookkeepingYears',bookkeepingYears);
+   try
+   {   const dashBookYearElement              =  document.getElementById( 'dashBookYear' );
+      while ( dashBookYearElement.firstChild )
+      {   dashBookYearElement.removeChild( dashBookYearElement.firstChild );
+      }
+
+       bookkeepingYears.forEach ( ( element ) =>
+       {   const option                = document.createElement( 'option' );
+           option.value                = element._id;
+           option.text                 = element.bookkeepingYear;
+           
+           if (option.value.includes(dashBookYear))
+             {  option.selected = true;
+               }
+           dashBookYearElement.add( option );
+       } );
+   }
+   catch ( ex )
+   { console.log( 'zndDashboard:contextualizeBookYears: An exception occurred:[' + ex + '].' );
    }
 }
 
@@ -829,6 +897,7 @@ function contextualizeAccounts ( rows,ledgerAccounts )
             option                      = document.createElement( 'option' );
             option.value                = ledgerAccountList[k];
             option.text                 = ledgerAccountList[k];
+            
             dashledgerAccounts.add( option );
          }
 
@@ -838,7 +907,7 @@ function contextualizeAccounts ( rows,ledgerAccounts )
    }
    catch ( ex )
    {
-      console.log( 'zndDashboard:setupLegderAccounts: An exception occurred:[' + ex + '].' );
+      console.log( 'zndDashboard:contextualizeAccounts: An exception occurred:[' + ex + '].' );
    }
 }
 
@@ -968,7 +1037,7 @@ function initTable ( msg,queryObj )
       tableData                       = msg;
       setupLegderAccounts();
       setupCompanies();
-      manageDashBoard( 0,1999999999999,'--------------------------------------------','---' );
+      //manageDashBoard( 0,1999999999999,'--------------------------------------------','---' );
       const dashStartDate               = document.getElementById( 'dashStartDate' );
       dashStartDate.value             = typeof queryObj.startDate !== 'undefined' ? queryObj.startDate : '';
 
@@ -988,12 +1057,19 @@ function initTable ( msg,queryObj )
    }
 }
 //<body onload="init(<%=JSON.stringify(items) %>, <%=JSON.stringify(queryObj) %>);">
+
+function contextualizeFilter ( rows, ledgerAccounts, companies, dashBookYear )
+{   contextualizeAccounts( rows,ledgerAccounts );
+    contextualizeCompanies( rows, companies );
+    contextualizeBookYears( rows, dashBookYear );
+}
+
+
 function init ()
 {   const msg = JSON.parse( document.getElementById( 'items' ).value );
     const queryObj = JSON.parse( document.getElementById( 'queryObj' ).value );
     bookkeepingLedgerNames = JSON.parse( document.getElementById( 'bookkeepingLedgerNames' ).textContent );
-    bookkeepingYears =   JSON.parse(document.getElementById( 'bookkeepingYears' ).textContent ) ;
-    console.log( 'bookkeepingYears: ' , bookkeepingYears );
+    bookkeepingYears =   JSON.parse( document.getElementById( 'bookkeepingYears' ).textContent ) ;
     initTable ( msg,queryObj );
 }
 
