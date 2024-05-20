@@ -144,8 +144,8 @@ function filterOnDate ()
 
    const dashledgerAccounts            = document.getElementById( 'dashledgerAccounts' ).value;
    const companies                     = document.getElementById( 'companies' ).value;
-   const dashBookYear                  = document.getElementById( 'dashBookYear' ).value; 
-   
+   const dashBookYear                  = document.getElementById( 'dashBookYear' ).value;
+
 
    manageDashBoard( dashStartDatems,dashEndDatems, dashledgerAccounts,companies, dashBookYear );
 }
@@ -402,9 +402,9 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
       companySwitch                   = companies.includes( '---' ) ? false : true;
 
       const bookYear = findBookyear ( dashBookYear );
-      console.log('bookYear',typeof bookYear);
-      if ( bookYear === '---' || bookYear.length === 0 ) 
-      {   if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) ) 
+
+      if ( bookYear === '---' || bookYear.length === 0 )
+      {   if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) )
           {
              if ( !ledgerswitch && !companySwitch )
              {
@@ -417,7 +417,7 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
                    updateFunction( rowData, rows );
                 }
              }
-    
+
              if ( !ledgerswitch &&  companySwitch )
              {
                 if ( msg[rowNR].compagnyID.includes( companies ) )
@@ -425,7 +425,7 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
                    updateFunction( rowData, rows );
                 }
              }
-    
+
              if ( ledgerswitch &&  companySwitch )
              {
                 if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts )  &&  msg[rowNR].compagnyID.includes( companies ) )
@@ -436,7 +436,7 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
           }
       }
       else
-      {  if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) && ( msg[rowNR].bkBookYear === dashBookYear ) ) 
+      {  if ( ( msg[rowNR].invoiceDateEpoch >= startDate ) && ( msg[rowNR].invoiceDateEpoch <= endDate ) && ( msg[rowNR].bkBookYear === dashBookYear ) )
          {
             if ( !ledgerswitch && !companySwitch )
             {
@@ -449,7 +449,7 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
                   updateFunction( rowData, rows );
                }
             }
-   
+
             if ( !ledgerswitch &&  companySwitch )
             {
                if ( msg[rowNR].compagnyID.includes( companies ) )
@@ -457,7 +457,7 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
                   updateFunction( rowData, rows );
                }
             }
-   
+
             if ( ledgerswitch &&  companySwitch )
             {
                if ( msg[rowNR].ledgerAccount.includes( ledgerAccounts )  &&  msg[rowNR].compagnyID.includes( companies ) )
@@ -490,7 +490,7 @@ function mapTotals ( startDate,endDate,ledgerAccounts, companies )
       for ( j = 0; j < msg.length; j++ )
       {
          tRowData                    = {};
-         tRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ;
+         tRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
          tRowData.grossAmount        = msg[j].grossAmount;
          tRowData.grossAmount        = msg[j].grossAmount;
          tRowData.VAT                = msg[j].VAT;
@@ -521,7 +521,7 @@ function mapledgers ( startDate,endDate,ledgerAccounts, companies )
       for ( j = 0; j < msg.length; j++ )
       {
          oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ; 
+         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
          oRowData.grossAmount        = msg[j].grossAmount;
          oRowData.VAT                = msg[j].VAT;
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateLedgerOverviewList );
@@ -549,7 +549,7 @@ function mapOverview ( startDate,endDate,ledgerAccounts, companies )
       {
          oRowData.compagnyID         = msg[j].compagnyID;
          oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ; 
+         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
          oRowData.grossAmount        = msg[j].grossAmount;
          oRowData.VAT                = msg[j].VAT;
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateOverviewList );
@@ -586,8 +586,8 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies, dashBookYe
          rowData.UPL                 = typeof msg[j].transferredAccountantCount !== 'undefined' ?  Number( msg[j].transferredAccountantCount ) : 0 ;
          rowData.ACCOK               = typeof msg[j].accntchk !== 'undefined' ? ( msg[j].accntchk.includes( 'on' ) ? 'X' : '-' ) : '' ;
          rowData.TRNREF              = typeof msg[j].bankstatementID !== 'undefined' ? msg[j].bankstatementID : '-' ;
-         rowData.CREDEB              = typeof msg[j].movementSign !== 'undefined' ? ( Number(msg[j].movementSign) === 1 ? 'Debit' :  ( Number(msg[j].movementSign) === 0 ? 'Credit' :  'Unknown'  )) : 'Unknown' ;
-         
+         rowData.CREDEB              = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
+
          rowData.bankDate            = msg[j].bankDate;
          rowData.invoiceDate         = msg[j].invoiceDate;
          rowData.grossAmount         = msg[j].grossAmount;
@@ -638,7 +638,7 @@ function populateTable ( table, dataRows, map )
 
        let element, counter = 0;
 
-       
+
        for ( element of dataRows )
        {   const row                   = table.insertRow();
            let ROWID                   = '';
@@ -677,11 +677,11 @@ function populateTable ( table, dataRows, map )
                                                    break;
                                                }
                    default                  :   if ( amountElements.includes( key ) )
-                                                {   if ( typeof content !== 'undefined') 
+                                                {   if ( typeof content !== 'undefined' )
                                                     {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
                                                         cell.appendChild( taxt );
                                                         cell.style.textAlign   = 'right';
-                                                    } 
+                                                    }
                                                 }
                                                 else
                                                    cell.appendChild( textNode );
@@ -780,7 +780,7 @@ function sortRows ( sortID,sortMap, rows )
 
 
 
-function createTable ( tableName, rows, map,ledgerAccounts, companies , dashBookYear)
+function createTable ( tableName, rows, map,ledgerAccounts, companies , dashBookYear )
 {
    try
    {
@@ -823,13 +823,13 @@ function manageDashBoard ( startDate,endDate,ledgerAccounts, companies, dashBook
 {
    try
    {  const statementRecords = mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear );
-      console.log(statementRecords); 
+      console.log( statementRecords );
       createTable( 'statementRecords', mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear ), statementMap,ledgerAccounts, companies, dashBookYear );
       contextualizeFilter ( mapStatements( startDate,endDate,ledgerAccounts, companies ), ledgerAccounts, companies, dashBookYear );
       createTable( 'overviewRecords', mapOverview( startDate,endDate,ledgerAccounts, companies, dashBookYear ), overviewMap,ledgerAccounts, companies, dashBookYear );
       createTable( 'manageTotalsByLedger', mapledgers( startDate,endDate,ledgerAccounts, companies, dashBookYear ), ledgerMap,ledgerAccounts, companies, dashBookYear );
       createTable( 'totalsRecords', mapTotals( startDate,endDate,ledgerAccounts, companies, dashBookYear ), totalMap,ledgerAccounts, companies, dashBookYear );
-      
+
    }
    catch ( ex )
    {
@@ -837,22 +837,28 @@ function manageDashBoard ( startDate,endDate,ledgerAccounts, companies, dashBook
    }
 }
 
-function contextualizeBookYears ( rows, dashBookYear )
-{  //console.log('bookkeepingYears',bookkeepingYears);
-   try
+function contextualizeBookYears (  dashBookYear )
+{  try
    {   const dashBookYearElement              =  document.getElementById( 'dashBookYear' );
+
       while ( dashBookYearElement.firstChild )
       {   dashBookYearElement.removeChild( dashBookYearElement.firstChild );
       }
 
        bookkeepingYears.forEach ( ( element ) =>
        {   const option                = document.createElement( 'option' );
+
            option.value                = element._id;
            option.text                 = element.bookkeepingYear;
-           
-           if (option.value.includes(dashBookYear))
-             {  option.selected = true;
-               }
+
+           if ( option.value.includes( dashBookYear ) )
+           {  option.selected          = true;
+           }
+           if (  option.text.includes( '--'  ) )
+            {   if ( typeof dashBookYear === 'undefined' || dashBookYear.length === 0 )
+                {   option.selected    = true;
+                }
+            }
            dashBookYearElement.add( option );
        } );
    }
@@ -898,7 +904,7 @@ function contextualizeAccounts ( rows,ledgerAccounts )
             option                      = document.createElement( 'option' );
             option.value                = ledgerAccountList[k];
             option.text                 = ledgerAccountList[k];
-            
+
             dashledgerAccounts.add( option );
          }
 
@@ -1038,7 +1044,10 @@ function initTable ( msg,queryObj )
       tableData                       = msg;
       setupLegderAccounts();
       setupCompanies();
-      //manageDashBoard( 0,1999999999999,'--------------------------------------------','---' );
+
+
+      contextualizeBookYears ( typeof queryObj.bookYear !== 'undefined' ? queryObj.bookYear : '' );
+
       const dashStartDate               = document.getElementById( 'dashStartDate' );
       dashStartDate.value             = typeof queryObj.startDate !== 'undefined' ? queryObj.startDate : '';
 
@@ -1062,7 +1071,7 @@ function initTable ( msg,queryObj )
 function contextualizeFilter ( rows, ledgerAccounts, companies, dashBookYear )
 {   contextualizeAccounts( rows,ledgerAccounts );
     contextualizeCompanies( rows, companies );
-    contextualizeBookYears( rows, dashBookYear );
+    contextualizeBookYears( dashBookYear );
 }
 
 
@@ -1081,6 +1090,7 @@ function refreshPage ()
    const endDate                          = document.getElementById( 'dashEndDate' ).value;
    const dashledgerAccounts               = document.getElementById( 'dashledgerAccounts' ).value;
    const companies                        = document.getElementById( 'companies' ).value;
+   const bookYear                        = document.getElementById( 'dashBookYear' ).value;
    const pageString                       = window.location.href;
 
    const url                             = new URL( pageString );
@@ -1092,6 +1102,7 @@ function refreshPage ()
    endDate.length == 0 ? '' : urlOringin.searchParams.append( 'endDate', endDate );
    dashledgerAccounts.includes( '--------------------------------------------' )  ? '' : urlOringin.searchParams.append( 'dashledgerAccounts', dashledgerAccounts );
    companies.includes( '---' )   ? '' : urlOringin.searchParams.append( 'companies', companies );
+   bookYear.includes( '---' )   ? '' : urlOringin.searchParams.append( 'bookYear', bookYear );
 
    location.href = urlOringin;
 }
