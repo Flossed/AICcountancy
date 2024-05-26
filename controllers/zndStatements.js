@@ -31,7 +31,8 @@ const zanddEmployees                    = require( '../models/zanddEmployees' );
 const ledgerAccountLabels               = require( '../models/ledgerAccountCategoryName' );
 const paymentCatagories                 = require( '../models/paymentCatagories' );
 const zndBookKeepersLedgers             = require( '../models/zndBookKeepersLedgers' );
-const manageBookkeepingYears             = require( '../services/manageBookkeepingYears' );
+const manageBookkeepingYears            = require( '../services/manageBookkeepingYears' );
+const manageCheckBooks                  = require( '../services/manageCheckBooks' );
 /* -------------------------------- End Models -------------------------------*/
 
 /* ---------------------------------  Application constants    ----------------*/
@@ -259,59 +260,53 @@ async function runAugments ( items )
 
 
 async function main ( req, res )
-{
-   try
-   {
-      var items, ideez, bankData, employees, companies, accountLedgerNames, paymentTypesList;
-      var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList, bookyearNames;
+{   try
+    {   var items, ideez, bankData, employees, companies, accountLedgerNames, paymentTypesList;
+        var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList, bookyearNames;
 
-      logger.trace( applicationName + ':zndStatements:main:Started' );
+        logger.trace( applicationName + ':zndStatements:main:Started' );
 
-      if ( req.params.id != null )
-      {   req.params.newform          = false;
-          items                       = await zanddLedger.findById( req.params.id );
-          ideez                       = await zanddLedger.find().sort( {invoiceDate :1} ).distinct( '_id' );
-          bankData                    = [];
-          employees                   = await zanddEmployees.find().distinct( 'employeeID',{'employeeStatus':'Active' } );
-          companies                   = await zanddCompanies.find().sort( {companyName :1} );
-          accountLedgerNames          = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
-          //bookkeepingLedgerNames      = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
-          bookkeepingLedgerNames      = await zndBookKeepersLedgers.find();          
-		  const record = {'action':'getData'}; 
-		  const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
-          //console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
-          paymentTypesList            = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
-
-
+        if ( req.params.id != null )
+        {   req.params.newform           = false;
+            items                        = await zanddLedger.findById( req.params.id );
+            ideez                        = await zanddLedger.find().sort( {invoiceDate :1} ).distinct( '_id' );
+            bankData                     = [];
+            employees                    = await zanddEmployees.find().distinct( 'employeeID',{'employeeStatus':'Active' } );
+            companies                    = await zanddCompanies.find().sort( {companyName :1} );
+            accountLedgerNames           = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
+            //bookkeepingLedgerNames     = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
+            bookkeepingLedgerNames       = await zndBookKeepersLedgers.find();
+		        const record = {'action':'getData'};
+		        const bookkeepingYears       = await manageBookkeepingYears.manageBookkeepingYears( record,'' );
+            const verification           = await manageCheckBooks.manageCheckBooks( record,'' );
+            
+            paymentTypesList             = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
             if ( typeof items.bankRecord !== 'undefined' ||  items.bankRecord.length !== 0 )
-            {
-                if ( items.bankRecord.length > 0 )
-                {
-               bankData            = createFilteredDataDump( items.bankRecord );
+            {   if ( items.bankRecord.length > 0 )
+                {    bankData            = createFilteredDataDump( items.bankRecord );
                 }
             }
             const retVal                  = await runAugments( items );
-            res.render( 'zndStatements',{ items:items ,ideez:ideez,bankData:bankData, employees:employees, companies:companies, accountLedgerNames:accountLedgerNames,  bookkeepingLedgerNames:bookkeepingLedgerNames,paymentTypesList:paymentTypesList,bookkeepingYears:bookkeepingYears.body } );
+            res.render( 'zndStatements',{ items:items ,ideez:ideez,bankData:bankData, employees:employees, companies:companies, accountLedgerNames:accountLedgerNames,  bookkeepingLedgerNames:bookkeepingLedgerNames,paymentTypesList:paymentTypesList,bookkeepingYears:bookkeepingYears.body, verification:verification.body } );
         }
         else
-        {
-         req.params.newform         = true;
+        {   req.params.newform         = true;
             employees                  = await zanddEmployees.find().distinct( 'employeeID',{'employeeStatus':'Active' } );
             companies                  = await zanddCompanies.find().sort( {companyName :1} );
             accountLedgerNames         = await ledgerAccountLabels.find().distinct( 'ledgerLabel' );
             //bookkeepingLedgerNames     = await zndBookKeepersLedgers.find().distinct( "bkLedgerLabel" );
-          bookkeepingLedgerNames     = await zndBookKeepersLedgers.find();
-          const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
+            bookkeepingLedgerNames     = await zndBookKeepersLedgers.find();
+            const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears( record,'' );
+            const verification         = await manageCheckBooks.manageCheckBooks( record,'' );
             paymentTypesList           = await paymentCatagories.find().distinct( 'paymentCatagoryName' );
-          console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
-            res.render( 'zndStatements',{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList ,bookkeepingYears:bookkeepingYears.body} );
+            console.log( 'Bookkkaaaar',bookkeepingLedgerNames );
+            res.render( 'zndStatements',{  employees:employees, companies:companies, accountLedgerNames:accountLedgerNames, bookkeepingLedgerNames:bookkeepingLedgerNames, paymentTypesList:paymentTypesList ,bookkeepingYears:bookkeepingYears.body, verification:verification.body} );
         }
         logger.trace( applicationName + ':zndStatements:main:Done' );
     }
     catch ( ex )
-    {
-      logger.trace( applicationName + 'zndStatements:main:An exception occurred:[' + ex + ']' );
-     }
+    {   logger.trace( applicationName + 'zndStatements:main:An exception occurred:[' + ex + ']' );
+    }
 }
 /* --------------------------------- End Functions   -------------------------*/
 

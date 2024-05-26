@@ -4,18 +4,6 @@
       <%- include('layouts/heading'); -%>
       <%- include('layouts/navbar'); -%>
       <div class="main">         
-         <% if (typeof valErrors != "undefined"  && valErrors.length > 0 ) { %>
-            <div class="errorBar">
-               <span id="errorheader">Valdiation result: (page will not completly render until all errors are fixed)</span>
-               <ul class="errorClass">
-                    <%   var i;
-                         for (i = 0; i < valErrors.length; i++) { %>
-                            <li style="background-color:<%=valErrors[i].errorType.includes('Error')?'#ff9999':'#7CFC00'%>"> <%= valErrors[i].message %></li>
-                         <% } %>
-               </ul>
-            </div>
-         <% } %>
-	 
          <div>
             <div class="pageFlipper" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>">
                <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
@@ -38,21 +26,20 @@
             <h1 id="idlist" hidden ><%=typeof ideez != "undefined" ? JSON.stringify(ideez) : ""%></h1>
             <h1 id="bookkeepingLedgerNames" hidden ><%=typeof bookkeepingLedgerNames != "undefined" ? JSON.stringify(bookkeepingLedgerNames) : ""%></h1>            
             <h1 id="bookkeepingYears" hidden       ><%=typeof bookkeepingYears !== "undefined" ? JSON.stringify(bookkeepingYears) : ""%></h1>
-            
-            
+            <h1 id="verification" hidden       ><%=typeof verification !== "undefined" ? JSON.stringify(verification) : ""%></h1>
             <table>
                <tr>
                   <th style="background-color: #e6e6e6">
-                    Edit State
+                  Edit State
                   </th> 
                   <th style="background-color: #e6e6e6">
-                    Send state
+                  Send state
                   </th>
                   <th style="background-color: #e6e6e6">
-                    Send time
+                  Send time
                   </th>
                   <th style="background-color: #e6e6e6">
-                    Send count
+                  Send count
                   </th>
                </tr> 
                <tr>
@@ -77,16 +64,16 @@
                <textarea style="display:none;" rows="1" class="form-control" id="actie" name="actie"><%= typeof items != "undefined" ? items.actie: "" %></textarea>
       
                <div id="statementDropArea"> 	                
-      	          Please Drop your files in  the red dashed rectangle.  	    	            
+      	         Please Drop your files in  the red dashed rectangle.  	    	            
                   <input type="file" style="display:none;" id="statementDocuments" multiple  onchange="handleFiles(this.files)"> 
-	             </div>
+	            </div>
 	       
-	             <input type="checkbox"  style="display:none;"  id="editState" name="editState" <%=(typeof items != "undefined" &&  items.editState) ? (items.editState.includes('on') ? 'checked': ''): '' %>>
+	            <input type="checkbox"  style="display:none;"  id="editState" name="editState" <%=(typeof items != "undefined" && items.editState) ? (items.editState.includes('on') ? 'checked': ''): '' %>>
                <input type="checkbox"  style="display:none;"  id="locked" name="locked" <%=(typeof items != "undefined" &&  items.locked) ? (items.locked.includes('locked') ? 'checked': ''): '' %>>
                <input type="checkbox"  style="display:none;"  id="accntchk" name="accntchk" <%=(typeof items != "undefined" &&  items.accntchk) ? (items.accntchk.includes('true') ? 'checked': ''): '' %>>
                <input type="checkbox"  style="display:none;"  id="transferredAccountant" name="transferredAccountant" <%=(typeof items != "undefined" &&  items.transferredAccountant) ? (items.transferredAccountant.includes('on') ? 'checked': ''): '' %>>
                <br><p>
-                <div id="#ignorePDF"></div> 
+               <div id="#ignorePDF"></div> 
                <p><label>Bank reference:</label>
                <textarea  cols="40" id="bankstatementID" disabled rows="1" style="resize: none;text-align:center;"><%=(typeof items  != "undefined") ? items.bankstatementID   : '-' %></textarea>
                <p><label>Payment via (list of paymenttypes): </label>
@@ -94,145 +81,92 @@
                   <% for (var i = 0; i < paymentTypesList.length; i++) { %>
                      <option value="<%=paymentTypesList[i]%>" <%=(typeof items != "undefined" &&  items.paymentTypes.includes(paymentTypesList[i])) ? 'selected': '' %>><%=paymentTypesList[i]%></option>
                   <%  } %>
-                </select></p>
-                <br>
-                <p><label>Payment date (dd-mm-jjj): </label>
-                <textarea rows="1"  cols="40" style="resize: none;" id="depositDate" placeholder="..." name="bankDate"><%= typeof items != "undefined" ? items.bankDate : "" %></textarea></p>
-                <p><label>Invoice date (dd-mm-jjj): </label>
-                <textarea rows="1"  cols="40" style="resize: none;" id="InvoiceDate" placeholder="..." name="invoiceDate"><%= typeof items != "undefined" ? items.invoiceDate : "" %></textarea></p>
-                <br>
-                <p><label>Fiat sign Credit/Debit</label>            
-                Credit: <input type="radio"  <%=(typeof items != "undefined" &&  typeof items.paymentTypes != "undefined") ?(items.paymentTypes.includes('BANK')  ? 'disabled': ''):"" %>  id="creditSign" name="creditSign" <%=(typeof items != "undefined" &&  typeof items.movementSign !== 'undefined') ?(items.movementSign.includes('0')  ? 'checked': ''):"" %> onchange="setCreditSign('0');" > -  Debit:<input <%=(typeof items !== 'undefined' &&  typeof items.paymentTypes !== 'undefined' ) ?(items.paymentTypes.includes('BANK')  ? 'disabled': ''):"" %>   type="radio" id="debitSign" name="debitSign" <%=(typeof items != "undefined" &&  typeof items.movementSign != "undefined" )? (items.movementSign.includes('0')  ? '':'checked'):'' %> onchange="setCreditSign('1');">
-                <p><label>Payed gross amount  ((+,-)nnnn,nn): </label>
-                <textarea rows="1"  cols="40" id="grossAmount" style="resize: none;" placeholder="..." name="grossAmount"><%= typeof items != "undefined" ? items.grossAmount : "" %></textarea>          
-                <p><label>Payed V.A.T.((+,-)nnnn,nn): </label>
-                <textarea rows="1"  cols="40" id="VAT" style="resize: none;" placeholder="..." name="VAT"><%= typeof items != "undefined" ? items.VAT : "" %></textarea>          
-                <br>  <!--              
-                <p><label>Booked V.A.T.): </label>
-                <textarea rows="1"  cols="40" id="bookedVAT" style="resize: none;" placeholder="..." name="bookedVAT"><%= typeof items != "undefined" ? items.bookedVAT : "" %></textarea>          
-                <br> -->
-                <br><!--
-                <p><label>ZANDD Account Number: </label>                
-                <textarea rows="1"  cols="40" id="zndAccountNumber" placeholder="..." style="resize: none;" name="zndAccountNumber"><%= typeof items != "undefined" ? items.zndAccountNumber : "" %></textarea></p>
-                <br>-->
-                <p><label>LedgerAccount: </label>
-                <select style="width: 316px;" name="ledgerAccount" id="ledgerAccount">
-                   <% for (var i = 0; i < accountLedgerNames.length; i++) { %>`
-                      <option value="<%=accountLedgerNames[i]%>" <%=(typeof items != "undefined" &&  items.ledgerAccount.includes(accountLedgerNames[i])) ? 'selected': '' %>><%=accountLedgerNames[i]%></option>
-                   <%  } %>
-                 </select>
-                 </p>
-                 <br>
-                 <hr>
-                 <p><label>LedgerAccount Accountant: </label>
-                  <select style="width: 316px;" name="bkLedgerAccount" id="bkLedgerAccount">
-                   <!--<% for (var i = 0; i < bookkeepingLedgerNames.length; i++) { %>`
-                      <option value="<%=bookkeepingLedgerNames[i]%>" <%=(typeof items != "undefined" &&  items.ledgerAccount.includes(bookkeepingLedgerNames[i])) ? 'selected': '' %>><%=bookkeepingLedgerNames[i]%></option>
-                   <%  } %> --> 
-                 </select>
-                 </p>
-                 <br>
-                 <p><label>Book Year Cost: </label>
-                 <select style="width: 316px;" name="bkBookYear" id="bkBookYear">                                       
-                  </select>
-                  <br> 
-                 <p><label>Accountant Reference: </label>
-                 <textarea rows="1"  cols="40" id="acountantReference" style="resize: none;" placeholder="..." name="acountantReference"><%= typeof items != "undefined" ? items.acountantReference : "" %></textarea>          
-                 <br>
+               </select></p>
+               <br>
+               <p><label>Payment date (dd-mm-jjj): </label>
+               <textarea rows="1"  cols="40" style="resize: none;" id="depositDate" placeholder="..." name="bankDate"><%= typeof items != "undefined" ? items.bankDate : "" %></textarea></p>
+               <p><label>Invoice date (dd-mm-jjj): </label>
+               <textarea rows="1"  cols="40" style="resize: none;" id="InvoiceDate" placeholder="..." name="invoiceDate"><%= typeof items != "undefined" ? items.invoiceDate : "" %></textarea></p>
+               <br>
+               <p><label>Fiat sign Credit/Debit</label>            
+               Credit: <input type="radio"  <%=(typeof items != "undefined" &&  typeof items.paymentTypes != "undefined") ?(items.paymentTypes.includes('BANK')  ? 'disabled': ''):"" %>  id="creditSign" name="creditSign" <%=(typeof items != "undefined" &&  typeof items.movementSign !== 'undefined') ?(items.movementSign.includes('0')  ? 'checked': ''):"" %> onchange="setCreditSign('0');" > -  Debit:<input <%=(typeof items !== 'undefined' &&  typeof items.paymentTypes !== 'undefined' ) ?(items.paymentTypes.includes('BANK')  ? 'disabled': ''):"" %>   type="radio" id="debitSign" name="debitSign" <%=(typeof items != "undefined" &&  typeof items.movementSign != "undefined" )? (items.movementSign.includes('0')  ? '':'checked'):'' %> onchange="setCreditSign('1');">
+               <p><label>Payed gross amount  ((+,-)nnnn,nn): </label>
+               <textarea rows="1"  cols="40" id="grossAmount" style="resize: none;" placeholder="..." name="grossAmount"><%= typeof items != "undefined" ? items.grossAmount : "" %></textarea>          
+               <p><label>Payed V.A.T.((+,-)nnnn,nn): </label>
+               <textarea rows="1"  cols="40" id="VAT" style="resize: none;" placeholder="..." name="VAT"><%= typeof items != "undefined" ? items.VAT : "" %></textarea>          
+               <br>
+               <p><label>LedgerAccount: </label>
+               <select style="width: 316px;" name="ledgerAccount" id="ledgerAccount">
+                  <% for (var i = 0; i < accountLedgerNames.length; i++) { %>`
+                     <option value="<%=accountLedgerNames[i]%>" <%=(typeof items != "undefined" &&  items.ledgerAccount.includes(accountLedgerNames[i])) ? 'selected': '' %>><%=accountLedgerNames[i]%></option>
+                  <%  } %>
+               </select>
+               </p>
+               <br>
+               <p><label>Compagny(list of compagnies): </label>
+               <select style="width: 316px;" name="compagnyID" id="compagnyID" onchange="setCompanyDetails()">
+                  <% for (var i = 0; i < companies.length; i++) { %>
+                     <option  value="<%=companies[i].companyName%>" <%=(typeof items != "undefined" &&  items.compagnyID.includes(companies[i].companyName)) ? 'selected': '' %>><%=companies[i].companyName%></option>
+                  <%  } %>
+               </select></p>
+               <p><label>Invoice Number: </label>
+               <textarea rows="1"  cols="40" id="invoiceNumber" style="resize: none;" placeholder="..." name="invoiceNumber"><%= typeof items != "undefined" ? items.invoiceNumber : "" %></textarea></p>
+               <br>
+               <p><label>Structured Payment ID: </label>
+               <textarea rows="1" cols="40"  id="PaymentID" style="resize: none;" placeholder="..." name="PaymentID"><%= typeof items != "undefined" ? items.PaymentID : "" %></textarea></p>
+               <br>
+               <p><label>Declaration Statement: </label>
+               <textarea rows="1"  cols="40" readonly id="declarationStatement" style="resize: none;" placeholder="..." name="declarationStatement"><%= typeof items != "undefined" ? items.declarationStatement : "" %></textarea></p>
+               <br>                     
+               <p><label>Employees Invoice: </label>
+               <select style="width: 316px;" name="beneficiary" id="beneficiary">
+                  <% for (var i = 0; i < employees.length; i++) { %>
+                     <option value="<%=employees[i]%>" <%=(typeof items != "undefined" &&  items.beneficiary.includes(employees[i])) ? 'selected': '' %>><%=employees[i]%></option>
+                  <%  } %>
+               </select>
+               </p>
+               <br> 
+               <p><label>Description of Bill: </label>
+               <textarea style="resize: none;" rows="7"  cols="40"  id="billDescription" placeholder="..." name="billDescription"><%= typeof items != "undefined" ? items.billDescription : "" %></textarea></p>
+               <br>
 
-                 <p><label>Bookkeeping Notes: </label>
-                  <textarea style="resize: none;" rows="7"  cols="40"  id="bkNotes" placeholder="..." name="bkNotes"></textarea></p>
-                  <br>
+               <hr>
+               <h2>Bookkeepers reference.</h2>
+               <p><label>LedgerAccount Accountant: </label>
+               <select style="width: 316px;" name="bkLedgerAccount" id="bkLedgerAccount"></select>
+               </p>
+               <br>
+               <p><label>Book Year: </label>
+               <select style="width: 316px;" name="bkBookYear" id="bkBookYear"></select>
+               <br> 
+               <p><label>Accountant Reference: </label>
+               <textarea rows="1"  cols="40" id="acountantReference" style="resize: none;" placeholder="..." name="acountantReference"><%= typeof items != "undefined" ? items.acountantReference : "" %></textarea>          
+               <br>
+               <p><label>Bookkeeping Notes: </label>
+               <textarea style="resize: none;" rows="7"  cols="40"  id="bkNotes" placeholder="..." name="bkNotes"></textarea></p>
+               <br>
 
-                 <hr>
-                 <p><label>Booking Periode(Q<n>/Year): </label>
-                 <select style="width: 316px;" name="bookingPeriod" id="bookingPeriod" value="opel">
-                    <option value="Q1"  <%=(typeof items != "undefined" &&  items.bookingPeriod.includes('Q1')) ? 'selected': '' %>>Q1</option>
-                    <option value="Q2"  <%=(typeof items != "undefined" &&  items.bookingPeriod.includes('Q2')) ? 'selected': '' %>>Q2</option>
-                    <option value="Q3"  <%=(typeof items != "undefined" &&  items.bookingPeriod.includes('Q3')) ? 'selected': '' %>>Q3</option>
-                    <option value="Q4"  <%=(typeof items != "undefined" &&  items.bookingPeriod.includes('Q$')) ? 'selected': '' %>>Q4</option>
-                </select></p>
-                <br>
-                <p><label>Type of Proof(list of prooftypes): </label>
-                <select style="width: 316px;" name="proofType" id="proofType">
-                     <option value="---" <%=(typeof items != "undefined" &&  items.proofType.includes('---')) ? 'selected': '' %>>---</option>
-                     <option value="DOC"  <%=(typeof items != "undefined" &&  items.proofType.includes('DOC')) ? 'selected': '' %>>DOC</option>
-                     <option value="BON"  <%=(typeof items != "undefined" &&  items.proofType.includes('BON')) ? 'selected': '' %>>BON</option>
-                </select></p>
-                <br>
-                <br>
-                <p><label>Invoice Number: </label>
-                <textarea rows="1"  cols="40" id="invoiceNumber" style="resize: none;" placeholder="..." name="invoiceNumber"><%= typeof items != "undefined" ? items.invoiceNumber : "" %></textarea></p>
-                <br>
-                <p><label>Customer Reference: </label>
-                <textarea rows="1" cols="40"  id="customerReference" style="resize: none;" placeholder="..." name="customerReference"><%= typeof items != "undefined" ? items.customerReference : "" %></textarea></p>
-                <br>
-                <p><label>Structured Payment ID: </label>
-                <textarea rows="1" cols="40"  id="PaymentID" style="resize: none;" placeholder="..." name="PaymentID"><%= typeof items != "undefined" ? items.PaymentID : "" %></textarea></p>
-                <br>
-                <p><label>Compagny(list of compagnies): </label>
-                <select style="width: 316px;" name="compagnyID" id="compagnyID" onchange="setCompanyDetails()">
-                   <% for (var i = 0; i < companies.length; i++) { %>
-                      <option  value="<%=companies[i].companyName%>" <%=(typeof items != "undefined" &&  items.compagnyID.includes(companies[i].companyName)) ? 'selected': '' %>><%=companies[i].companyName%></option>
-                   <%  } %>
-                </select></p>
-                
-                <p><label>Bankaccount Number: </label>
-                <textarea rows="1"  cols="40" readonly id="bankAccountNumber" style="resize: none;" placeholder="..." name="bankAccountNumber"><%= typeof items != "undefined" ? items.bankAccountNumber : "" %></textarea></p>
-                <br>
-                <p><label>VAT Number: </label>
-                <textarea rows="1" cols="40" readonly id="VATNumber" placeholder="..." style="resize: none;" name="VATNumber"><%= typeof items != "undefined" ? items.VATNumber : "" %></textarea></p>
-                <br>
-                <br>
-                <p><label>Declaration Statement: </label>
-                <textarea rows="1"  cols="40" readonly id="declarationStatement" style="resize: none;" placeholder="..." name="declarationStatement"><%= typeof items != "undefined" ? items.declarationStatement : "" %></textarea></p>
-                <br>                
-                
-                <p><label>Employees Invoice: </label>
-                <select style="width: 316px;" name="beneficiary" id="beneficiary">
-                   <% for (var i = 0; i < employees.length; i++) { %>
-                      <option value="<%=employees[i]%>" <%=(typeof items != "undefined" &&  items.beneficiary.includes(employees[i])) ? 'selected': '' %>><%=employees[i]%></option>
-                   <%  } %>
-                </select>
-                </p>
-                <br>                
-                 <p><label>Specification of Bill: </label>
-                <textarea disabled style="resize: none;" rows="7"  cols="40" id="billSpecification" placeholder="..." name="billSpecification"><%= typeof items != "undefined" ? items.billSpecification : "" %></textarea></p>
-                <br>
-                <p><label>Description of Bill: </label>
-                <textarea style="resize: none;" rows="7"  cols="40"  id="billDescription" placeholder="..." name="billDescription"><%= typeof items != "undefined" ? items.billDescription : "" %></textarea></p>
-                <br>
-                
-                
-                <p><label>Notes: </label>
-                <textarea style="resize: none;" rows="7"  cols="40"  id="notes" placeholder="..." name="notes"><%= typeof items != "undefined" ? items.notes : "" %></textarea></p>
-                <br>
-                <p><label>Pending actions: </label>
-                <textarea style="resize: none;" rows="7"  cols="40"  id="pendingActions" placeholder="..." name="pendingActions"><%= typeof items != "undefined" ? items.pendingActions : "" %></textarea></p>
-                <br>
-                <div class="buttonbar">
-                   <button id="FA" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>                   
-                   <button id="FA" type="button"  onclick="formulierActie('validate');">Validate</button><br>
-                   <button id="FA" type="button"  onclick="formulierActie('cancel');">Cancel</button><br>
-                   <button id="FAD" name="deleteForm" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
-                   <button id="FAU" name="updateForm" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
-                   <button id="FA" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>                   
-                </div>
-                 
-            </form>
-           <!-- <div class="displayDocument">                   
-               <div >
-                  <h2>Preview Document</h2>
-                  <span class="docEntry"></span> File name:[ <%=typeof items != "undefined" ? items.docScan : ""%> ]</br>
-                  <span class="docEntry"></span> Path:[ <%=typeof items != "undefined" ? items.docPath : ""%> ]      
-                  <hr>
-                   <button id="prev">Previous</button>
-                  <button id="next">Next</button>                
-                  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-               </div>
-               <canvas id="the-canvas"></canvas>
-            </div>
-         -->
+               <hr>
+               <h2>Verification</h2>
+               <p><label>Bookkeeping Status:</label>
+               <select style="width: 316px;" name="bcStatus" id="bcStatus"></select>
+               </p>
+               <br>
+               <p><label>Description: </label>               
+               <textarea style="resize: none;" rows="7"  cols="40"  id="bcComment" placeholder="..." name="bcComment"><%= typeof items != "undefined" ? items.bcComment : "" %></textarea></p>
+               <hr>               
+               <p><label>Specification of Bill: </label>
+               <textarea disabled style="resize: none;" rows="7"  cols="40" id="billSpecification" placeholder="..." name="billSpecification"><%= typeof items != "undefined" ? items.billSpecification : "" %></textarea></p>
+               <br>               
+               <div class="buttonbar">
+                  <button id="FA" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('duplicate');">Duplicate</button><br>                   
+                  <button id="FA" type="button"  onclick="formulierActie('validate');">Validate</button><br>
+                  <button id="FA" type="button"  onclick="formulierActie('cancel');">Cancel</button><br>
+                  <button id="FAD" name="deleteForm" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('deleteRecord');">Delete</button><br>
+                  <button id="FAU" name="updateForm" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
+                  <button id="FA" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>                   
+               </div>                 
+            </form>           
          <div class="displayDocument">                   
             <div>
                <h2>Document</h2>
@@ -240,19 +174,11 @@
                <button id="FA" onclick="openPDF();">Open in other window</button>
             </div> 
          </div> 
-
-           
          </div>
       </div>
       <%- include('layouts/RawDataViewer'); -%>
-      <%- include('layouts/footer'); -%>
-      <!-- <script src="/js/html2canvas.min.js"></script> 
-      <script src="/js/jspdf/jspdf.js"></script> -->      
-      <!-- <script src="/js/pdfviewer.js"></script> -->
-
+      <%- include('layouts/footer'); -%>      
       <script src="/js/zndStatements.js"></script>
       <script src="/js/statementDrop.js"></script> 
-      
-      
    </body>
 </html>

@@ -140,14 +140,14 @@ input
 
 .displayDocument
 {   position: absolute;
-	  left:103%;
-	  top: 12.2%;
-	  height:15%;
-	  width:100%; 	  
-	  overflow: hidden;
-	  padding: 20px;
-	  border: 1px solid green;
-	  font-family: 'Calibri', sans-serif;
+	left:103%;
+	top: 15%;
+	height:15%;
+	width:100%; 	  
+	overflow: hidden;
+	padding: 20px;
+	border: 1px solid green;
+	font-family: 'Calibri', sans-serif;
     font-size: 14px;
 }	
 
@@ -195,6 +195,13 @@ input
 
 
 .ledgerentry
+{   position: absolute;
+    top: 12vh;
+    padding: 20px;    
+}
+
+
+.fixedEntry
 {   position: fixed;
     top: 12vh;
     padding: 20px;    

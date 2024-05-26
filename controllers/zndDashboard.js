@@ -39,6 +39,7 @@ const zndManageData                     = require('../services/zndManageData')
 const zanddLedger                       = require('../models/zanddLedger')
 const zndBookKeepersLedgers             = require( "../models/zndBookKeepersLedgers" );
 const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
+const manageCheckBooks                 = require( '../services/manageCheckBooks' );
 /* -------------------------------- End Models -------------------------------*/
 
 
@@ -77,9 +78,10 @@ async function main(req, res)
         let bookkeepingLedgerNames  = await zndBookKeepersLedgers.find();
         const record                = {};
         record.action               = 'getData';
-        const bookkeepingYears     = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
+        const bookkeepingYears      = await manageBookkeepingYears.manageBookkeepingYears(record,''); 
+        const verification           = await manageCheckBooks.manageCheckBooks( record,'' );
         
-        res.render('zndDashboard',{ items:items, queryObj:queryObj, bookkeepingLedgerNames:bookkeepingLedgerNames, bookkeepingYears:bookkeepingYears.body });
+        res.render('zndDashboard',{ items:items, queryObj:queryObj, bookkeepingLedgerNames:bookkeepingLedgerNames, bookkeepingYears:bookkeepingYears.body, verification:verification.body });
     }
     catch(ex)
     {   logger.exception(applicationName + ':zndDashboard:main():An exception occurred: ['+ ex +'].')

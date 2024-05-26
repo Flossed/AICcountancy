@@ -1,15 +1,16 @@
 let tableData, rowList, oRowList;
 let bookkeepingLedgerNames;
 let bookkeepingYears;
+let verificationStatus;
 
 const statementMap                      = {   'NR'                   :'ID' ,
-                                              'Doc'                  :'DOC',
+                                              //'Doc'                  :'DOC',
                                               'creation Date'        :'creationDate',
                                               'creation DateStr'     :'creationDateString',
                                               //'UploadTime'           :'DONE',
                                               //'UploadCount'          :'UPL',
-                                              'ACCOK'                :'ACCOK',
-                                              'TRANSREF'             :'TRNREF',
+                                              //'ACCOK'                :'ACCOK',
+                                              //'TRANSREF'             :'TRNREF',
                                               'CRED/DEB'             :'CREDEB',
                                               'Bankdate'             :'bankDate',
                                               'Invoice Date'         :'invoiceDate',
@@ -17,7 +18,7 @@ const statementMap                      = {   'NR'                   :'ID' ,
                                               'Vat'                  :'VAT',
                                               //'Booked VAT'           :'bookedVAT',
                                               //'Booked Period'        :'bookingPeriod',
-                                              'Type of Proof'        :'proofType',
+                                              //'Type of Proof'        :'proofType',
                                               'Type payment'         :'paymentTypes',
                                               'Declarant'            :'beneficiary',
                                               'Grootboekrekening'    :'ledgerAccount',
@@ -27,7 +28,8 @@ const statementMap                      = {   'NR'                   :'ID' ,
                                               'Document Name'        :'documentName',
                                               'Bookkeeping Ledger'   :'bkLedgerAccount',
                                               'acountant Reference'  :'acountantReference',
-                                              'bkBookYear'           :'bkBookYear'
+                                              'bkBookYear'           :'bkBookYear', 
+                                              'bcStatus'             :'bcStatus'
                                            };
 
 
@@ -616,6 +618,7 @@ function mapStatements ( startDate,endDate,ledgerAccounts, companies, dashBookYe
          rowData.grossAmountNR       = msg[j].grossAmountNR ;
          rowData.VATNR               = msg[j].VATNR ;
          rowData.bkBookYear          = msg[j].bkBookYear ;
+         rowData.bcStatus            = msg[j].bcStatus ; 
          rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, rowData, rows, updateStatementList, dashBookYear );
       }
       return rows;
@@ -638,6 +641,15 @@ function findBookyear ( bkBookYearID )
 {  const pos = bookkeepingYears.map( e => e._id ).indexOf( bkBookYearID );
    return pos > -1 ? bookkeepingYears[pos].bookkeepingYear : '';
 }
+
+function findbcStatus ( bcStatusID )
+{   console.log('bcStatusID:',bcStatusID)
+    const pos = verificationStatus.map( e => e._id ).indexOf( bcStatusID );
+    if ( typeof bcStatusID !=='undefined') console.log('pos:',verificationStatus[pos])
+    return pos > -1 ? verificationStatus[pos].bookingType : '';
+}
+
+
 
 function populateTable ( table, dataRows, map )
 {
@@ -681,6 +693,10 @@ function populateTable ( table, dataRows, map )
                                                     break;
                                                 }
                   case 'bkBookYear'         :   {   const ledgerText        =  document.createTextNode( findBookyear( content ) );
+                                                   cell.appendChild( ledgerText );
+                                                   break;
+                                               }
+                  case 'bcStatus'           :  {   const ledgerText        =  document.createTextNode( findbcStatus( content ) );
                                                    cell.appendChild( ledgerText );
                                                    break;
                                                }
@@ -1090,10 +1106,11 @@ function contextualizeFilter ( rows, ledgerAccounts, companies, dashBookYear )
 
 
 function init ()
-{   const msg = JSON.parse( document.getElementById( 'items' ).value );
-    const queryObj = JSON.parse( document.getElementById( 'queryObj' ).value );
-    bookkeepingLedgerNames = JSON.parse( document.getElementById( 'bookkeepingLedgerNames' ).textContent );
-    bookkeepingYears =   JSON.parse( document.getElementById( 'bookkeepingYears' ).textContent ) ;
+{   const msg                          =   JSON.parse( document.getElementById( 'items' ).value );
+    const queryObj                     =   JSON.parse( document.getElementById( 'queryObj' ).value );
+    bookkeepingLedgerNames             =   JSON.parse( document.getElementById( 'bookkeepingLedgerNames' ).textContent );
+    bookkeepingYears                   =   JSON.parse( document.getElementById( 'bookkeepingYears' ).textContent ) ;
+    verificationStatus                 =   JSON.parse( document.getElementById( 'verification' ).textContent );
     initTable ( msg,queryObj );
 }
 

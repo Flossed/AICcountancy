@@ -380,16 +380,47 @@ function updatebkBookYear ()
     } );
 }
 
+function updatebcStatus ()
+{  console.log( 'updatebcStatus' );
+   const verification                  = JSON.parse( document.getElementById( 'verification' ).textContent );
+   const bcStatus                      =  document.getElementById( 'bcStatus' );
+   
+   verification.forEach( function ( item )
+   {  /*const option = document.createElement( 'option' );
+      option.text = item.bankStatementStatus;
+      option.value = item._id;
+      bcStatus.add( option );
+      if ( typeof itemList.bcStatus !== 'undefined' )
+      if ( itemList.bcStatus.includes( item._id ) )
+      {   option.selected = true;
+      }*/
+      console.log( item );
+      const option                     = document.createElement( 'option' );
+      option.text                      = item.bookingType;
+      option.value                     = item._id;
+      bcStatus.add( option );
+      if ( typeof itemList.bcStatus !== 'undefined' )
+         if ( itemList.bcStatus.includes( item._id ) )
+         {   option.selected = true;
+         }
+   } );
+}
 
 function updateFields ()
 {  console.log( 'updateFields' );
    updatebkLedgerAccount();
    updatebkBookYear();
 
-   if (typeof itemList.bkNotes !== 'undefined' )
-   {   document.getElementById( 'bkNotes' ).value = itemList.bkNotes;      
+   /*if (typeof itemList.bkNotes !== 'undefined' )
+   {   document.getElementById( 'bkNotes' ).value = itemList.bkNotes;
+       option.text = item.bookingType;       
+       option.value = item._id;
    } 
    else 
    {   document.getElementById( 'bkNotes' ).value = '1. Geen Opmerkingen'; 
-   }
+   }*/
+
+   updatebcStatus();
+
+
 }
