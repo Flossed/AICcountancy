@@ -1,0 +1,68 @@
+<html lang="en">
+    <%- include('layouts/header'); -%>
+    <body onload="init();">
+       <%- include('layouts/heading'); -%>
+       <%- include('layouts/navbar'); -%>
+       <div class="main">          
+          <div>
+             <div class="pageFlipper" id="pageFlipperID">
+                <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+                <button id="pf" type="button" onclick="loadpage(1);" >Next </button><br>
+                <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+             </div>
+          </div>
+ 
+          <div class="ledgerentry">
+             <h1>Specification of bookkeeping verification statuses.</h1>             
+             This is the management page for creating statuses used to verify that the bookkeeping entries have <br> 
+             been verified against the balance report created by the accountant.<br> <p><br> 
+            <hr style="border-style:double;">
+             
+             <textarea style="display:none;" id="pageDataElements"><%=typeof dataRecord !== "undefined" ? JSON.stringify(dataRecord) : "{}" %></textarea>
+             <textarea style="display:none;" id="dataRecords"><%=typeof dataRecords != "undefined" ? JSON.stringify(dataRecords) : "[]"%></textarea>
+ 
+             
+             Currently the form is<span id="formState"></span> editable.
+             <br><p>
+             <hr>
+             <form id="checkBooks" action="/checkBooks" method="POST" enctype="multipart/form-data">
+                 <textarea style="display:none;" rows="1"  id="_id" name="_id"></textarea>
+                 <textarea style="display:none;" rows="1"  id="__v" name="__v"></textarea>
+                 <textarea style="display:none;" rows="1"  id="action" name="action"></textarea>
+                 <textarea style="display:none;" rows="1"  id="editState" name="editState"></textarea>
+                 
+ 
+                 <p><label>Book Verification Label</label>
+                 <textarea readonly class="textareaLineGreyedOUt" id="bookingID"></textarea>
+                 <br><p>
+                 <p><label>Book Verification Code:</label>
+                 <textarea class="textareaLine" id="bookingCode" name="bookingCode"></textarea>
+                 <br><p>
+                 <p><label>Book Verification Type:</label>
+                 <textarea  class="textareaLine" id="bookingType" name="bookingType"></textarea>
+                 <br><p>                
+ 
+                 <p><label style="vertical-align: top;">Description of Book Verification Type:</label>
+                 <textarea class="textareaBlock"  id="bookingDescription" name="bookingDescription"></textarea>
+                 <br><p>
+                 <div class="buttonbar">                   
+                   <button class="buttonni"  id="newFormButton"    type="button" onclick="formulierActie('newForm');">New</button><br>
+                   <button class="buttonni"  id="createFormButton" type="button" onclick="formulierActie('createData');">Create</button><br>
+                   <button class="buttonni"  id="updateFormButton" type="button" onclick="formulierActie('updateData');">Update</button><br>
+                   <button class="buttonni"  id="deleteFormButton" type="button" onclick="formulierActie('deleteData');">Delete</button><br>
+                   <button class="buttonni"  id="CancelButton"     type="button" onclick="formulierActie('cancel');">Cancel</button><br>
+                 </div>
+             </form>
+          </div>
+          <div class="tableOfValues">
+            <h1>Verification statuses.</h1>             
+             Below table shows all the created statuses<br> 
+             Clicking on the ID in the row allows to see and edit it in detail.<br> <p><br> 
+            <hr style="border-style:double;">
+            <div id="tableOfValues"></div>   
+          </div>
+       </div>      
+       <script src="/js/checkBooks.js"></script>
+       <script src="/js/index.js"></script>
+    </body>
+</html>

@@ -195,8 +195,9 @@ input
 
 
 .ledgerentry
-{   position: absolute;  
-	  top: -2.5% ; 
+{   position: fixed;
+    top: 12vh;
+    padding: 20px;    
 }
 
 
@@ -603,6 +604,7 @@ input:checked + .slider:before
     min-width: 95px;
 }
 
+
 .textareaBlock
 {   height: 20em;
     width: 25em;   
@@ -619,5 +621,24 @@ input:checked + .slider:before
     margin: 0.1em;
 }
 
+.textareaLineGreyedOUt
+{   height: 2em;
+    width: 25em;   
+    resize: none;
+    text-align:center;
+    margin: 0.1em;
+    background-color: #f2f2f2;
+} 
+
+.tableOfValues
+{   position: fixed;
+    top: 12vh;
+    left: 50%;
+    width: 40vw;
+    height: 60vh;
+    padding: 20px;    
+    font-family: 'Calibri', sans-serif;
+    
+}
 /* LOG:
 */

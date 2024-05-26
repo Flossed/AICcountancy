@@ -15,11 +15,13 @@
 /* -------------------------------- End Controllers ---------------------------*/
 
 /* ------------------------------------- Services -----------------------------*/
-const { data } = require( 'jquery' );
+
 const {logger,applicationName}         = require( '../services/generic' );
-const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
-const manageLedger                     = require( '../services/manageLedger' );
 const zndManageData                    = require( '../services/zndManageData' );
+const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
+const manageCheckBooks                 = require( '../services/manageCheckBooks' );
+const manageLedger                     = require( '../services/manageLedger' );
+
 /* -------------------------------- End Services ------------------------------*/
 
 /* ------------------------------------- Models -------------------------------*/
@@ -32,6 +34,82 @@ const zndManageData                    = require( '../services/zndManageData' );
 /* ----------- End Internal Application Libraries Initialization --------------*/
 
 /* ----------------------------- Private Functions   --------------------------*/
+async function updateAllMovements ()
+{   try
+    {   logger.trace( applicationName + ':generic:updateAllMovements():Started' );
+        const record                   =   {};
+        const recordID                 =   '';
+        record.action                  =   'getData';
+        const timeOuttime                =   100;
+
+        const allRecords               = ( await manageLedger.manageLedger( record , recordID ) ).body;
+        allRecords.forEach( element => {   zndManageData.handleGetMovement( element._doc._id );
+                                            } );
+
+        logger.trace( applicationName + ':generic:updateAllMovements():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:updateAllMovements():An exception occurred :[' + ex + '].' );
+    }
+}
+
+async function handleLaboratoryPost ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleLaboratoryPost():Started' );
+        switch ( req.body.action )
+        {   case 'updateCreationDate' :   zndManageData.updateCreationDate();
+                                          break;
+            case 'deleteCreationDate' :   zndManageData.deleteCreationDate();
+                                          break;
+            case 'updateOneMovement'  :   await zndManageData.handleGetMovement( req.body.recordID );
+                                          break;
+            case 'updateAllMovements' :   updateAllMovements( );
+                                          break;
+            default                   :   throw 'Crap Action: [' + req.body.action  + ']';
+        }
+
+        res.render( 'laboratory'  );
+        logger.trace( applicationName + ':generic:handleLaboratoryPost():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleLaboratoryPost():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+async function handleLaboratoryGet ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleLaboratoryGet():Started' );
+        res.render( 'laboratory'  );
+        logger.trace( applicationName + ':generic:handleLaboratoryGet():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleLaboratoryGet():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+async function laboratoryHandler ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:laboratoryHandler():Started' );
+
+        switch ( req.method )
+        {   case 'POST' :   handleLaboratoryPost( req,res );
+                            break;
+            case 'GET'  :   handleLaboratoryGet( req,res );
+                            break;
+            default     :   break;
+        }
+
+
+        logger.trace( applicationName + ':generic:laboratoryHandler():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:laboratoryHandler():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
 async function unknownHandler ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:unknownHandler():Started' );
@@ -98,20 +176,14 @@ async function handleBookkeepingYearsGet ( req,res )
 async function handleBookkeepingYearsPost ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:handleBookkeepingYearsPost():Started' );
-
         const dataRecord               = { ... req.body } ;
         console.log( 'The P:',dataRecord );
         const params                   = req.params;
         const retVal                   = await manageBookkeepingYears.manageBookkeepingYears( dataRecord,'' );
-
         const responseRecord           = retVal.body.createRec;
         const tempRecord               = { action : 'getData' };
         const dataRecords              = await manageBookkeepingYears.manageBookkeepingYears( tempRecord,'' );
-
-
-
         res.render( 'zndBookkeepingYears' , {   params:params , dataRecord : responseRecord , dataRecords: dataRecords.body} );
-
         logger.trace( applicationName + ':generic:handleBookkeepingYearsPost():Done' );
     }
     catch ( ex )
@@ -137,84 +209,82 @@ async function bookkeepingYearsHandler ( req,res )
     }
 }
 
-
-async function updateAllMovements()
+async function handleCheckBooksPost ( req,res )
 {   try
-    {   logger.trace( applicationName + ':generic:updateAllMovements():Started' );
-        const record                   =   {}; 
-        const recordID                 =   '';
-        record.action                  =   'getData';
-        let timeOuttime                =   100;
+    {   logger.trace( applicationName + ':generic:handleCheckBooksPost():Started' );
 
-        const allRecords               = ( await manageLedger.manageLedger( record , recordID )).body;
-        allRecords.forEach( element => {   zndManageData.handleGetMovement( element._doc._id );
-                                            });
- 
-        logger.trace( applicationName + ':generic:updateAllMovements():Done' );
-    }
-    catch ( ex )
-    {   logger.exception( applicationName + ':generic:updateAllMovements():An exception occurred :[' + ex + '].' );
-    }
-}
+        let responseRecord           = {};
+        
+        
 
-
-
-async function handleLaboratoryPost ( req,res )
-{   try
-    {   logger.trace( applicationName + ':generic:handleLaboratoryPost():Started' );
-        switch ( req.body.action )
-        {   case 'updateCreationDate' :   zndManageData.updateCreationDate();
-                                          break;
-            case 'deleteCreationDate' :   zndManageData.deleteCreationDate();
-                                          break;
-            case 'updateOneMovement'  :   await zndManageData.handleGetMovement( req.body.recordID );
-                                          break;
-            case 'updateAllMovements' :   updateAllMovements( );
-                                          break;
-            default                   :   throw 'Crap Action: [' + req.body.action  + ']';
+        if ( req.body.action.includes( 'newForm' ) )
+        {   console.log( 'Krakatao' );
+            logger.trace( applicationName + ':generic:handleCheckBooksPost():Done' );
+            responseRecord            = {};
         }
+        else
+        {   const dataRecord          = { ... req.body } ;
+            const retVal              = await manageCheckBooks.manageCheckBooks( dataRecord,'' );
+            responseRecord            = retVal.body.createRec;
+        }
+        const tempRecord               = { action : 'getData' };
+        const dataRecords              = await manageCheckBooks.manageCheckBooks( tempRecord,'' );
 
-        res.render( 'laboratory'  );
-        logger.trace( applicationName + ':generic:handleLaboratoryPost():Done' );
+        res.render( 'checkBooks' , {   dataRecord : responseRecord , dataRecords: dataRecords.body} );
+        logger.trace( applicationName + ':generic:handleCheckBooksPost():Done' );
     }
     catch ( ex )
-    {   logger.exception( applicationName + ':generic:handleLaboratoryPost():An exception occurred :[' + ex + '].' );
+    {   logger.exception( applicationName + ':generic:handleCheckBooksPost():An exception occurred :[' + ex + '].' );
     }
 }
 
 
-async function handleLaboratoryGet ( req,res )
+async function handleCheckBooksGet ( req,res )
 {   try
-    {   logger.trace( applicationName + ':generic:handleLaboratoryGet():Started' );
-        res.render( 'laboratory'  );
-        logger.trace( applicationName + ':generic:handleLaboratoryGet():Done' );
+    {   logger.trace( applicationName + ':generic:handleCheckBooksGet():Started' );
+        const tempRecord               = { action : 'getData' };
+        let DR                         = {};
+        
+        const params                   = req.params;
+        console.log( params );
+
+        if ( params.recordID != null )
+        {   const record               = {} ;
+            record.action              = 'getRecordData';
+            const recordID             = params.recordID;
+            const dataRecord           = await manageCheckBooks.manageCheckBooks( record,recordID );
+            DR                         = {   ... dataRecord.body._doc } ;
+        }
+        const dataRecords              = await manageCheckBooks.manageCheckBooks( tempRecord,'' );
+
+        res.render( 'checkBooks' , {   dataRecord : DR , dataRecords: dataRecords.body} );
+
+
+        logger.trace( applicationName + ':generic:handleCheckBooksGet():Done' );
     }
     catch ( ex )
-    {   logger.exception( applicationName + ':generic:handleLaboratoryGet():An exception occurred :[' + ex + '].' );
+    {   logger.exception( applicationName + ':generic:handleCheckBooksGet():An exception occurred :[' + ex + '].' );
     }
 }
 
 
-async function laboratoryHandler ( req,res )
-{   try
-    {   logger.trace( applicationName + ':generic:laboratoryHandler():Started' );
 
+async function  checkBooksHandler ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:checkBooksHandler():Started' );
         switch ( req.method )
-        {   case 'POST' :   handleLaboratoryPost( req,res );
+        {   case 'POST' :   handleCheckBooksPost( req,res );
                             break;
-            case 'GET'  :   handleLaboratoryGet( req,res );
+            case 'GET'  :   handleCheckBooksGet( req,res );
                             break;
             default     :   break;
         }
-
-
-        logger.trace( applicationName + ':generic:laboratoryHandler():Done' );
+        logger.trace( applicationName + ':generic:checkBooksHandler():Done' );
     }
     catch ( ex )
-    {   logger.exception( applicationName + ':generic:laboratoryHandler():An exception occurred :[' + ex + '].' );
+    {   logger.exception( applicationName + ':generic:checkBooksHandler():An exception occurred :[' + ex + '].' );
     }
 }
-
 
 /* --------------------------- End Private Functions   --------------------------*/
 
@@ -225,14 +295,18 @@ async function main ( req, res )
     {   logger.trace( applicationName + ':generic:main():Started' );
 
         switch ( req.originalUrl )
-        {  case '/zndBookkeepingYears'        :   bookkeepingYearsHandler( req,res );
-                                                  break;
-           case  findTerm( req.originalUrl,'zndBookkeepingYears' )         :   bookkeepingYearsHandler( req,res );
-                                                  break;
-           case '/Laboratory'                 :   laboratoryHandler( req,res );
-                                                  break;
-           default                            :   unknownHandler( req,res );
-                                                  break;
+        {  case '/zndBookkeepingYears'                               :   bookkeepingYearsHandler( req,res );
+                                                                         break;
+           case  findTerm( req.originalUrl,'zndBookkeepingYears' )   :   bookkeepingYearsHandler( req,res );
+                                                                         break;
+           case '/checkBooks'                                        :   checkBooksHandler( req,res );
+                                                                         break;
+           case  findTerm( req.originalUrl,'checkBooks' )            :   checkBooksHandler( req,res );
+                                                                         break;
+           case '/Laboratory'                                        :   laboratoryHandler( req,res );
+                                                                         break;
+           default                                                   :   unknownHandler( req,res );
+                                                                         break;
         }
         logger.trace( applicationName + ':generic:main():Done' );
     }

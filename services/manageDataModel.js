@@ -32,6 +32,8 @@ const zndBookkeepingYears                   = require( '../models/zndBookkeeping
 const zndBookkeepingYearsHist               = require( '../models/zndBookkeepingYearHist');
 const zndLedger                             = require( '../models/zanddLedger' );
 const zndLedgerHist                         = require( '../models/zanddLedgerHist' );
+const checkBooks                            = require( '../models/checkBooks' );
+const checkBooksHist                        = require( '../models/checkBooksHist' );
 /* -------------------------------- End Models --------------------------------*/
 
 /* ---------------------------------  Application constants    ----------------*/
@@ -49,6 +51,8 @@ function getModel ( model )
         {   case 'bookkeepingYear'      : result.body          = { zndBookkeepingYears, zndBookkeepingYearsHist };
                                           return result;
             case 'zanddLedger'          : result.body          = { zndLedger, zndLedgerHist };
+                                          return result;
+            case 'checkBook'            : result.body          = { checkBooks, checkBooksHist };
                                           return result;
             default                     : result               = { ...errorCatalog.badResult };
                                           result.body.extendedMessage = applicationName + ':manageDataModel:getModel:Unknown Model requested:[' + model + ']';

@@ -171,6 +171,7 @@ function setRouting ()
 
         
         app.get( '/zndBookkeepingYears/:recordID',genericCntrl.main );
+        app.get( '/checkBooks/:recordID',genericCntrl.main );
         app.use( '*', genericCntrl.main );
        logger.trace( applicationName + ':index:setRouting:Done ' );
      }

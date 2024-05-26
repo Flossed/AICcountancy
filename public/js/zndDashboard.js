@@ -45,29 +45,37 @@ const overviewMap                       = {   'Grootboekrekening'   : 'ledgerAcc
 
 };
 
-const  ledgerMap                        = {   'Grootboekrekening'   : 'ledgerAccount' ,
-   'Netto Inkomsten'      : 'nettoInkomsten',
-   'Netto Uitgaven'       : 'nettoUitgaven',
-   'Netto Resultaat'      : 'nettoResultaat',
-   'BTW Inkomsten'        : 'btwInkomsten',
-   'BTW uitgaven'         : 'btwUitgaven',
-   'BTW Resultaat'        : 'btwResultaat',
-   'Bruto Inkomsten'      : 'inkomsten' ,
-   'Bruto Uitgaven'       : 'uitgaven' ,
-   'Bruto Resultaat'      : 'uitgaven'
-};
+const  ledgerMap                        = {   'Grootboekrekening'    : 'ledgerAccount' ,
+                                              'Netto Inkomsten'      : 'nettoInkomsten',
+                                              'Netto Uitgaven'       : 'nettoUitgaven',
+                                              'Netto Resultaat'      : 'nettoResultaat',
+                                              'BTW Inkomsten'        : 'btwInkomsten',
+                                              'BTW uitgaven'         : 'btwUitgaven',
+                                              'BTW Resultaat'        : 'btwResultaat',
+                                              'Bruto Inkomsten'      : 'inkomsten' ,
+                                              'Bruto Uitgaven'       : 'uitgaven' ,
+                                              'Bruto Resultaat'      : 'uitgaven'
+                                          };
 
+/*
 
-const totalMap                          = { 'Netto Inkomsten'        : '',
-   'Netto Uitgaven'         : '',
-   'Netto Resultaat'        : '',
-   'BTW Inkomsten'          : '',
-   'BTW uitgaven'           : '',
-   'BTW Resultaat'          : '',
-   'Bruto Inkomsten'        : '',
-   'Bruto Uitgaven'         : '',
-   'Bruto Resultaat'        : ''
-};
+      List[0].nettoUitgaven               = List[0].uitgaven       -  List[0].btwUitgaven;
+      List[0].nettoInkomsten              = List[0].inkomsten      -  List[0].btwInkomsten;
+      List[0].resultaat                   = List[0].inkomsten      -  List[0].uitgaven;
+      List[0].btwResultaat                = List[0].btwInkomsten   -  List[0].btwUitgaven;
+      List[0].nettoResultaat              = List[0].nettoInkomsten -  List[0].nettoUitgaven;
+*/
+
+const totalMap                          = { 'Netto Inkomsten'        : 'nettoInkomsten',
+                                            'Netto Uitgaven'         : 'nettoUitgaven',
+                                            'Netto Resultaat'        : 'nettoResultaat',
+                                            'BTW Inkomsten'          : 'btwInkomsten',
+                                            'BTW uitgaven'           : 'btwUitgaven',
+                                            'BTW Resultaat'          : 'btwResultaat',
+                                            'Bruto Inkomsten'        : 'inkomsten',
+                                            'Bruto Uitgaven'         : 'uitgaven',
+                                            'Bruto Resultaat'        : 'resultaat'
+                                         };
 
 
 
@@ -170,6 +178,8 @@ function updateTotalList ( dataRecord, List )
    try
    {
       let oRecord;
+      
+
 
       oRecord                             = {};
 
@@ -235,6 +245,7 @@ function updateOverviewList ( dataRecord, List )
 
    skip                                = false;
    oRecord                             = {};
+   
 
    for ( let i = 0; i < List.length;i++ )
    {
@@ -254,6 +265,7 @@ function updateOverviewList ( dataRecord, List )
          break;
       }
    }
+
    if ( !skip )
    {
       oRecord.ledgerAccount           = dataRecord.ledgerAccount;
@@ -288,10 +300,10 @@ function updateOverviewList ( dataRecord, List )
    for ( let i = 0; i < List.length;i++ )
    {
       List[i].resultaat               = List[i].inkomsten    - List[i].uitgaven;
-      List[i].btwResultaat            = List[i].btwInkomsten - List[i].btwUitgaven;
+      List[i].btwResultaat            = List[i].btwInkomsten + List[i].btwUitgaven;
 
       List[i].nettoUitgaven           = List[i].uitgaven     - List[i].btwUitgaven;
-      List[i].nettoInkomsten          = List[i].inkomsten    - List[i].btwInkomsten;
+      List[i].nettoInkomsten          = List[i].inkomsten    + List[i].btwInkomsten;
       List[i].nettoResultaat          = List[i].nettoInkomsten -  List[i].nettoUitgaven;
    }
 
@@ -308,6 +320,7 @@ function updateLedgerOverviewList ( dataRecord, List )
 
       skip                                = false;
       oRecord                             = {};
+      
 
       for ( let i = 0; i < List.length;i++ )
       {
@@ -318,6 +331,7 @@ function updateLedgerOverviewList ( dataRecord, List )
             {
                List[i].uitgaven        += getNumber( dataRecord.grossAmount );
                List[i].btwUitgaven     += getNumber( dataRecord.VAT );
+
             }
             if ( dataRecord.CREDEB.includes( 'Credit' ) )
             {
@@ -478,27 +492,25 @@ function updateList ( startDate,endDate,ledgerAccounts, companies, rowNR, rowDat
 
 
 
-function mapTotals ( startDate,endDate,ledgerAccounts, companies )
-{
-   try
-   {
-      let msg, j, tRowData, rows;
-      const expensenLedgerAccountsArray     = ['3001 _Verkopen','1001_ZakelijkeInvestering', '1002_Kantinekosten', '1003_Vakliteratuur', '1004_Bankkosten','1005_Accountantkosten', '1006_Zakelijke Huur','1007_Loonkosten','1008_Kantoor','1010_Restaurantkosten','1011_Reiskosten','1012_Relatiegeschenken','1100_CARCOSTS','2000_Auteurrechten uitkering','5000_BTW','5004_AuteursrechtenTAX','5005_Douane kosten','6000_BeheerOntvangsten'  ];
-      msg                             = tableData;
-      rows                            = [];
+function mapTotals ( startDate,endDate,ledgerAccounts, companies , filterData )
+{   try
+    {   const expenses                 = ['3001 _Verkopen','1001_ZakelijkeInvestering', '1002_Kantinekosten', '1003_Vakliteratuur', '1004_Bankkosten','1005_Accountantkosten', '1006_Zakelijke Huur','1007_Loonkosten','1008_Kantoor','1010_Restaurantkosten','1011_Reiskosten','1012_Relatiegeschenken','1100_CARCOSTS','2000_Auteurrechten uitkering','5000_BTW','5004_AuteursrechtenTAX','5005_Douane kosten','6000_BeheerOntvangsten'  ];
+        const msg                      = [];
+        const rows                     = [];
 
-      for ( j = 0; j < msg.length; j++ )
-      {
-         tRowData                    = {};
-         tRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
-         tRowData.grossAmount        = msg[j].grossAmount;
-         tRowData.grossAmount        = msg[j].grossAmount;
-         tRowData.VAT                = msg[j].VAT;
-         if ( expensenLedgerAccountsArray.includes( msg[j].ledgerAccount ) )
-         {
-            rows                    = updateList( startDate,endDate,ledgerAccounts, companies, j, tRowData, rows, updateTotalList );
-         }
-      }
+        filterData.forEach( ( filterObj ) => {  const  result = tableData.filter( obj => { return obj._id === filterObj.ID;      } );
+                                              msg.push( result[0] );
+                                             } );
+
+         msg.forEach( ( element ) => {   const tRowData         = {};
+                                         tRowData.CREDEB        = typeof element.movementSign !== 'undefined' ? ( Number( element.movementSign ) === 1 ? 'Debit' :  ( Number( element.movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
+                                         tRowData.grossAmount   = element.grossAmount;
+                                         tRowData.grossAmount   = element.grossAmount;
+                                         tRowData.VAT           = element.VAT;
+                                         if ( expenses.includes( element.ledgerAccount ) )
+                                         {   updateTotalList( tRowData, rows );
+                                         }
+                                     } );
       return rows;
    }
    catch ( ex )
@@ -509,56 +521,52 @@ function mapTotals ( startDate,endDate,ledgerAccounts, companies )
 
 
 
-function mapledgers ( startDate,endDate,ledgerAccounts, companies )
-{
-   try
-   {
-      let msg, j, oRowData, rows;
-      msg                             = tableData;
-      oRowData                        = {};
-      rows                            = [];
+function mapledgers ( startDate,endDate,ledgerAccounts, companies , filterData )
+{   try
+    {   const msg                      = [];
+        const oRowData                 = {};
+        const rows                     = [];
 
-      for ( j = 0; j < msg.length; j++ )
-      {
-         oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
-         oRowData.grossAmount        = msg[j].grossAmount;
-         oRowData.VAT                = msg[j].VAT;
-         rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateLedgerOverviewList );
-      }
-      return rows;
+        filterData.forEach( ( filterObj ) => {  const  result = tableData.filter( obj => { return obj._id === filterObj.ID;      } );
+                                                msg.push( result[0] );
+                                             } );
+
+        msg.forEach( ( element ) => {   oRowData.ledgerAccount      = element.ledgerAccount;
+                                        oRowData.CREDEB             = typeof element.movementSign !== 'undefined' ? ( Number( element.movementSign ) === 1 ? 'Debit' :  ( Number( element.movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
+                                        oRowData.grossAmount        = element.grossAmount;
+                                        oRowData.VAT                = element.VAT;
+                                        updateLedgerOverviewList( oRowData, rows );
+                                     } );
+        return rows;
    }
    catch ( ex )
-   {
-      console.log( 'zndDashboard:mapledgers: An exception occurred:[' + ex + '].' );
+   {   console.log( 'zndDashboard:mapledgers: An exception occurred:[' + ex + '].' );
    }
 }
 
 
 
-function mapOverview ( startDate,endDate,ledgerAccounts, companies )
-{
-   try
-   {
-      let msg, j, oRowData, rows;
-      msg                             = tableData;1;
-      oRowData                        = {};
-      rows                            = [];
+function mapOverview ( startDate,endDate,ledgerAccounts, companies, filterData )
+{   try
+    {   const msg                      = [];
+        const oRowData                 = {};
+        const rows                     = [];
 
-      for ( j = 0; j < msg.length; j++ )
-      {
-         oRowData.compagnyID         = msg[j].compagnyID;
-         oRowData.ledgerAccount      = msg[j].ledgerAccount;
-         oRowData.CREDEB             = typeof msg[j].movementSign !== 'undefined' ? ( Number( msg[j].movementSign ) === 1 ? 'Debit' :  ( Number( msg[j].movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
-         oRowData.grossAmount        = msg[j].grossAmount;
-         oRowData.VAT                = msg[j].VAT;
-         rows                        = updateList( startDate,endDate,ledgerAccounts, companies, j, oRowData, rows, updateOverviewList );
-      }
-      return rows;
+        filterData.forEach( ( filterObj ) => {  const  result = tableData.filter( obj => { return obj._id === filterObj.ID;      } );
+                                             msg.push( result[0] );
+                                          } );
+
+        msg.forEach( ( element ) => {   oRowData.compagnyID         = element.compagnyID;
+                                        oRowData.ledgerAccount      = element.ledgerAccount;
+                                        oRowData.CREDEB             = typeof element.movementSign !== 'undefined' ? ( Number( element.movementSign ) === 1 ? 'Debit' :  ( Number( element.movementSign ) === 0 ? 'Credit' :  'Unknown'  ) ) : 'Unknown' ;
+                                        oRowData.grossAmount        = element.grossAmount;
+                                        oRowData.VAT                = element.VAT;
+                                        updateOverviewList( oRowData, rows );
+                                     } );
+        return rows;
    }
    catch ( ex )
-   {
-      console.log( 'zndDashboard:mapOverview: An exception occurred:[' + ex + '].' );
+   {   console.log( 'zndDashboard:mapOverview: An exception occurred:[' + ex + '].' );
    }
 }
 
@@ -823,12 +831,18 @@ function manageDashBoard ( startDate,endDate,ledgerAccounts, companies, dashBook
 {
    try
    {  const statementRecords = mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear );
-      console.log( statementRecords );
-      createTable( 'statementRecords', mapStatements( startDate,endDate,ledgerAccounts, companies , dashBookYear ), statementMap,ledgerAccounts, companies, dashBookYear );
-      contextualizeFilter ( mapStatements( startDate,endDate,ledgerAccounts, companies ), ledgerAccounts, companies, dashBookYear );
-      createTable( 'overviewRecords', mapOverview( startDate,endDate,ledgerAccounts, companies, dashBookYear ), overviewMap,ledgerAccounts, companies, dashBookYear );
-      createTable( 'manageTotalsByLedger', mapledgers( startDate,endDate,ledgerAccounts, companies, dashBookYear ), ledgerMap,ledgerAccounts, companies, dashBookYear );
-      createTable( 'totalsRecords', mapTotals( startDate,endDate,ledgerAccounts, companies, dashBookYear ), totalMap,ledgerAccounts, companies, dashBookYear );
+      createTable( 'statementRecords', statementRecords, statementMap,ledgerAccounts, companies, dashBookYear );
+
+      const overviewRecords = mapOverview( startDate,endDate,ledgerAccounts, companies, statementRecords );
+      createTable( 'overviewRecords', overviewRecords, overviewMap,ledgerAccounts, companies, dashBookYear );
+
+      const manageTotalsByLedger = mapledgers( startDate,endDate,ledgerAccounts, companies, statementRecords );
+      createTable( 'manageTotalsByLedger', manageTotalsByLedger, ledgerMap,ledgerAccounts, companies, dashBookYear );
+
+      const totalsRecords = mapTotals( startDate,endDate,ledgerAccounts, companies, statementRecords  );
+      createTable( 'totalsRecords', totalsRecords, totalMap,ledgerAccounts, companies, dashBookYear );
+
+      contextualizeFilter ( statementRecords, ledgerAccounts, companies, dashBookYear );
 
    }
    catch ( ex )
