@@ -36,7 +36,8 @@ const options = {   month : "2-digit",
                     year  : "numeric",
                     hour  : "2-digit",
                     minute: "2-digit",
-                    second: "2-digit"
+                    second: "2-digit",
+                    fractionalSecondDigits: 3
                 };
 
 //const options = {};
@@ -78,11 +79,13 @@ class LoggerService
      {   const consoleOutput           = config.get( 'application:consoleOutput' );
          const logPath                 = config.get( 'application:logPath' );
          
+         
          const temp                    = dateFormat().split( ',' ) ;         
          const datestruct              = temp[0].split( '.' );
+         console.log(temp[2])
          const date                    = datestruct[2] + datestruct[0] + datestruct[1];
          const timeStr                 = temp[1].replace( ':', '' ).replace( ':', '' ).replace( ' ', '' );
-         this.route                    = route + '-' + date + '-' + timeStr;
+         this.route                    = route + '-' + date + '-' + timeStr ;
 
          logConfig.transports.push( new winston.transports.File( { filename: `${logPath}${this.route}.log`} ) );
          

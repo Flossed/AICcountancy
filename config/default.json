@@ -12,6 +12,6 @@
                           "WordOptions"                    : "/mFilePrintDefault /mFileExit /mFileCloseOrExit /q /n",
                           "consoleOutput"                  : "on",
                           "logPath"                        : "./logs/",  
-                          "logTracelevel"                  : "trace"                                           
+                          "logTracelevel"                  : "debug"                                           
                       }
 }

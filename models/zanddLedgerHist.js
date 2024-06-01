@@ -55,7 +55,8 @@ const zanddLedgerHistSchema = new Schema( {   accntchk                        : 
                                               originalRecordID                :   String,
                                               recordTime                      :   Number,
                                               recordStatus                    :   String,
-                                              storedVersion                   :   Number
+                                              storedVersion                   :   Number, 
+                                              restoredRecordID                :   String,
                                           } );
 
 

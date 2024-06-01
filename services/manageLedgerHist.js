@@ -36,11 +36,11 @@ const manageData                        = require( './manageDataModel' );
 
 
 
-async function manageLedger ( dataRecord,recordID , criterea )
+async function manageLedgerHist ( dataRecord,recordID )
 {   try
     {   logger.trace( applicationName + ':manageLedger:():Started' );
         const dataModel                =  'zanddLedger';
-        
+
         switch ( dataRecord.action )
         {  case 'getData'               :  {   const allRecords  =  await manageData.getRecords( dataModel );
                                                return allRecords;
@@ -48,10 +48,6 @@ async function manageLedger ( dataRecord,recordID , criterea )
            case 'getRecordData'         :  {   const recordData = await manageData.getRecord( dataModel,recordID );
                                                logger.trace( applicationName + ':manageLedger:():Done' );
                                                return recordData;
-                                           }
-           case 'restore'               :  {   const restoreResp = await manageData.restoreRecord( dataModel,recordID );                                               
-                                               logger.trace( applicationName + ':manageLedger:():Done' );
-                                               return restoreResp;
                                            }
 
            case 'updateData'            :  {   const updateResp =  await manageData.updateRecord( dataModel,dataRecord );
@@ -62,11 +58,8 @@ async function manageLedger ( dataRecord,recordID , criterea )
                                            }
            case 'deleteData'            :  {   const deleteResp = await manageData.deleteRecord( dataModel,dataRecord );
                                                return deleteResp;
-                                           }
-           case 'getHistoricalRecord'   :  {   const histRec = await manageData.getHistoricalRecord( dataModel,recordID );
-                                                     return histRec;
-                                           }
-          case 'getHistoricalRecords'   :  {   const histRecs = await manageData.getHistoricalRecords( dataModel, criterea );
+                                           } 
+           case 'getHistoricalRecords'  :  {   const histRecs = await manageData.getHistoricalRecords( dataModel,dataRecord );
                                                return histRecs;
                                            } 
            default                      :  logger.error( applicationName + ':manageLedger:Unknown action : [' + dataRecord.action + '];' ) ;
@@ -81,7 +74,7 @@ async function manageLedger ( dataRecord,recordID , criterea )
 
 }
 /* ----------------------------------External functions ------------------------*/
-module.exports.manageLedger            = manageLedger;
+module.exports.manageLedgerHist            = manageLedgerHist;
 /* ----------------------------------End External functions --------------------*/
 
 /* LOG:

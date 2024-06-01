@@ -29,7 +29,7 @@ const {logger,applicationName}          = require( './generic' );
 
 /* ------------------------------------- Models -------------------------------*/
 const zndBookkeepingYears                   = require( '../models/zndBookkeepingYears' );
-const zndBookkeepingYearsHist               = require( '../models/zndBookkeepingYearHist');
+const zndBookkeepingYearsHist               = require( '../models/zndBookkeepingYearHist' );
 const zndLedger                             = require( '../models/zanddLedger' );
 const zndLedgerHist                         = require( '../models/zanddLedgerHist' );
 const checkBooks                            = require( '../models/checkBooks' );
@@ -248,6 +248,119 @@ async function getRecord ( model, recordID )
    }
 }
 
+async function getHistoricalRecord ( model, recordID )
+{   try
+    {   logger.trace( applicationName + ':manageDataModel:getHistoricalRecord:Started ' );
+
+        const dbModel                   = getModel( model );
+        let result                      = { ...errorCatalog.noError };
+
+        if ( dbModel.returnCode !== errorCatalog.NO_ERROR )
+        {   logger.error( applicationName + ':manageDataModel:getHistoricalRecord:Technical error: Model not found.' );
+            return dbModel;
+        }
+
+        const response                  = await dbModel.body[Object.keys( dbModel.body )[1]].find( { _id: recordID } );
+
+        if ( response.length ===  0 )
+        {   result                      = { ...errorCatalog.badResult };
+            result.body.extendedMessage = applicationName + ':manageDataModel:getHistoricalRecord:no data found for recordID:[' + recordID + ']';
+            logger.error( result.body.extendedMessage );
+            return result;
+        }
+        result.body                     = response[0];
+        logger.trace( applicationName + ':manageDataModel:getHistoricalRecord:Done.' );
+        return result;
+   }
+   catch ( ex )
+   {   const result                      = { ...errorCatalog.exception };
+       result.body.extendedMessage = applicationName + ':manageDataModel:getHistoricalRecord:An exception occurred: [' + ex + '].';
+       logger.exception( result.body.extendedMessage );
+       logger.trace( applicationName + ':manageDataModel:getHistoricalRecord:Done!' );
+       return result;
+   }
+}
+/*  restore Record
+    This function restores a record from the historical record.
+    The function takes the model and the historical record ID as input.
+    The function will find the historical record and create a new record in the active records zanddLedger collection.
+    The function will then update the historical record to reflect the restore action. Abd change the state of the historical record to 'RESTORED'
+    and add the new record ID to the historical record. which will then be obsolete. as the new historical record will be created with a new ID.
+    The function will return the new record created in the active records zanddLedger collection.
+    ---------------------
+    Errors:
+    ---------------------
+    The function will return an error if the model is not found.
+    The function will return an error if the  historical record ID is not provided.
+    The function will return an error if the historical record is not found.
+    The function will return an error if the new record cannot be created.
+    The function will return an error if the historical record cannot be updated.
+    The function will return an error if the new historical record cannot be created.
+*/
+async function restoreRecord ( model, histRecordID )
+{   try
+    {   logger.trace( applicationName + ':manageDataModel:restoreRecord:Started.' );
+
+        const result                      = { ...errorCatalog.noError };
+        const dbModel                   = getModel( model );
+
+        if ( dbModel.returnCode !== errorCatalog.NO_ERROR )
+        {   logger.error( applicationName + ':manageDataModel:restoreRecord:Technical error: Model not found.' );
+            return dbModel;
+        }
+        if ( typeof histRecordID === 'undefined' || histRecordID.length === 0 )
+        {   const errorResult               = { ...errorCatalog.badRequest };
+            errorResult.body.extendedMessage = applicationName + ':manageDataModel:restoreRecord:No historical record ID provided.';
+            logger.error( applicationName + errorResult.body.extendedMessage );
+             return errorResult;
+        }
+
+        const histRecord                  = await dbModel.body[Object.keys( dbModel.body )[1]].findById( histRecordID );
+
+        if ( histRecord == null )
+        {   const errorResult               = { ...errorCatalog.badRequest };
+            errorResult.body.extendedMessage = applicationName + ':manageDataModel:restoreRecord:No historical record ID found!.';
+            logger.error( applicationName + errorResult.body.extendedMessage );
+            return errorResult;
+        }
+
+        const dataRecord                  = { ... histRecord._doc };
+        delete dataRecord._id;
+        delete dataRecord.__v;
+        delete dataRecord.recordTime;
+        delete dataRecord.storedVersion;
+        delete dataRecord.originalRecordID;
+        delete dataRecord.recordStatus;
+
+        const newRecord                   = await createRecord( model, dataRecord );
+        if ( newRecord.returnCode !== 0 )
+        {   const errorResult               = { ...errorCatalog.badRequest };
+            errorResult.body.extendedMessage = applicationName + ':manageDataModel:restoreRecord:Could not create a new Record.';
+            logger.error( applicationName + errorResult.body.extendedMessage );
+            return errorResult;
+         }
+
+        const tempRec                  = { ... histRecord._doc };
+        tempRec.__v                    = parseInt( tempRec.__v ) + 1;
+        const now                      = new Date();
+        tempRec.recordTime             = now.getTime();
+        tempRec.restoredRecordID       = newRecord.body.createRec._id;
+        tempRec.recordStatus           = 'RESTORED';
+
+        const histRec                     = await dbModel.body[Object.keys( dbModel.body )[1]].findByIdAndUpdate( histRecordID, { ...tempRec }, { useFindAndModify: false, new: true } );
+
+        result.body                     = newRecord.body;
+        return result;
+    }
+    catch ( ex )
+    {  const result                      = { ...errorCatalog.exception };
+       result.body.extendedMessage = applicationName + ':manageDataModel:restoreRecord:An exception occurred: [' + ex + '].';
+       logger.exception( result.body.extendedMessage );
+       logger.trace( applicationName + ':manageDataModel:restoreRecord:Done!' );
+       return result;
+    }
+
+}
 async function checkRecord ( model, criterea )
 {   try
     {   logger.trace( applicationName + ':manageDataModel:checkRecord:Started ' );
@@ -310,6 +423,37 @@ async function getRecords ( model )
    }
 }
 
+async function getHistoricalRecords ( model, criterea )
+{   try
+    {   let response;
+
+        logger.trace( applicationName + ':manageDataModel:getHistoricalRecords:Started ' );
+        const result                      = { ...errorCatalog.noError };
+
+        const dbModel                   = getModel( model );
+
+        if ( dbModel.returnCode !== errorCatalog.NO_ERROR )
+        {   logger.error( applicationName + ':manageDataModel:getHistoricalRecords:Technical error: Model not found.' );
+            return dbModel;
+        }
+
+
+
+        response                        = [];
+        response                        = await dbModel.body[Object.keys( dbModel.body )[1]].find( criterea );
+
+        result.body                     = response;
+        logger.trace( applicationName + ':manageDataModel:getHistoricalRecords:Done.' );
+        return result;
+   }
+   catch ( ex )
+   {   const result                      = { ...errorCatalog.exception };
+       result.body.extendedMessage = applicationName + ':manageDataModel:getHistoricalRecords:An exception occurred: [' + ex + '].';
+       logger.exception( result.body.extendedMessage );
+       logger.trace( applicationName + ':manageDataModel:getHistoricalRecords:Done!' );
+       return result;
+   }
+}
 
 async function init ()
 {   try
@@ -420,6 +564,9 @@ module.exports.init                     = init;
 module.exports.updateRecord             = updateRecord;
 module.exports.validateRecord           = validateRecord;
 module.exports.checkRecord              = checkRecord;
+module.exports.getHistoricalRecords     = getHistoricalRecords;
+module.exports.getHistoricalRecord      = getHistoricalRecord;
+module.exports.restoreRecord            = restoreRecord;
 /* ----------------------------------End External functions --------------------*/
 
 /* LOG:

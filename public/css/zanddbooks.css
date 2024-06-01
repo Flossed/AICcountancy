@@ -647,5 +647,17 @@ input:checked + .slider:before
     font-family: 'Calibri', sans-serif;
     
 }
+
+.tableOfValuesScroll
+{   position: absolute;
+    top: -1vh;
+    left: 50%;
+    width: 35vw;
+    height: 77vh;
+    padding: 20px;    
+    font-family: 'Calibri', sans-serif;
+    overflow-y: scroll;
+    
+}
 /* LOG:
 */
