@@ -5,6 +5,8 @@ const permanentOff                     = ['CancelButton','restoreButton'];
 const tableMap                         = {   'ID'                   :'_id' ,
                                              'Invoice Date'         :'invoiceDate',
                                              'PaymentTypes'         :'paymentTypes',
+                                             'Amount'               :'grossAmount',
+                                             'Compagny'             :'compagnyID',
                                              'Document'             :'docScan',
                                              'Description'          :'billDescription'
                                          };
