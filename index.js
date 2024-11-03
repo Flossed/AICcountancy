@@ -169,11 +169,11 @@ function setRouting ()
 
         app.get( '/zndPrintStatement/:id',zndPrintStatementCntrl.main );
 
-        
+
         app.get( '/zndBookkeepingYears/:recordID',genericCntrl.main );
         app.get( '/checkbooks/:recordID',genericCntrl.main );
         app.get( '/restoreLedgerEntry/:recordID',genericCntrl.main );
-        
+
         app.use( '*', genericCntrl.main );
        logger.trace( applicationName + ':index:setRouting:Done ' );
      }
@@ -212,28 +212,29 @@ function browserOutput ()
 
 function initializeServices ()
 {   try
-     {   let timeStamp, msg;
+     {   logger.trace( applicationName + ':index:initializeServices: Starting' );
 
-        logger.trace( applicationName + ':index:initializeServices: Starting' );
-
-        timeStamp                       = new Date();
-        msg                             = 'The time is now : ';
+         const timeStamp                       = new Date();
+         const appNameString            = 'Starting ' + applicationName;
+         const timeStampString          = 'Time: ' + timeStamp.toLocaleTimeString( 'de-DE' );
+         const dateString               = 'Date: ' + timeStamp.toLocaleDateString( 'de-DE' );
+         const portString               = 'App listening on port [' + ApplicationPort + ']';
 
          logger.info( '********************************************************************************' );
-         logger.info( '*                    Starting ' + applicationName + '                                         *' );
-         logger.info( '*                    Time: ' + timeStamp.toLocaleTimeString( 'de-DE' ) + '                                            *' );
-         logger.info( '*                    Date: ' + timeStamp.toLocaleDateString( 'de-DE' ) + '                                           *' );
-         logger.info( '*                    App listening on port [' + ApplicationPort + ']                             *' );
+         logger.info( '*'.padEnd( 21 ,' ' ) + appNameString.padEnd( '58',' ' ) + '*' );
+         logger.info( '*'.padEnd( 21 ,' ' ) + timeStampString.padEnd( '58',' ' ) + '*' );
+         logger.info( '*'.padEnd( 21 ,' ' ) + dateString.padEnd( '58',' ' ) + '*' );
+         logger.info( '*'.padEnd( 21 ,' ' ) + portString.padEnd( '58',' ' ) + '*' );
          logger.info( '********************************************************************************' );
 
          db.on( 'error', console.error.bind( console, 'connection error: ' ) );
-        db.once( 'open', function () { logger.info( 'Connected successfully' ); } );
+         db.once( 'open', function () { logger.info( 'Connected successfully' ); } );
 
-        zndManageDataService.init();
+         zndManageDataService.init();
          zndCodaRecordService.zndCodaRecordInit();
          zndIMAPSync.init();
          browserOutput();
-        logger.trace( applicationName + ':index:initializeServices: Done' );
+         logger.trace( applicationName + ':index:initializeServices: Done' );
     }
     catch ( ex )
     {   logger.exception( applicationName + ':index:initializeServices:An exception occured:[' + ex + ']' );

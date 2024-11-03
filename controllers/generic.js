@@ -21,6 +21,8 @@ const zndManageData                    = require( '../services/zndManageData' );
 const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
 const manageCheckBooks                 = require( '../services/manageCheckBooks' );
 const manageLedger                     = require( '../services/manageLedger' );
+const errorCatalog                     = require( '../services/errorCatalog' );
+const manageReferenceData              = require( '../services/manageReferenceData' );
 
 /* -------------------------------- End Services ------------------------------*/
 
@@ -305,7 +307,7 @@ async function handleRestoreLedgerEntryGet ( req,res )
         arrayOfUndefinedHistoricalRecords.reverse().forEach( ( element ) => { console.log( 'Removing element:', element ); allRecords.splice( element,1 );} );
         // Sort the records by originalRecordID from highest to lowest
         allRecords.sort( ( a,b ) => b.originalRecordID.localeCompare( a.originalRecordID  ) );
-        
+
 
         if ( params.recordID != null )
         {   const record               = {} ;
@@ -315,7 +317,7 @@ async function handleRestoreLedgerEntryGet ( req,res )
             DR                         = {   ... dataRecord.body._doc } ;
         }
         const dataRecords              = await manageLedger.manageLedger( tempRecord,'' );
-        console.log(DR)
+        console.log( DR );
 
         res.render( 'restoreLedgerEntry' , {   dataRecord : DR , dataRecords: allRecords} );
     }
@@ -358,6 +360,75 @@ async function restoreLedgerEntryHandler ( req,res )
     {   logger.exception( applicationName + ':generic:restoreLedgerEntryHandler():An exception occurred :[' + ex + '].' );
     }
 }
+/*
+
+<textarea style="display:none;" id="bookkeepingLedgerNames"><%=typeof bookkeepingLedgerNames !== "undefined" ? JSON.stringify(bookkeepingLedgerNames) : ""%></textarea>
+         <textarea style="display:none;" id="bookkeepingYears"><%=typeof bookkeepingYears !== "undefined" ? JSON.stringify(bookkeepingYears) : ""%></textarea>
+         <textarea style="display:none;" id="verification"><%=typeof verification !== "undefined" ? JSON.stringify(verification) : ""%></textarea>
+bookkeepingLedgerNames       = await zndBookKeepersLedgers.find();
+		        const record = {'action':'getData'};
+		        const bookkeepingYears       = await manageBookkeepingYears.manageBookkeepingYears( record,'' );
+            const verification           = await manageCheckBooks.manageCheckBooks( record,'' );
+
+         */
+async function handleValidationGet ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleValidationGet():Started' );
+        const record                   = {};
+        const recordID                 = '';
+        record.action                  = 'getData';
+        const response                 = await manageLedger.manageLedger( record , recordID ) ;
+
+        if ( response.returnCode !== errorCatalog.NO_ERROR )
+        {   const resp                 = { ...errorCatalog.badResult};
+            resp.body.extendedMessage  = ':generic:handleValidationGet():Couldn\'t retrieve Data';
+            res.render( 'validation' , { items : {}, responseStatus:resp } );
+        }
+
+
+        const resp                 = { ... response};
+        resp.body                  = '';
+        const items                = response.body;
+
+        res.render( 'validation' ,{ items : items, responseStatus:resp } );
+        logger.trace( applicationName + ':generic:handleValidationGet():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleValidationGet():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+
+async function handleValidationPost ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:handleValidationPost():Started' );
+        res.render( 'validation' );
+        logger.trace( applicationName + ':generic:handleValidationPost():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:handleValidationPost():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+
+async function validationHandler ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:validationHandler():Started' );
+        switch ( req.method )
+        {   case 'GET'  :   handleValidationGet( req,res );
+                            break;
+            case 'POST' :   handleValidationPost( req,res );
+                            break;
+            default     :   break;
+        }
+        logger.trace( applicationName + ':generic:validationHandler():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:validationHandler():An exception occurred :[' + ex + '].' );
+    }
+}
 /* --------------------------- End Private Functions   --------------------------*/
 
 
@@ -381,6 +452,8 @@ async function main ( req, res )
            case  findTerm( req.originalUrl,'restoreLedgerEntry' )    :   restoreLedgerEntryHandler( req,res );
                                                                          break;
            case '/Laboratory'                                        :   laboratoryHandler( req,res );
+                                                                         break;
+           case '/validation'                                        :   validationHandler( req,res );
                                                                          break;
            default                                                   :   unknownHandler( req,res );
                                                                          break;

@@ -351,7 +351,7 @@ async function updateCreationDate ()
                                               {   element.creationDate  = await getCreationDateFromHistoricaRecords( element._id );
                                                   //console.log( element);
                                                   let retVal            = await zanddLedger.findByIdAndUpdate(element._id,{ ...element} ,{useFindAndModify:false});
-                                             }
+                                                }
                                            } );
 
         dataSet                        =   await zanddLedger.find();
@@ -408,7 +408,10 @@ async function runDataAugmentation ()
 
          logger.trace( applicationName + ':zndManageData:runDataAugmentation:Started' );
 
-         results                        = await copyBankandInvoiceDate();
+        dataSet                        =   await zanddLedger.find();
+        dataSetHist                    =   await zanddLedgerHist.find();
+        
+        results                        = await copyBankandInvoiceDate();
          results                        = await cleanNotes();
          results                        = await filloutPendingActions();
          results                        = await killNozems();

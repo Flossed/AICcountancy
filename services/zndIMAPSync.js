@@ -378,10 +378,10 @@ async function findStatement(statement)
 {  try
    {   var items;
        logger.trace(applicationName + ':zndIMAPSync:findStatement:Started');
-       logger.debug("Looking for :["+statement+"]");
+       //logger.debug("Looking for :["+statement+"]");
 
        items                            = await zndMailedStatements.find({ headerstring : {$regex :statement } } );
-       logger.debug(applicationName + ':zndIMAPSync:findStatement:Found',items);
+       //logger.debug(applicationName + ':zndIMAPSync:findStatement:Found',items);
        logger.trace(applicationName + ':zndIMAPSync:findStatement:Done');
        return(items);
 

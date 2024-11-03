@@ -34,6 +34,8 @@ const zndLedger                             = require( '../models/zanddLedger' )
 const zndLedgerHist                         = require( '../models/zanddLedgerHist' );
 const checkBooks                            = require( '../models/checkBooks' );
 const checkBooksHist                        = require( '../models/checkBooksHist' );
+const zndBookKeepersLedgers                 = require( '../models/zndBookKeepersLedgers' );
+const zndBookKeepersLedgersHist             = require( '../models/zndBookKeepersLedgersHist' ); 
 /* -------------------------------- End Models --------------------------------*/
 
 /* ---------------------------------  Application constants    ----------------*/
@@ -49,6 +51,8 @@ function getModel ( model )
         let result                      = { ...errorCatalog.noError };
         switch ( model )
         {   case 'bookkeepingYear'      : result.body          = { zndBookkeepingYears, zndBookkeepingYearsHist };
+                                          return result;
+            case 'bookKeepersLedgers'   : result.body          = { zndBookKeepersLedgers, zndBookKeepersLedgersHist };
                                           return result;
             case 'zanddLedger'          : result.body          = { zndLedger, zndLedgerHist };
                                           return result;

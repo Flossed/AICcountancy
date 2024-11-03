@@ -167,9 +167,8 @@ input
 
 .displayDocumentComp
 {   position: fixed;
-	  left:38vw;
-	  top: 26.5vh;
-	  height:69.5vh;
+	  left:50vw;
+	  top: 45vh;	  
 	  width:36%; 	  
 	  overflow: hidden;
 	  padding: 20px;
@@ -556,7 +555,7 @@ input:checked + .slider:before
 
 #statementDropAreaComp 
 {   position: absolute;
-	  left:26vw;
+	  left:37.5vw;
 	  top: -4.1vh;
 	  border: 2px dashed red;
     border-radius: 20px;
@@ -658,6 +657,29 @@ input:checked + .slider:before
     font-family: 'Calibri', sans-serif;
     overflow-y: scroll;
     
+}
+
+.validationRecords
+{   position: absolute;
+    top: 22vh;
+    left: 1%;
+    width: 86vw;
+    height: 90vh;    
+}
+
+.validationStats
+{   position: absolute;
+    top: 12vh;
+    left: 1%;
+    width: 86vw;
+    height: 90vh;    
+}
+
+.vatcalculation
+{   position: fixed;
+    top: 15vh;
+    left: 12%;
+    width: 25vw;    
 }
 /* LOG:
 */

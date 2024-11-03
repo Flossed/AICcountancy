@@ -406,6 +406,157 @@ function updatebcStatus ()
    } );
 }
 
+const vatTableMap                      = {   'Vat Percentage'   :'ID' ,
+                                             'Vat Amount'   :'ID' ,
+                                             'Netto Amount'   :'ID' ,
+                                          };
+
+function createTableHeader ( Table, map, tableName, rows )
+{
+   try
+   {  const header                     = Table.createTHead();
+      const row                        = header.insertRow( 0 );
+      tableHeader                      = Object.keys( map );
+
+      for ( i = tableHeader.length - 1; i >= 0 ; i-- )
+      {
+         cell                        = row.insertCell( 0 );
+         let element                 = document.createTextNode( tableHeader[i] );
+         cell.appendChild( element );
+         element                 = document.createElement( 'a' );
+         let param               = 'javascript:sortColumn(\'' + tableHeader[i] + 'UP\',' + JSON.stringify( tableName ) + ',' + JSON.stringify( map ) + ',' + JSON.stringify( rows ) + ');';
+         element.setAttribute( 'href', param  );
+         temp                    = document.createTextNode( '\u25B4'	);
+         element.style.textDecoration   = 'none';
+         element.appendChild( temp );
+         cell.appendChild( element );
+         element                 = document.createElement( 'a' );
+         param                   = 'javascript:sortColumn(\'' + tableHeader[i] + 'DOWN\',' + JSON.stringify( tableName ) + ',' + JSON.stringify( map ) + ',' + JSON.stringify( rows ) + ');';
+         element.setAttribute( 'href', param  );
+         temp                    = document.createTextNode( '\u25BE'	);
+         element.style.textDecoration   = 'none';
+         element.appendChild( temp );
+         cell.appendChild( element );
+         cell.style.backgroundColor  = '#a9becc';
+         cell.style.fontWeight       = 'bold';
+      }
+   }
+   catch ( ex )
+   {
+      console.log( 'zndDashboard:clearTable: An exception occurred:[' + ex + '].' );
+   }
+}
+
+
+/*
+
+
+function populateTable ( table, dataRows, map )
+{
+   try
+   {   const options                   =  { minimumFractionDigits: 2, maximumFractionDigits: 2, style: 'currency', currency: 'EUR'};
+
+       let element, counter = 0;
+
+
+       for ( element of dataRows )
+       {   const row                   = table.insertRow();
+           let ROWID                   = '';
+
+           for ( const matrixElement in map )
+           {   const key               = map[matrixElement];
+               const cell              = row.insertCell();
+               const content           = element[key];
+               let text                = '';
+               const textNode          = document.createTextNode( content );
+               const aElement          = document.createElement( 'a' );
+               const rowReference      = '/zndStatements/' + content;
+               aElement.setAttribute( 'href',rowReference );
+               aElement.setAttribute( 'target','_blank' );
+               cell.setAttribute( 'style', 'padding-left:10px;padding-right:10px;' );
+               switch ( key )
+               {   case 'compagnyID'        :   cell.appendChild( textNode );
+                                                break;
+                   case 'ID'                :   text            =  document.createTextNode( counter++ );
+                                                aElement.appendChild( text );
+                                                cell.appendChild( aElement );
+                                                ROWID = aElement;
+                                                break;
+                   case 'documentName'      :   {   const textNoder        =  document.createTextNode( content );
+                                                     aElement.appendChild( textNoder );
+                                                     aElement.setAttribute( 'href',ROWID.href );
+                                                     cell.appendChild( aElement );
+                                                     break;
+                                                }
+                   case 'bkLedgerAccount'   :   {   const ledgerText        =  document.createTextNode( findBookkeeperLedgerName( content ) );
+                                                    cell.appendChild( ledgerText );
+                                                    break;
+                                                }
+                  case 'bkBookYear'         :   {   const ledgerText        =  document.createTextNode( findBookyear( content ) );
+                                                   cell.appendChild( ledgerText );
+                                                   break;
+                                               }
+                  case 'bcStatus'           :  {   const ledgerText        =  document.createTextNode( findbcStatus( content ) );
+                                                   cell.appendChild( ledgerText );
+                                                   break;
+                                               }
+                   default                  :   if ( amountElements.includes( key ) )
+                                                {   if ( typeof content !== 'undefined' )
+                                                    {   const taxt = document.createTextNode( content.toLocaleString( 'nl-NL', options ) );
+                                                        cell.appendChild( taxt );
+                                                        cell.style.textAlign   = 'right';
+                                                    }
+                                                }
+                                                else
+                                                   cell.appendChild( textNode );
+                                                break;
+               }
+               cell.style.maxWidth = '200px';
+           }
+       }
+   }
+   catch ( ex )
+   {   console.log( 'zndDashboard:populateTable2: An exception occurred:[' + ex + '].' );
+   }
+}
+
+
+
+*/
+
+function calculateVat ()
+{  console.log( 'calculateVat' );
+   const vatPercentage = [0,6,7,21];   
+   const grossAmount = document.getElementById( 'grossAmount' ).value;
+   const grossAmountNN =Number(grossAmount.replace(",", "."))
+   console.log('grossAmount',grossAmountNN);
+
+   const tableAnchor                   = document.getElementById( "vatTable" );
+   const tableElement                  = document.createElement( 'TABLE' );
+   createTableHeader(tableElement, vatTableMap, 'vatTable', [] );
+   tableAnchor.appendChild( tableElement );
+   
+   vatPercentage.forEach( function ( item )
+   {   const row                   = tableElement.insertRow();
+       for ( const matrixElement in vatTableMap )
+       {   const cell              = row.insertCell();
+           console.log('matrixElement',matrixElement, item);
+           switch(matrixElement)
+           { case 'Vat Percentage' :  cell.appendChild( document.createTextNode( item ) );
+                                      break;    
+             case 'Vat Amount'     :  cell.appendChild( document.createTextNode(  ((grossAmountNN / (100 + item))*item).toFixed(2) ) );
+                                      break;                         
+            case 'Netto Amount'   :  cell.appendChild( document.createTextNode(  ((grossAmountNN / (100 + item)) *100).toFixed(2) ) );
+                                     break;
+            default                : console.log('Wierdness');  
+                                     break;     
+
+           }
+       }   
+   } );
+}
+
+
 function updateFields ()
 {  console.log( 'updateFields' );
    updatebkLedgerAccount();
@@ -421,6 +572,7 @@ function updateFields ()
    }*/
 
    updatebcStatus();
+   calculateVat();
 
 
 }

@@ -166,7 +166,12 @@
                   <button id="FAU" name="updateForm" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? '':'display:none' %>" type="button"  onclick="formulierActie('updateRecord');">Update</button><br>
                   <button id="FA" style="<%=(typeof items != "undefined" &&  typeof items._id != "undefined" )  ? 'display:none' : '' %>" type="button"  onclick="formulierActie('create');">Create</button><br>                   
                </div>                 
-            </form>           
+            </form>  
+         <div class="vatcalculation">
+            Vat calculation:<br>
+            <hr>
+            <div id="vatTable"></div>               
+         </div>         
          <div class="displayDocument">                   
             <div>
                <h2>Document</h2>

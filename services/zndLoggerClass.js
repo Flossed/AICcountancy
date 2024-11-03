@@ -42,9 +42,9 @@ var loggingLevels                       = {   levels: {   exception   : 0,
                                                           error       : 1, 
                                                           warn        : 2, 
                                                           info        : 3, 
-                                                          http        : 4, 
-                                                          debug       : 5, 
-                                                          trace       : 6                                                           
+                                                          http        : 4,                                                           
+                                                          trace       : 5,                                                           
+                                                          debug       : 6 
                                                        }
                                            };
 
