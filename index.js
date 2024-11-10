@@ -35,14 +35,15 @@ const db                               = mongoose.connection;
 const app                              = express();
 const http                             = require( 'http' ).Server( app );
 
-
+// eslint-disable-next-line no-undef
+const directoryName                     = __dirname;
 app.set( 'view engine','ejs' );
 mongoose.connect( config.get( 'application:DB' ), {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true} );
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( express.static( 'public' ) );
 app.use( fileUpload() );
-app.use( favicon( path.join( __dirname, 'public\\img', 'zandd.ico' ) ) );
+app.use( favicon( path.join( directoryName, 'public', 'img', 'zandd.ico' ) ) );
 app.use( cors() );
 
 app.use( function ( req, res, next ) {
