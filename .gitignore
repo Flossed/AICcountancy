@@ -11,7 +11,7 @@ controllers/_ARCH
 services/_ARCH     
 public/docs
 public/docsold
-!.gitignore
+.gitignore
 !automation
 !*.txt
 !*.js
@@ -55,3 +55,4 @@ public/docsold
 #  19. !/scripts                    ' the directory scripts , script directory containing scripts required for devops
 #  20. !/documentation              ' the directory documentation ,  containing any suipporting text documentation for the project 
 #########################################################################################################
+node_modules
