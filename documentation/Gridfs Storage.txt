@@ -1,0 +1,10 @@
+We would like to keep de documents in MONGODB so that we can be system independent and also have a one point for backup. 
+Just backup the mongodDB and you will be fine. 
+
+To do this we will store the documents in the DB using gridFS, and Multer ( which handles multipart documents). 
+Good guide to this is : https://mayallo.com/mongodb-gridfs/
+
+Things that need to be adapted. 
+Spooling all documents from the docs dir in the project to the db. 
+create adapted viewing of documents. 
+
