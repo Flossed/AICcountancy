@@ -3,19 +3,7 @@
    Copywrite        : Daniel S. A. Khan (c) 2024
    Description      :
    Notes            :
-
 */
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
-
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
-
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
-
 const {logger,applicationName}         = require( '../services/generic' );
 const zndManageData                    = require( '../services/zndManageData' );
 const manageBookkeepingYears           = require( '../services/manageBookkeepingYears' );
@@ -24,18 +12,7 @@ const manageLedger                     = require( '../services/manageLedger' );
 const errorCatalog                     = require( '../services/errorCatalog' );
 const manageReferenceData              = require( '../services/manageReferenceData' );
 
-/* -------------------------------- End Services ------------------------------*/
 
-/* ------------------------------------- Models -------------------------------*/
-/* -------------------------------- End Models --------------------------------*/
-
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
 async function updateAllMovements ()
 {   try
     {   logger.trace( applicationName + ':generic:updateAllMovements():Started' );
@@ -415,7 +392,26 @@ async function handleValidationPost ( req,res )
 async function restoreHistRecordGet ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:restoreHistRecordGet():Started' );
-        res.render( 'restoreHistRecord' );
+        const dataRecord               =   {};
+        dataRecord.action              =   'getHistoricalRecord';
+        const recordID                 =   req.params.recordID;
+        console.log( 'The P:',req.params.recordID);
+        let dataRecordResult           =   {};
+        let resultRecords              =   {};
+        let originalRecordID           =   '';
+        if ( recordID !== 'undefined'  )
+        {   dataRecordResult           =   await manageLedger.manageLedger( dataRecord, recordID );
+            console.log( 'Data Record:', dataRecordResult );
+            if (( dataRecordResult.returnCode === errorCatalog.NO_ERROR )  && (Object.keys(dataRecordResult.body._doc).length > 0 ))
+            {    console.log('Whoohoo whoop whooop:',  dataRecordResult.body.originalRecordID );
+                 originalRecordID      =   dataRecordResult.body.originalRecordID;
+                console.log('Whoohoo whoop length:',  Object.keys(dataRecordResult.body._doc).length );
+                dataRecord.action              =   'getHistoricalRecords';
+                const criteria                 = { originalRecordID : originalRecordID };
+                resultRecords                  = await manageLedger.manageLedger( dataRecord,recordID,criteria );
+            } 
+        } 
+        res.render( 'restoreHistRecord' ,{originalRecordID:originalRecordID, dataRecord:dataRecordResult.body, dataRecords: resultRecords.body});        
         logger.trace( applicationName + ':generic:restoreHistRecordGet():Done' );
     }
     catch ( ex )
@@ -428,8 +424,17 @@ async function restoreHistRecordGet ( req,res )
 async function restoreHistRecordPost ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:restoreHistRecordPost():Started' );
+        logger.debug ( applicationName + ':generic:restoreHistRecordPost():Request Body: ' +  req.body.recorIDToSelect + '.' );
+        const dataRecord               = {};
+        dataRecord.action              = 'getHistoricalRecords';
+        const recordID                 = req.body.recorIDToSelect;
+        let dataRecordData           = {};
         
-        res.render( 'restoreHistRecord' );
+        const criteria                 = { originalRecordID : recordID };
+        const resultRecords            = await manageLedger.manageLedger( dataRecord,recordID,criteria );
+        console.log( resultRecords );
+
+        res.render( 'restoreHistRecord',{originalRecordID:recordID, dataRecord:dataRecordData,dataRecords: resultRecords.body} );
         logger.trace( applicationName + ':generic:restoreHistRecordPost():Done' );
     }
     catch ( ex )
@@ -441,7 +446,7 @@ async function restoreHistRecordPost ( req,res )
 async function restoreHistRecordHandler ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:restoreHistRecordHandler():Started' );
-        console.log('dodododododd URL:', req.method );
+
         switch ( req.method )
         {   case 'GET'  :   await restoreHistRecordGet( req,res );
                             break;
@@ -473,10 +478,7 @@ async function validationHandler ( req,res )
     {   logger.exception( applicationName + ':generic:validationHandler():An exception occurred :[' + ex + '].' );
     }
 }
-/* --------------------------- End Private Functions   --------------------------*/
 
-
-/* --------------------------- Public Functions   ----------------------------*/
 async function main ( req, res )
 {   try
     {   logger.trace( applicationName + ':generic:main():Started' );
@@ -493,7 +495,9 @@ async function main ( req, res )
                                                                          break;
            case '/restoreLedgerEntry'                                :   restoreLedgerEntryHandler( req,res );
                                                                          break;
-           case '/restoreHistRecord'                                  :  await restoreHistRecordHandler( req,res );     
+           case '/restoreHistRecord'                                 :  await restoreHistRecordHandler( req,res );
+                                                                         break;
+           case  findTerm( req.originalUrl,'restoreHistRecord' )     :   restoreHistRecordHandler( req,res );
                                                                          break;
            case  findTerm( req.originalUrl,'restoreLedgerEntry' )    :   restoreLedgerEntryHandler( req,res );
                                                                          break;
@@ -501,8 +505,7 @@ async function main ( req, res )
                                                                          break;
            case '/validation'                                        :   validationHandler( req,res );
                                                                          break;
-           default                                                   :  
-                                                                         unknownHandler( req,res );
+           default                                                   :   unknownHandler( req,res );
                                                                          break;
         }
         logger.trace( applicationName + ':generic:main():Done' );
@@ -511,10 +514,5 @@ async function main ( req, res )
     {   logger.exception( applicationName + ':generic:main():An exception occurred: [' + ex + '].' );
     }
 }
-/* ----------------------------- End Public Functions   ------------------------*/
 
-/* ----------------------------------External functions ------------------------*/
 module.exports.main                     = main;
-/* ----------------------------------End External functions --------------------*/
-/* LOG:
-*/

@@ -627,10 +627,12 @@ input:checked + .slider:before
 .idSelector
 {   position: fixed;
     top: 15vh;
-    left: 50%;
-    width: 40%;
+    left: 56%;
+    width: 33.5%;
     height: 10%;  
     border: #001a4d solid 2px;  
+    padding-left: 20px;
+    padding-top : 20px;
 }
 
 .textareaBlock

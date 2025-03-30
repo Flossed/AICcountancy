@@ -1,6 +1,6 @@
 /* File             : manageDataModel.js
    Author           : Daniel S. A. Khan
-   Copywrite        : Daniel S. A. Khan (c) 2023-20244
+   Copywrite        : Daniel S. A. Khan (c) 2023-2025
    Description      : generic library for handling actions on storing data in
                       database. Containing CRUD functions for the data.
                       using the library consistently allows for management of
@@ -426,6 +426,8 @@ async function getHistoricalRecords ( model, criterea )
 
 
         response                        = [];
+        console.log( dbModel.body[Object.keys( dbModel.body )[1]] );
+        console.log( 'Whooop Whoop: ',criterea );
         response                        = await dbModel.body[Object.keys( dbModel.body )[1]].find( criterea );
 
         result.body                     = response;

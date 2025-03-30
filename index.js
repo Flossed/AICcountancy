@@ -32,6 +32,7 @@ const http                             = require( 'http' ).Server( app );
 const directoryName                     = __dirname;
 app.set( 'view engine','ejs' );
 mongoose.connect(dbName , {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true} );
+mongoose.set('debug', true);
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( express.static( 'public' ) );
@@ -144,6 +145,7 @@ function setRouting ()
         app.get( '/zndBookkeepingYears/:recordID',genericCntrl.main );
         app.get( '/checkbooks/:recordID',genericCntrl.main );
         app.get( '/restoreLedgerEntry/:recordID',genericCntrl.main );
+        app.get( '/restoreHistRecord/:recordID',genericCntrl.main );
 
         app.use( '*', genericCntrl.main );
         logger.trace( applicationName + ':index:setRouting:Done ' );
