@@ -14,18 +14,11 @@ const tableMap                         = {   'ID'                   :   '_id' ,
                                          };
 
 
-const dataRecordTemplate                      =  {   'Statement': { 'Reference': 'bankstatementID',
-                                                            'Payment via (list of paymenttypes)' :  'paymentTypes'
-                                                          },
-                                             'Bookkeepers reference':{},
-                                             'verification':{},
-                                             'Invoice':{},
-                                        } ;
+
 
 
 function selectID ( )
-{   const recorIDToSelect              =   document.getElementById( 'recorIDToSelect' ).value;
-    console.log( 'ID Length' + recorIDToSelect.length );
+{   const recorIDToSelect              =   document.getElementById( 'recorIDToSelect' ).value;    
     if ( recorIDToSelect.length == 24 )
     {   const recordIDForm             =   document.getElementById( 'selectAnID' );        
         recordIDForm.submit();
@@ -44,8 +37,7 @@ function fillTable ()
 
        document.getElementById( 'nrHistoricalRecordsFound' ).innerHTML = 'Number of records found for [' + originalRecordID + '] is: [' + historicalRecordsArray.length + ']';
        if ( historicalRecordsArray.length > 0 )
-       {   historicalRecordsArray.sort( ( a, b ) => ( historicalRecordsArray.recordTime > b.recordTime ) ? 1 : ( ( b.recordTime > a.recordTime ) ? -1 : 0 ) );
-           console.log( 'Sorted records:', historicalRecordsArray );
+       {   historicalRecordsArray.sort( ( a, b ) => ( historicalRecordsArray.recordTime > b.recordTime ) ? 1 : ( ( b.recordTime > a.recordTime ) ? -1 : 0 ) );           
        }
    }
 }
@@ -53,9 +45,7 @@ function fillTable ()
 function fillRecord ()
 {   const dataRecord                   =   document.getElementById( 'dataRecord' ).value;
     const dataRecords                  =   document.getElementById( 'dataRecords' ).value;
-    
     const dataRecordsObj               =   JSON.parse( dataRecords );
-    console.log('asdhjkahsjkdsadjhkadsjkhasdjhk =>',dataRecordsObj.length);
 
     if (dataRecord.length > 0 )
     {   const dataRecordObj           =   JSON.parse( dataRecord );
@@ -191,20 +181,12 @@ function initTable ( tableData, tableReference )
 
 
 function init ()
-{   console.log( 'Init() called' );
-    fillForm();
+{   fillForm();
     const dataRecords                  =   JSON.parse( document.getElementById( 'dataRecords' ).textContent );
-    console.log( 'Data Records: ', dataRecords );
     initTable( dataRecords, 'tableOfValues' );
 }
 
 function formulierActie(action)
-{   const elements                     = document.forms[documentFormName].elements;
-    for ( let i = 0;i < elements.length;i++ )
-    {   console.log('id : [' + elements[i].id + '] value: [ ' + elements[i].value + ']' );
-    }
-    
-    const form                     = document.forms[documentFormName];
-        form.submit();
-        console.log( 'Form submitted' );
+{   const form                     = document.forms[documentFormName];
+    form.submit();
 }

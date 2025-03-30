@@ -390,12 +390,8 @@ async function getRecords ( model )
         {   logger.error( applicationName + ':manageDataModel:getRecords:Technical error: Model not found.' );
             return dbModel;
         }
-
-        //console.log( dbModel.body[Object.keys( dbModel.body )[0]] );
-
         response                        = [];
-        response                        = await dbModel.body[Object.keys( dbModel.body )[0]].find();
-        //console.log( response );
+        response                        = await dbModel.body[Object.keys( dbModel.body )[0]].find();        
         result.body                     = response;
         logger.trace( applicationName + ':manageDataModel:getRecords:Done.' );
         return result;
@@ -425,9 +421,7 @@ async function getHistoricalRecords ( model, criterea )
 
 
 
-        response                        = [];
-        console.log( dbModel.body[Object.keys( dbModel.body )[1]] );
-        console.log( 'Whooop Whoop: ',criterea );
+        response                        = [];        
         response                        = await dbModel.body[Object.keys( dbModel.body )[1]].find( criterea );
 
         result.body                     = response;

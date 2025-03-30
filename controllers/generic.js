@@ -11,6 +11,7 @@ const manageCheckBooks                 = require( '../services/manageCheckBooks'
 const manageLedger                     = require( '../services/manageLedger' );
 const errorCatalog                     = require( '../services/errorCatalog' );
 const manageReferenceData              = require( '../services/manageReferenceData' );
+const { data } = require( 'jquery' );
 
 
 async function updateAllMovements ()
@@ -395,23 +396,23 @@ async function restoreHistRecordGet ( req,res )
         const dataRecord               =   {};
         dataRecord.action              =   'getHistoricalRecord';
         const recordID                 =   req.params.recordID;
-        console.log( 'The P:',req.params.recordID);
+        console.log( 'The P:',req.params.recordID );
         let dataRecordResult           =   {};
         let resultRecords              =   {};
         let originalRecordID           =   '';
         if ( recordID !== 'undefined'  )
         {   dataRecordResult           =   await manageLedger.manageLedger( dataRecord, recordID );
             console.log( 'Data Record:', dataRecordResult );
-            if (( dataRecordResult.returnCode === errorCatalog.NO_ERROR )  && (Object.keys(dataRecordResult.body._doc).length > 0 ))
-            {    console.log('Whoohoo whoop whooop:',  dataRecordResult.body.originalRecordID );
+            if ( ( dataRecordResult.returnCode === errorCatalog.NO_ERROR )  && ( Object.keys( dataRecordResult.body._doc ).length > 0 ) )
+            {    console.log( 'Whoohoo whoop whooop:',  dataRecordResult.body.originalRecordID );
                  originalRecordID      =   dataRecordResult.body.originalRecordID;
-                console.log('Whoohoo whoop length:',  Object.keys(dataRecordResult.body._doc).length );
+                console.log( 'Whoohoo whoop length:',  Object.keys( dataRecordResult.body._doc ).length );
                 dataRecord.action              =   'getHistoricalRecords';
                 const criteria                 = { originalRecordID : originalRecordID };
                 resultRecords                  = await manageLedger.manageLedger( dataRecord,recordID,criteria );
-            } 
-        } 
-        res.render( 'restoreHistRecord' ,{originalRecordID:originalRecordID, dataRecord:dataRecordResult.body, dataRecords: resultRecords.body});        
+            }
+        }
+        res.render( 'restoreHistRecord' ,{originalRecordID:originalRecordID, dataRecord:dataRecordResult.body, dataRecords: resultRecords.body} );
         logger.trace( applicationName + ':generic:restoreHistRecordGet():Done' );
     }
     catch ( ex )
@@ -423,18 +424,26 @@ async function restoreHistRecordGet ( req,res )
 
 async function restoreHistRecordPost ( req,res )
 {   try
-    {   logger.trace( applicationName + ':generic:restoreHistRecordPost():Started' );
-        logger.debug ( applicationName + ':generic:restoreHistRecordPost():Request Body: ' +  req.body.recorIDToSelect + '.' );
-        const dataRecord               = {};
-        dataRecord.action              = 'getHistoricalRecords';
-        const recordID                 = req.body.recorIDToSelect;
-        let dataRecordData           = {};
-        
-        const criteria                 = { originalRecordID : recordID };
-        const resultRecords            = await manageLedger.manageLedger( dataRecord,recordID,criteria );
-        console.log( resultRecords );
+    {   logger.trace( applicationName + ':generic:restoreHistRecordPost():Started' );        
 
-        res.render( 'restoreHistRecord',{originalRecordID:recordID, dataRecord:dataRecordData,dataRecords: resultRecords.body} );
+        if ( typeof req.body.recorIDToSelect !== 'undefined' )
+        {   const dataRecord               = {};
+            dataRecord.action              = 'getHistoricalRecords';
+            const recordID                 = req.body.recorIDToSelect;
+            const dataRecordData           = {};
+            const criteria                 = { originalRecordID : recordID };
+            const resultRecords            = await manageLedger.manageLedger( dataRecord,recordID,criteria );
+            res.render( 'restoreHistRecord',{originalRecordID:recordID, dataRecord:dataRecordData,dataRecords: resultRecords.body} );
+        }
+        else
+        {   const dataRecord               = { ... req.body } ;
+            const retVal                   = await manageLedger.manageLedger( dataRecord,dataRecord._id );
+            const criteria                 = { originalRecordID : dataRecord._id };
+            const dr                       = {};
+            dr.action                      = 'getHistoricalRecords';
+            const resultRecords            = await manageLedger.manageLedger( dr,dataRecord._id,criteria );
+            res.render( 'restoreHistRecord' , {   originalRecordID:dataRecord._id, dataRecord : retVal.body.createRec , dataRecords: resultRecords.body} );
+        }
         logger.trace( applicationName + ':generic:restoreHistRecordPost():Done' );
     }
     catch ( ex )

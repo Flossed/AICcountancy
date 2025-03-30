@@ -32,7 +32,7 @@ const http                             = require( 'http' ).Server( app );
 const directoryName                     = __dirname;
 app.set( 'view engine','ejs' );
 mongoose.connect(dbName , {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true} );
-mongoose.set('debug', true);
+//mongoose.set('debug', true);
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( express.static( 'public' ) );
