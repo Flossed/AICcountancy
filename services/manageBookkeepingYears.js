@@ -5,34 +5,12 @@
    Notes            :
 */
 
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
 
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
-const {logger,applicationName}          = require( './generic' );
 const manageData                        = require( './manageDataModel' );
-/* -------------------------------- End Services ------------------------------*/
 
-/* ------------------------------------- Models -------------------------------*/
-/* -------------------------------- End Models --------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
-/* -------------------------- End Private Functions   ------------------------*/
-
-/* --------------------------- Public Functions   ----------------------------*/
-/* ----------------------------- End Public Functions   ------------------------*/
 
 
 
@@ -70,9 +48,5 @@ async function manageBookkeepingYears ( dataRecord,recordID )
     }
 
 }
-/* ----------------------------------External functions ------------------------*/
-module.exports.manageBookkeepingYears  = manageBookkeepingYears;
-/* ----------------------------------End External functions --------------------*/
 
-/* LOG:
-*/
+module.exports.manageBookkeepingYears  = manageBookkeepingYears;

@@ -359,7 +359,20 @@ input
 {   background: #b3ccff;
 }
 
+.mutton
+{   color: white;  
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin-top: -100px;
+    cursor: pointer;    
+    padding: 10px;
+    border-radius: 5px;
+    border: 2px solid #001a4d;
+    min-width: 95px;
 
+}
 
 #pf, #ed, #sendForm, #lock, #accnt, #NB
 {   color: white;  
@@ -611,6 +624,15 @@ input:checked + .slider:before
 }
 
 
+.idSelector
+{   position: fixed;
+    top: 15vh;
+    left: 50%;
+    width: 40%;
+    height: 10%;  
+    border: #001a4d solid 2px;  
+}
+
 .textareaBlock
 {   height: 20em;
     width: 25em;   
@@ -653,6 +675,18 @@ input:checked + .slider:before
     left: 50%;
     width: 35vw;
     height: 77vh;
+    padding: 20px;    
+    font-family: 'Calibri', sans-serif;
+    overflow-y: scroll;
+    
+}
+
+.tableOfIDStoScroll
+{   position: absolute;
+    top: 10vh;
+    left: 50%;
+    width: 35vw;
+    height: 67vh;
     padding: 20px;    
     font-family: 'Calibri', sans-serif;
     overflow-y: scroll;

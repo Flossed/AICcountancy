@@ -1,14 +1,10 @@
 /* File             : index.js
    Author           : Daniel S. A. Khan
-   Copywrite        : Daniel S. A. Khan (c) 2022
+   Copywrite        : Daniel S. A. Khan (c) 2022 -2025
    Description      : Main file for ZANDDBOOKS
    Notes            :
-*/
+*/ 
 
-
-
-/* ------------------     External Application Libraries      ----------------*/
-const winston                          = require( 'winston' );
 const mongoose                         = require( 'mongoose' );
 const express                          = require( 'express' );
 const ejs                              = require( 'ejs' );
@@ -18,19 +14,16 @@ const { exec }                         = require( 'child_process' );
 const favicon                          = require( 'serve-favicon' );
 const path                             = require( 'path' );
 const cors                             = require( 'cors' );
+ 
+const {logger,applicationName}         = require( './services/generic' );
+const { dbName }                       = require( './services/generic' );
+const {ApplicationPort,progStart }      =  require( './services/generic' );
+const {outputToBrowser }                =  require( './services/generic' );
 
-/* ------------------ End External Application Libraries      ----------------*/
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const Logger                           = require( './services/zndLoggerClass' );
-const config                           = require( './services/configuration' );
 const zndCodaRecordService             = require( './services/zndCodaRecord' );
 const zndManageDataService             = require( './services/zndManageData' );
 const zndIMAPSync                      = require( './services/zndIMAPSync' );
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-
-/* --------------- External Application Libraries Initialization -------------*/
+ 
 const db                               = mongoose.connection;
 const app                              = express();
 const http                             = require( 'http' ).Server( app );
@@ -38,7 +31,7 @@ const http                             = require( 'http' ).Server( app );
 // eslint-disable-next-line no-undef
 const directoryName                     = __dirname;
 app.set( 'view engine','ejs' );
-mongoose.connect( config.get( 'application:DB' ), {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true} );
+mongoose.connect(dbName , {useNewUrlParser: true, useUnifiedTopology:true, useCreateIndex: true} );
 app.use( bodyParser.json() );
 app.use( bodyParser.urlencoded( {extended:true} ) );
 app.use( express.static( 'public' ) );
@@ -52,9 +45,7 @@ app.use( function ( req, res, next ) {
   next();
 } );
 
-/* ----------- End External Application Libraries Initialization -------------*/
 
-/* ------------------------------------- Cntrls -------------------------*/
 const mainCntrl                         = require( './controllers/main' );
 const defaultCntrl                      = require( './controllers/default' );
 const zndLedgerCntrl                    = require( './controllers/zndLedger' );
@@ -90,28 +81,7 @@ const zndDashboardCntrl                 = require( './controllers/zndDashboard' 
 const zndPrintStatementCntrl            = require( './controllers/zndPrintStatement' );
 const genericCntrl                      = require( './controllers/generic' );
 
-
-/* -------------------------------- End Cntrls --------------------------*/
-
-/* ------------------------------------- Services    -------------------------*/
-/* -------------------------------- End Services    --------------------------*/
-
-/* --------------- Internal Variables Initialization -------------------------*/
-/* ----------- End Internal Variables Initialization -------------------------*/
-
-/* ------------------------------------- Application constants ----------------*/
-const ApplicationPort                   = config.get( 'application:ServiceEndPointPort' );
-const progStart                         = config.get( 'application:progStart' );
-const outputToBrowser                   = config.get( 'application:outputToBrowser' );
-const logFileName                       = config.get( 'application:logFileName' );
-const applicationName                   = config.get( 'application:applicationName' );
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization -------------*/
-const logger                            = new Logger( logFileName );
-/* ----------- End Internal Application Libraries Initialization -------------*/
-
-/* ------------------------------------- Functions   -------------------------*/
+ 
 function setRouting ()
 {   try
      {   logger.trace( applicationName + ':index:setRouting:Started ' );
@@ -176,7 +146,7 @@ function setRouting ()
         app.get( '/restoreLedgerEntry/:recordID',genericCntrl.main );
 
         app.use( '*', genericCntrl.main );
-       logger.trace( applicationName + ':index:setRouting:Done ' );
+        logger.trace( applicationName + ':index:setRouting:Done ' );
      }
      catch ( ex )
      {   logger.exception( applicationName + ':index:setRouting:An exception Occured:[' + ex + ']' );
@@ -215,7 +185,7 @@ function initializeServices ()
 {   try
      {   logger.trace( applicationName + ':index:initializeServices: Starting' );
 
-         const timeStamp                       = new Date();
+         const timeStamp                = new Date();
          const appNameString            = 'Starting ' + applicationName;
          const timeStampString          = 'Time: ' + timeStamp.toLocaleTimeString( 'de-DE' );
          const dateString               = 'Date: ' + timeStamp.toLocaleDateString( 'de-DE' );
@@ -255,7 +225,7 @@ function main ()
      {   logger.exception( applicationName + 'index:main:An exception Occurred:[' + ex + ']' );
      }
 }
-/* --------------------------------- End Functions   -------------------------*/
+
 
 
 module.exports = app.listen( ApplicationPort );

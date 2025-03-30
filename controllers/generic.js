@@ -59,14 +59,14 @@ async function handleLaboratoryPost ( req,res )
 {   try
     {   logger.trace( applicationName + ':generic:handleLaboratoryPost():Started' );
         switch ( req.body.action )
-        {   case 'updateCreationDate' :   zndManageData.updateCreationDate();
+        {   /*case 'updateCreationDate' :   zndManageData.updateCreationDate();
                                           break;
             case 'deleteCreationDate' :   zndManageData.deleteCreationDate();
                                           break;
             case 'updateOneMovement'  :   await zndManageData.handleGetMovement( req.body.recordID );
                                           break;
             case 'updateAllMovements' :   updateAllMovements( );
-                                          break;
+                                          break;*/
             default                   :   throw 'Crap Action: [' + req.body.action  + ']';
         }
 
@@ -412,6 +412,50 @@ async function handleValidationPost ( req,res )
 }
 
 
+async function restoreHistRecordGet ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:restoreHistRecordGet():Started' );
+        res.render( 'restoreHistRecord' );
+        logger.trace( applicationName + ':generic:restoreHistRecordGet():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:restoreHistRecordGet():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+
+async function restoreHistRecordPost ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:restoreHistRecordPost():Started' );
+        
+        res.render( 'restoreHistRecord' );
+        logger.trace( applicationName + ':generic:restoreHistRecordPost():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:restoreHistRecordPost():An exception occurred :[' + ex + '].' );
+    }
+}
+
+
+async function restoreHistRecordHandler ( req,res )
+{   try
+    {   logger.trace( applicationName + ':generic:restoreHistRecordHandler():Started' );
+        console.log('dodododododd URL:', req.method );
+        switch ( req.method )
+        {   case 'GET'  :   await restoreHistRecordGet( req,res );
+                            break;
+            case 'POST' :   await restoreHistRecordPost( req,res );
+                            break;
+            default     :   break;
+        }
+        logger.trace( applicationName + ':generic:restoreHistRecordHandler():Done' );
+    }
+    catch ( ex )
+    {   logger.exception( applicationName + ':generic:restoreHistRecordHandler():An exception occurred :[' + ex + '].' );
+    }
+}
+
 
 async function validationHandler ( req,res )
 {   try
@@ -449,13 +493,16 @@ async function main ( req, res )
                                                                          break;
            case '/restoreLedgerEntry'                                :   restoreLedgerEntryHandler( req,res );
                                                                          break;
+           case '/restoreHistRecord'                                  :  await restoreHistRecordHandler( req,res );     
+                                                                         break;
            case  findTerm( req.originalUrl,'restoreLedgerEntry' )    :   restoreLedgerEntryHandler( req,res );
                                                                          break;
            case '/Laboratory'                                        :   laboratoryHandler( req,res );
                                                                          break;
            case '/validation'                                        :   validationHandler( req,res );
                                                                          break;
-           default                                                   :   unknownHandler( req,res );
+           default                                                   :  
+                                                                         unknownHandler( req,res );
                                                                          break;
         }
         logger.trace( applicationName + ':generic:main():Done' );

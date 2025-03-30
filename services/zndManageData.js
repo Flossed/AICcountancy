@@ -5,45 +5,19 @@
    Description      :
 */
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require( 'winston' );
-/* ------------------ End External Application Libraries      ----------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
 
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require( '../services/configuration' );
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-/* ------------------------------------- Controllers -------------------------*/
 const zndManageStatements               = require( '../controllers/zndManageStatements' );
-/* -------------------------------- End Controllers --------------------------*/
 
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require( '../services/zndLoggerClass' );
+
 const manageLedger                      = require( '../services/manageLedger' );
-/* -------------------------------- End Services -----------------------------*/
 
-/* ------------------------------------- Models ------------------------------*/
+
 const zanddLedger                       = require( '../models/zanddLedger.js' );
 const zanddLedgerHist                   = require( '../models/zanddLedgerHist.js' );
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get( 'application:logFileName' );
-const applicationName                   = config.get( 'application:applicationName' );
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Application Libraries Initialization  -------------*/
-const logger                            = new Logger( logFileName );
-/* ----------- End Internal Application Libraries Initialization  -------------*/
-
-/* ------------------------------------- Application Variables ----------------*/
-
-/* ---------------------------------End Application Variables  ----------------*/
-
-/* ------------------------------------- Functions   --------------------------*/
 let dataSet, dataSetHist;
 
 async function handleGetMovement ( recordID )
@@ -444,9 +418,8 @@ async function init ()
     {   logger.exception( applicationName + ':zndManageData:init:An exception occured:[' + ex + '].' );
     }
 }
-/* --------------------------------- End Functions   -------------------------*/
 
-/* ----------------------------------External functions ----------------------*/
+
 module.exports.init                     = init;
 module.exports.runDataAugmentation      = runDataAugmentation;
 module.exports.removeLock               = removeLock;
@@ -454,9 +427,3 @@ module.exports.updateCreationDate       = updateCreationDate;
 module.exports.deleteCreationDate       = deleteCreationDate;
 module.exports.setCreditDebitSign       = setCreditDebitSign;
 module.exports.handleGetMovement        = handleGetMovement;
-
-
-/* ----------------------------------End External functions ------------------*/
-
-/* LOG:
-*/

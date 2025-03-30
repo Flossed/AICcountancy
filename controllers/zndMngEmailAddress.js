@@ -5,40 +5,12 @@
    Description      : 
 */
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
-/* ------------------ End External Application Libraries      ----------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-/* ------------------------------------- Controllers -------------------------*/
-/* -------------------------------- End Controllers --------------------------*/
-
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
-/* -------------------------------- End Services -----------------------------*/
-
-/* ------------------------------------- Models ------------------------------*/
 const zndEmailAdress                       = require('../models/emailAdresses')
 const zndEmailAdressHist                   = require('../models/emailAdressesHist')
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
-const headless                          = config.get('application:headless')
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Variables Initialization -------------------------*/
-const logger                            = new Logger(logFileName)
-/* ----------- End Internal Variables Initialization -------------------------*/
-
-/* ------------------------------------- Functions   -------------------------*/
 async function duplicateRecord(record)
 {   try
 	  {   var response, result, localRec;

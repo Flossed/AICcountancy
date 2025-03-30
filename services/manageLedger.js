@@ -5,35 +5,10 @@
    Notes            :
 */
 
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
 
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
 
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
-const {logger,applicationName}          = require( './generic' );
+const {logger,applicationName}         = require( '../services/generic' );
 const manageData                        = require( './manageDataModel' );
-/* -------------------------------- End Services ------------------------------*/
-
-/* ------------------------------------- Models -------------------------------*/
-/* -------------------------------- End Models --------------------------------*/
-
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
-/* -------------------------- End Private Functions   ------------------------*/
-
-/* --------------------------- Public Functions   ----------------------------*/
-/* ----------------------------- End Public Functions   ------------------------*/
-
 
 
 async function manageLedger ( dataRecord,recordID , criterea )
@@ -80,9 +55,6 @@ async function manageLedger ( dataRecord,recordID , criterea )
     }
 
 }
-/* ----------------------------------External functions ------------------------*/
-module.exports.manageLedger            = manageLedger;
-/* ----------------------------------End External functions --------------------*/
 
-/* LOG:
-*/
+
+module.exports.manageLedger            = manageLedger;

@@ -8,52 +8,29 @@
 
 */
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
+const {logger,applicationName}         = require( '../services/generic' );
+
 var Imap                                = require('node-imap')
 var inspect                             = require('util').inspect;
 const fs                                = require('fs');
 const { Base64Decode }                  = require('base64-stream')
-/* ------------------ End External Application Libraries      ----------------*/
 
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
 
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-/* ------------------------------------- Controllers -------------------------*/
 const zndManageStatements               = require('../controllers/zndManageStatements')
-/* -------------------------------- End Controllers --------------------------*/
 
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
+
 const zndMsg                            = require('../services/zndMsg')
 
-/* -------------------------------- End Services -----------------------------*/
 
-/* ------------------------------------- Models ------------------------------*/
+
 const zndMailedStatements               = require('../models/zndMailedStatements.js')
 
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
+
 var   lastMailItem;
 var   imap;
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Application Libraries Initialization  -------------*/
-const logger                            = new Logger(logFileName)
-/* ----------- End Internal Application Libraries Initialization  -------------*/
 
-/* ------------------------------------- Application Variables ----------------*/
-
-/* ---------------------------------End Application Variables  ----------------*/
-
-/* ------------------------------------- Functions   --------------------------*/
 function openInbox(cb)
 {   try
     {   logger.trace(applicationName + ':zndIMAPSync:openInbox:Started');

@@ -5,36 +5,9 @@
    Notes            :
 */
 
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
-
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
-const {logger,applicationName}          = require( './generic' );
 const manageData                        = require( './manageDataModel' );
-/* -------------------------------- End Services ------------------------------*/
-
-/* ------------------------------------- Models -------------------------------*/
-/* -------------------------------- End Models --------------------------------*/
-
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
-/* -------------------------- End Private Functions   ------------------------*/
-
-/* --------------------------- Public Functions   ----------------------------*/
-/* ----------------------------- End Public Functions   ------------------------*/
-
-
 
 async function manageBookKeepersLedgers ( dataRecord,recordID )
 {   try
@@ -70,9 +43,5 @@ async function manageBookKeepersLedgers ( dataRecord,recordID )
     }
 
 }
-/* ----------------------------------External functions ------------------------*/
-module.exports.manageBookKeepersLedgers  = manageBookKeepersLedgers;
-/* ----------------------------------End External functions --------------------*/
 
-/* LOG:
-*/
+module.exports.manageBookKeepersLedgers  = manageBookKeepersLedgers;

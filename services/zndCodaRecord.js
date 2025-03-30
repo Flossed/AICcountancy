@@ -5,46 +5,22 @@
    Description      :
 */
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
-/* ------------------ End External Application Libraries      ----------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-/* ------------------------------------- Controllers -------------------------*/
 const zndManageStatements               = require('../controllers/zndManageStatements')
-/* -------------------------------- End Controllers --------------------------*/
 
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
+
 const zndMsg                            = require('../services/zndMsg');
-/* -------------------------------- End Services -----------------------------*/
 
-/* ------------------------------------- Models ------------------------------*/
+
 const zanddLedger                       = require('../models/zanddLedger.js')
 const codaRecordModel                   = require('../models/codaRecord')
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Application Libraries Initialization  -------------*/
-const logger                            = new Logger(logFileName)
-/* ----------- End Internal Application Libraries Initialization  -------------*/
-
-/* ------------------------------------- Application Variables ----------------*/
 var codaRecords, RECORDSCOUNT, transactions;
 var ledgerEntryCodaRecords=[]
-/* ---------------------------------End Application Variables  ----------------*/
 
-/* ------------------------------------- Functions   --------------------------*/
+
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -258,15 +234,6 @@ async function zndCodaRecordInit()
     {   logger.exception(applicationName + ':zndCodaRecord:zndCodaRecordInit:An exception occured:[' + ex + '].');
     }
 }
-/* --------------------------------- End Functions   -------------------------*/
 
-/* ----------------------------------Module Initialization -------------------*/
-/* ----------------------------------End Module Initialization ---------------*/
-
-/* ----------------------------------External functions ----------------------*/
 module.exports.zndCodaRecordInit        = zndCodaRecordInit
-/* ----------------------------------End External functions ------------------*/
 
-
-/* LOG:
-*/

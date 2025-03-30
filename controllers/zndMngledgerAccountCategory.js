@@ -4,55 +4,12 @@
    Notes            :
    Description      :
 */
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
-/* ------------------ End External Application Libraries      ----------------*/
-
-
-
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
-
-
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-
-
-/* ------------------------------------- Controllers -------------------------*/
-/* -------------------------------- End Controllers --------------------------*/
-
-
-
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
-/* -------------------------------- End Services -----------------------------*/
-
-
-
-/* ------------------------------------- Models ------------------------------*/
 const ledgerAccount                     = require('../models/ledgerAccountCategoryName.js')
 const ledgerAccountHist                 = require('../models/ledgerAccountNameCategoryHist.js')
-/* -------------------------------- End Models -------------------------------*/
 
 
-
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
-const headless                          = config.get('application:headless')
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization -------------*/
-const logger                            = new Logger(logFileName)
-/* ----------- End Internal Application Libraries Initialization -------------*/
-
-
-
-/* ------------------------------------- Functions   -------------------------*/
 async function duplicateRecord(record)
 {   try
 	  {   var response, result, localRec;

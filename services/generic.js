@@ -26,11 +26,17 @@ const Logger                           = require( '../services/loggerClass' );
 const logFileName                      = config.get( 'application:logFileName' );
 const applicationName                  = config.get('application:applicationName');
 const ApplicationPort                  = config.get( 'application:ServiceEndPointPort' );
+const progStart                        = config.get( 'application:progStart' );
 const outputToBrowser                  = config.get( 'application:outputToBrowser' );
 const logTracelevel                    = config.get( 'application:logTracelevel' );
 const consoleOutput                    = config.get( 'application:consoleOutput' );
 const logPath                          = config.get( 'application:logPath' );
-const dbName                            = config.get( 'application:dbName' ); 
+const dbName                           = config.get( 'application:dbName' ); 
+const headless                          = config.get('application:headless');
+const statementTemplate                 = config.get('application:statementTemplate'); 
+const outputDir                         = config.get('application:outputDir'); 
+const wordPath                          = config.get('application:wordPath'); 
+const WordOptions                       = config.get('application:WordOptions'); 
 /* --------------------------------- End Application constants ----------------*/
 
 /* --------------- Internal Application Libraries Initialization --------------*/
@@ -50,6 +56,12 @@ module.exports.logTracelevel           = logTracelevel;
 module.exports.consoleOutput           = consoleOutput;
 module.exports.logPath                 = logPath;
 module.exports.dbName                  = dbName;
+module.exports.progStart               = progStart;
+module.exports.headless                = headless;
+module.exports.statementTemplate       = statementTemplate;
+module.exports.outputDir               = outputDir;
+module.exports.wordPath                = wordPath;
+module.exports.WordOptions             = WordOptions;
 /* ----------------------------------End External functions -----------------*/
 /* LOG:
 */

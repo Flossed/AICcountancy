@@ -6,54 +6,31 @@
 */
 
 /* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
+const {logger,applicationName}         = require( '../services/generic' );
 const fileUpload                        = require('express-fileupload')
 const path                              = require('path');
 const md5                               = require('sha256');
 const fs                                = require('fs');
 const util                              = require('util');
 const { v4: uuidv4 }                    = require('uuid');
-/* ------------------ End External Application Libraries      ----------------*/
 
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
 
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-var zndMsg                              = require('../services/zndMsg');
-/* ------------------ End Internal Application Libraries      ----------------*/
+const zndMsg                              = require('../services/zndMsg');
 
-/* ------------------------------------- Controllers -------------------------*/
-/* -------------------------------- End Controllers --------------------------*/
-
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
 const errorCatalog                      = require('../services/errorCatalog')
 
-/* -------------------------------- End Services -----------------------------*/
 
-/* ------------------------------------- Models ------------------------------*/
+
 const codaRecordModel                   = require('../models/codaRecord')
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
-const headless                          = config.get('application:headless')
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Variables Initialization -------------------------*/
-const logger                            = new Logger(logFileName)
-/* ----------- End Internal Variables Initialization -------------------------*/
-
-/* ------------------------------------- Functions   -------------------------*/
 
 const BAD_REQUEST                       = errorCatalog.BAD_REQUEST;
 const BAD_RESULT                        = errorCatalog.BAD_RESULT;
 const EXCEPTION                         = errorCatalog.EXCEPTION;
 const NO_ERROR                          = errorCatalog.NO_ERROR;
 
-var   StatementID, TransactionID, ID;     
+let   StatementID, TransactionID, ID;     
 
 async function storeInDB(statementID, transactionID, recordID, articleCode,ID,codaRecordJSON)
 {   try

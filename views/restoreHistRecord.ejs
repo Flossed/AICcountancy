@@ -1,0 +1,135 @@
+<html lang="en">
+    <%- include('layouts/header'); -%>
+    <body>
+       <%- include('layouts/heading'); -%>
+       <%- include('layouts/navbar'); -%>
+       <div class="main">          
+          <div>
+             <div class="pageFlipper" id="pageFlipperID">
+                <button id="pf" type="button"  onclick="loadpage(-1);">Previous</button><br>
+                <button id="pf" type="button" onclick="loadpage(1);" >Next </button><br>
+                <button id="ed"  type="button"  onclick="enableForm('toggle');">Edit form</button><br>
+             </div>
+          </div>
+          <div class="idSelector" id="idSelectorID">
+                Select the record you wish to restore.<br> <p><br>
+                 <form id="selectAnID" action="/restoreHistRecord" method="POST" enctype="multipart/form-data">
+                    <p><label>record ID to select: </label>
+                     <textarea class="textareaLine" id="recorIDToSelect" name="recorIDToSelect"></textarea><button id="pf" type="button" onclick="selectID();" >load ID</button><br>
+                 </form> 
+                 
+           </div>
+ 
+          <div class="fixedEntry">
+             <h1>Restore historical records.</h1>             
+             Here you can restore an record which was created previously.<br> <p><br>              
+            <hr style="border-style:double;">
+             
+             <textarea style="display:none;" id="pageDataElements"><%=typeof dataRecord !== "undefined" ? JSON.stringify(dataRecord) : "{}" %></textarea>
+             <textarea style="display:none;" id="dataRecords"><%=typeof dataRecords != "undefined" ? JSON.stringify(dataRecords) : "[]"%></textarea>
+ 
+             
+             Currently the form is<span id="formState"></span> editable.
+             <br><p>
+             <hr>
+             <form id="checkBooks" action="/restoreLedgerEntry" method="POST" enctype="multipart/form-data">
+                 <textarea style="display:none;" rows="1"  id="_id" name="_id"></textarea>
+                 <textarea style="display:none;" rows="1"  id="__v" name="__v"></textarea>
+                 <textarea style="display:none;" rows="1"  id="action" name="action"></textarea>
+                 <textarea style="display:none;" rows="1"  id="editState" name="editState"></textarea>
+                 <textarea style="display:none;" rows="1"  id="movementSign" ></textarea>
+
+                 <p><label>Bank reference:</label>
+                 <textarea  class="textareaLineGreyedOUt" id="bankstatementID" ></textarea>
+
+                 <p><label>Payment via (list of paymenttypes):</label>
+                 <textarea  class="textareaLine" id="paymentTypes"></textarea>
+
+                 <p><label>Payment date (dd-mm-jjj): </label>
+                 <textarea class="textareaLine" id="bankDate" name="bankDate"></textarea></p>
+
+                 <p><label>Invoice date (dd-mm-jjj): </label>
+                 <textarea class="textareaLine" id="invoiceDate"  name="invoiceDate"></textarea></p>
+                 <br>
+
+                 <p><label>Fiat sign Credit/Debit</label>            
+                 Credit: <input type="radio"  disabled id="creditSign" name="creditSign"> -  Debit:<input type="radio" disabled  id="debitSign" name="debitSign">
+
+                 <p><label>Payed gross amount  ((+,-)nnnn,nn): </label>
+                 <textarea  class="textareaLine" id="grossAmount" name="grossAmount"></textarea>  
+                 
+                 <p><label>Payed V.A.T.((+,-)nnnn,nn): </label>
+                 <textarea class="textareaLine" id="VAT" name="VAT"></textarea>
+                 
+                 <p><label>LedgerAccount: </label>
+                 <textarea class="textareaLine" id="ledgerAccount" name="ledgerAccount"></textarea>
+                 
+                 <p><label>Compagny(list of compagnies): </label>
+                 <textarea class="textareaLine" id="compagnyID" name="compagnyID"></textarea>
+
+                 <p><label>Invoice Number: </label>                 
+                 <textarea class="textareaLine" id="invoiceNumber" name="invoiceNumber"></textarea>
+
+                 <p><label>Structured Payment ID: </label>
+                 <textarea class="textareaLine" id="PaymentID" name="PaymentID"></textarea>
+
+                 <p><label>Declaration Statement: </label>
+                 <textarea class="textareaLine" id="declarationStatement" name="declarationStatement"></textarea>
+
+                  
+                  <p><label>Employees Invoice: </label>
+                  <textarea class="textareaLine" id="beneficiary" name="beneficiary"></textarea>
+                  
+                  
+                  <p><label>Description of Bill: </label>
+                  <textarea class="textareaLine" id="billDescription" name="billDescription"></textarea>
+
+                  <p><label>Attached Document:</label>
+                  <textarea class="textareaLine" id="docScan" name="docScan"></textarea>
+                     
+                  <hr>
+                  <h2>Bookkeepers reference.</h2>
+                  <p><label>LedgerAccount Accountant: </label>
+                  <textarea class="textareaLine" id="bkLedgerAccount" name="bkLedgerAccount"></textarea>                  
+                  
+                  
+                  <p><label>Book Year: </label>
+                  <textarea class="textareaLine" id="bkBookYear" name="bkBookYear"></textarea>                  
+                  
+                  <p><label>Accountant Reference: </label>
+                  <textarea class="textareaLine" id="acountantReference" name="acountantReference"></textarea>                  
+                  
+                  <p><label>Bookkeeping Notes: </label>
+                  <textarea class="textareaLine" id="bkNotes" name="bkNotes"></textarea>                  
+                  
+                  <hr>
+                  <h2>Verification</h2>
+                  <p><label>Bookkeeping Status:</label>
+                  <textarea class="textareaLine" id="bcStatus" name="bcStatus"></textarea>                  
+                  
+                  <p><label>Description: </label>               
+                  <textarea class="textareaLine" id="bcComment" name="bcComment"></textarea>                  
+                  
+                  <hr>               
+                  <p><label>Specification of Bill: </label>
+                  <textarea class="textareaLine" id="billSpecification" name="billSpecification"></textarea>                  
+                  
+                 <br><p>
+                 <div class="buttonbar">                   
+                   <button class="buttonni"  id="restoreButton"    type="button" onclick="formulierActie('restore');">Restore</button><br>                   
+                   <button class="buttonni"  id="CancelButton"     type="button" onclick="formulierActie('cancel');">Cancel</button><br>
+                 </div>
+             </form>
+          </div>
+          <div class="tableOfIDStoScroll">
+            <h1>Verification statuses.</h1>             
+             Below table shows all the created statuses<br> 
+             Clicking on the ID in the row allows to see and edit it in detail.<br> <p><br> 
+            <hr style="border-style:double;">
+            <div id="tableOfValues"></div>   
+          </div>
+       </div>      
+       <script src="/js/restoreHistRecord.js"></script>
+       <script src="/js/index.js"></script>
+    </body>
+</html>

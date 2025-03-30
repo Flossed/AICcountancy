@@ -6,45 +6,12 @@
                       bookyears, verificationStatus, bookkkeeping ledgers.   
 */
 
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
 
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
-
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
-const {logger,applicationName}          = require( './generic' );
+const {logger,applicationName}         = require( '../services/generic' );
 const manageData                        = require( './manageDataModel' );
 const manageBookkeepingYears            = require( './manageBookkeepingYears' );
 const manageCheckBooks                  = require( './manageCheckBooks' );
 
-/* -------------------------------- End Services ------------------------------*/
-
-/* ------------------------------------- Models -------------------------------*/
-/* -------------------------------- End Models --------------------------------*/
-
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
-/* -------------------------- End Private Functions   ------------------------*/
-
-/* --------------------------- Public Functions   ----------------------------*/
-/* ----------------------------- End Public Functions   ------------------------*/
-
-/*
-bookkeepingLedgerNames       = await zndBookKeepersLedgers.find();
-		        const record = {'action':'getData'};
-		        const bookkeepingYears       = await manageBookkeepingYears.manageBookkeepingYears( record,'' );
-            const verification           = await manageCheckBooks.manageCheckBooks( record,'' );
-
-*/
 
 async function manageReferenceData ( dataRecord,recordID )
 {   try
@@ -68,9 +35,7 @@ async function manageReferenceData ( dataRecord,recordID )
     }
 
 }
-/* ----------------------------------External functions ------------------------*/
-module.exports.manageReferenceData     = manageReferenceData;
-/* ----------------------------------End External functions --------------------*/
 
-/* LOG:
-*/
+
+module.exports.manageReferenceData     = manageReferenceData;
+

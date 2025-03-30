@@ -5,57 +5,23 @@
    Description      :
 */
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require('winston')
+const {logger,applicationName}         = require( '../services/generic' );
+const { headless	}                     = require( '../services/generic' );
+
 const fileUpload                        = require('express-fileupload')
 const path                              = require('path');
-/* ------------------ End External Application Libraries      ----------------*/
 
 
-
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
-
-
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require('../services/configuration')
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-
-
-/* ------------------------------------- Controllers -------------------------*/
-/* -------------------------------- End Controllers --------------------------*/
-
-
-
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require('../services/zndLoggerClass')
-/* -------------------------------- End Services -----------------------------*/
-
-
-
-/* ------------------------------------- Models ------------------------------*/
 const zanddEmployees                = require('../models/zanddEmployees')
 const zanddEmployeesHist            = require('../models/zanddEmployeesHist')
-/* -------------------------------- End Models -------------------------------*/
 
 
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get('application:logFileName')
-const applicationName                   = config.get('application:applicationName')
-const headless                          = config.get('application:headless')
-/* --------------------------------- End Application constants ----------------*/
-
-/* --------------- Internal Application Libraries Initialization -------------*/
-const logger                            = new Logger(logFileName)
 const NO_DOC_ERROR                      = 0x01
 const NO_EMPLOYEE_ERROR                 = 0x01
 const NO_ERROR                          = 0x00
-/* ----------- End Internal Application Libraries Initialization -------------*/
 
-/* ------------------------------------- Functions   -------------------------*/
+
 async function deleteRecord(record)
 {   try
 	  {   var response, result;
@@ -286,15 +252,7 @@ async function main(req, res)
 	  {   logger.exception(applicationName + ':zndManageEmployees:main:An exception occured:[' + ex + '].')
 	  }
 }
-/* --------------------------------- End Functions   -------------------------*/
-
-/* ----------------------------------Module Initialization -------------------*/
-/* ----------------------------------End Module Initialization ---------------*/
-
-/* ----------------------------------External functions ----------------------*/
+ 
 module.exports.main                     = main
 module.exports.getRecord                = getRecord
-/* ----------------------------------End External functions ------------------*/
-
-/* LOG:
-*/
+ 

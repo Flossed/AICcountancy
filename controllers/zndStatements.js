@@ -4,27 +4,11 @@
    Notes            :
    Description      :
 */
+const {logger,applicationName}          = require( '../services/generic' );
 
-/* ------------------     External Application Libraries      ----------------*/
-const winston                           = require( 'winston' );
-/* ------------------ End External Application Libraries      ----------------*/
-
-/* --------------- External Application Libraries Initialization -------------*/
-/* ----------- End External Application Libraries Initialization -------------*/
-
-/* ------------------     Internal Application Libraries      ----------------*/
-const config                            = require( '../services/configuration' );
-/* ------------------ End Internal Application Libraries      ----------------*/
-
-/* ------------------------------------- Controllers -------------------------*/
 const zndManageStatements               = require( '../controllers/zndManageStatements' );
-/* -------------------------------- End Controllers --------------------------*/
 
-/* ------------------------------------- Services ----------------------------*/
-const Logger                            = require( '../services/zndLoggerClass' );
-/* -------------------------------- End Services -----------------------------*/
 
-/* ------------------------------------- Models ------------------------------*/
 const zanddLedger                       = require( '../models/zanddLedger' );
 const zanddCompanies                    = require( '../models/zndCompanies' );
 const zanddEmployees                    = require( '../models/zanddEmployees' );
@@ -33,18 +17,8 @@ const paymentCatagories                 = require( '../models/paymentCatagories'
 const zndBookKeepersLedgers             = require( '../models/zndBookKeepersLedgers' );
 const manageBookkeepingYears            = require( '../services/manageBookkeepingYears' );
 const manageCheckBooks                  = require( '../services/manageCheckBooks' );
-/* -------------------------------- End Models -------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-const logFileName                       = config.get( 'application:logFileName' );
-const applicationName                   = config.get( 'application:applicationName' );
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Application Libraries Initialization -------------*/
-const logger                            = new Logger( logFileName );
-/* ----------- End Internal Application Libraries Initialization -------------*/
-
-/* ------------------------------------- Functions   -------------------------*/
 function getKeyValuePairFromArrayItem ( arrayOfElements, keyValueToReturn )
 {
    try
@@ -261,8 +235,8 @@ async function runAugments ( items )
 
 async function main ( req, res )
 {   try
-    {   var items, ideez, bankData, employees, companies, accountLedgerNames, paymentTypesList;
-        var employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList, bookyearNames;
+    {   let items, ideez, bankData;
+        let employees, companies, accountLedgerNames, bookkeepingLedgerNames, paymentTypesList;
 
         logger.trace( applicationName + ':zndStatements:main:Started' );
 
@@ -308,21 +282,6 @@ async function main ( req, res )
     {   logger.trace( applicationName + 'zndStatements:main:An exception occurred:[' + ex + ']' );
     }
 }
-/* --------------------------------- End Functions   -------------------------*/
-
-
-
-/* ----------------------------------Module Initialization -------------------*/
-
-
-/* ----------------------------------End Module Initialization ---------------*/
-
-
-
-/* ----------------------------------External functions ----------------------*/
+ 
 module.exports.main                     = main;
-/* ----------------------------------End External functions ------------------*/
-
-
-/* LOG:
-*/
+ 

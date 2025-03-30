@@ -1,5 +1,5 @@
 {   "application"   : {   "ServiceEndPointPort"            : 10070,
-                          "DB"                             : "mongodb://192.168.129.10/zanddBooks",                          
+                          "dbName"                         : "mongodb://192.168.129.10/zanddBooks",                          
                           "DBTest"                         : "mongodb://192.168.129.10/zanddBookstest",
                           "progStart"                      : "scripts\\startBrowser.bat",
                           "outputToBrowser"                : "no",
@@ -11,7 +11,7 @@
                           "outputDocName"                  : "outputDocName.docx",                            
                           "wordPath"                       : "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE", 
                           "WordOptions"                    : "/mFilePrintDefault /mFileExit /mFileCloseOrExit /q /n",
-                          "consoleOutput"                  : "off",
+                          "consoleOutput"                  : "on",
                           "logPath"                        : "./logs/",  
                           "logTracelevel"                  : "debug"                                           
                       }

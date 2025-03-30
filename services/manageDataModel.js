@@ -13,21 +13,11 @@
    Notes            : Consistent error handling needs to be added. //23020508
 */
 
-/* ------------------     External Application Libraries      -----------------*/
-/* ------------------ End External Application Libraries      -----------------*/
 
-/* --------------- External Application Libraries Initialization --------------*/
-/* ----------- End External Application Libraries Initialization --------------*/
-
-/* ------------------------------------- Controllers --------------------------*/
-/* -------------------------------- End Controllers ---------------------------*/
-
-/* ------------------------------------- Services -----------------------------*/
 const errorCatalog                      = require( '../services/errorCatalog' );
-const {logger,applicationName}          = require( './generic' );
-/* -------------------------------- End Services ------------------------------*/
+const {logger,applicationName}         = require( '../services/generic' );
 
-/* ------------------------------------- Models -------------------------------*/
+
 const zndBookkeepingYears                   = require( '../models/zndBookkeepingYears' );
 const zndBookkeepingYearsHist               = require( '../models/zndBookkeepingYearHist' );
 const zndLedger                             = require( '../models/zanddLedger' );
@@ -36,15 +26,8 @@ const checkBooks                            = require( '../models/checkBooks' );
 const checkBooksHist                        = require( '../models/checkBooksHist' );
 const zndBookKeepersLedgers                 = require( '../models/zndBookKeepersLedgers' );
 const zndBookKeepersLedgersHist             = require( '../models/zndBookKeepersLedgersHist' ); 
-/* -------------------------------- End Models --------------------------------*/
 
-/* ---------------------------------  Application constants    ----------------*/
-/* --------------------------------- End Application constants ----------------*/
 
-/* --------------- Internal Application Libraries Initialization --------------*/
-/* ----------- End Internal Application Libraries Initialization --------------*/
-
-/* ----------------------------- Private Functions   --------------------------*/
 function getModel ( model )
 {   try
     {   logger.trace( applicationName + ':manageDataModel:getModel:Started ' );
@@ -71,9 +54,8 @@ function getModel ( model )
         return result;
     }
 }
-/* -------------------------- End Private Functions   ------------------------*/
 
-/* --------------------------- Public Functions   ----------------------------*/
+
 
 
 async function createRecord ( model,dbRecord )
@@ -555,9 +537,8 @@ async function validateRecord ( model, dbRecord )
        return result;
    }
 }
-/* ----------------------------- End Public Functions   ------------------------*/
 
-/* ----------------------------------External functions ------------------------*/
+
 module.exports.createRecord             = createRecord;
 module.exports.createHistoricalRecord   = createHistoricalRecord;
 module.exports.deleteRecord             = deleteRecord;
@@ -571,7 +552,3 @@ module.exports.checkRecord              = checkRecord;
 module.exports.getHistoricalRecords     = getHistoricalRecords;
 module.exports.getHistoricalRecord      = getHistoricalRecord;
 module.exports.restoreRecord            = restoreRecord;
-/* ----------------------------------End External functions --------------------*/
-
-/* LOG:
-*/
