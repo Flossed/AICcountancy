@@ -63,7 +63,9 @@ async function storeInDB(statementID, transactionID, recordID, articleCode,ID,co
             return noError;
         }
 
-        logger.debug(applicationName + ':zndMngCodaFiles:storeInDB:Skipping  codaRecord  Entry already exist in DB:[' + codaRecordJSON + '].');
+        logger.debug(applicationName + ':zndMngCodaFiles:storeInDB:Skipping  codaRecordo  Entry already exist in DB.');
+        console.log( codaRecordJSON );
+        console.log(' adsjkhdaskjldsajkhdsakljdsadsahjkdjsklsdakjdskjlasjkldjaslkdjaslkjdlkasjdlkjasdlkajsdlkjasd');
         logger.error(applicationName + ':zndMngCodaFiles:storeInDB:An error occurred whilst adding record.');
         badResult.body                = 'codaRecord  Entry already exist in DB';
         return badResult;
