@@ -4,6 +4,7 @@ let bookkeepingYears;
 let verificationStatus;
 
 const statementMap                      = {   'NR'                   :'ID' ,
+                                              'ACCOK'                :'ACCOK',
                                               //'Doc'                  :'DOC',
                                               'creation Date'        :'creationDate',
                                               'creation DateStr'     :'creationDateString',
