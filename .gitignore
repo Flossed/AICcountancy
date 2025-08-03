@@ -32,6 +32,11 @@ public/docsold
 !/config
 !/documentation
 !/_CODARECORDS
+!/.github
+!/docs
+!CHANGELOG.md
+!CONTRIBUTING.md
+!*.md
 
 #########################################################################################################
 #   1. /*                           'exclude everything'

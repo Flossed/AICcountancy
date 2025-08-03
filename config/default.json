@@ -1,5 +1,5 @@
 {   "application"   : {   "ServiceEndPointPort"            : 10070,
-                          "dbName"                         : "mongodb://192.168.129.10/zanddBooks",                          
+                          "dbName"                         : "mongodb://192.168.129.10/AICcountancy",                          
                           "DBTest"                         : "mongodb://192.168.129.10/zanddBookstest",
                           "progStart"                      : "scripts\\startBrowser.bat",
                           "outputToBrowser"                : "no",
